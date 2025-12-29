@@ -32,7 +32,7 @@
           "type": "social-links",
           "name": "t:names.social_media_links",
           "settings": {
-            "facebook_url": "",
+            "facebook_url": "https://www.facebook.com/?locale=vi_VN",
             "instagram_url": "",
             "youtube_url": "",
             "tiktok_url": "",
