@@ -1,126 +1,418 @@
-
-
-{% if section.blocks.size > 1 %}
-  <script
-    src="{{ 'announcement-bar.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
+{% assign announcement_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == '_announcement' %}
+    {% assign announcement_count = announcement_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <aside
+  id="announcement-bar-{{ section.id }}"
   class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
   style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;"
+  {% if announcement_count > 1 %}data-autoplay="{{ section.settings.speed | times: 1000 }}"{% endif %}
 >
   {% liquid
     assign autoplay = false
     assign show_arrows = false
-    if section.blocks.size > 1
+    if announcement_count > 1
       assign autoplay = true
       assign show_arrows = true
     endif
   %}
 
-  <announcement-bar-component
-    class="announcement-bar__slider"
-    {% if autoplay == true %}
-      autoplay="{{ section.settings.speed }}" aria-live="polite"
-    {% endif %}
-  >
-    {% if show_arrows %}
-      {% render 'slideshow-arrows', icon_style: 'chevron' %}
-    {% endif %}
+  <div class="announcement-bar__inner">
+    <!-- LEFT: announcements (chiếm trái, slider fade) -->
+    <div class="announcement-bar__left">
+      <announcement-bar-component class="announcement-bar__slider">
+        {% if show_arrows %}
+          {% render 'slideshow-arrows', icon_style: 'chevron' %}
+        {% endif %}
 
-    <div class="announcement-bar__slides">
-      {% content_for 'blocks' %}
+        <div class="announcement-bar__slides">
+          {% content_for 'blocks' %}
+        </div>
+      </announcement-bar-component>
     </div>
-  </announcement-bar-component>
+
+    <!-- RIGHT: social icons -->
+    <div class="announcement-bar__right" aria-hidden="false"></div>
+  </div>
 </aside>
 
 {% stylesheet %}
   .announcement-bar {
     border-block-end: var(--border-bottom-width) solid var(--color-border);
+    overflow: hidden;
   }
 
-  .announcement-bar__slider {
+  .announcement-bar__inner {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    position: relative;
+    gap: var(--gap-md);
+  }
 
-    @media screen and (max-width: 749px) {
-      grid-column: 1 / -1;
+  .announcement-bar__left,
+  .announcement-bar__right {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  /* Desktop layout: 50/50, arrows on sides */
+  @media screen and (min-width: 750px) {
+    .announcement-bar__left,
+    .announcement-bar__right {
+      width: 50%;
+    }
+
+    .announcement-bar__left {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-inline-end: var(--gap-md);
+    }
+
+    .announcement-bar__right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-inline-start: var(--gap-md);
+      gap: var(--gap-sm);
+      padding-right: 20px;
+    }
+
+    .announcement-bar__slider {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+
+      /* Ensure controls can overflow and be clickable */
+      position: relative !important;
+      overflow: visible !important;
+    }
+
+    .announcement-bar__slides {
+      grid-column: 2;
+      position: relative;
+      width: 100%;
+    }
+
+    .announcement-bar__slider .slideshow-control--previous {
+      grid-column: 1;
+      justify-self: start;
+      z-index: 2;
+    }
+
+    .announcement-bar__slider .slideshow-control--next {
+      grid-column: 3;
+      justify-self: end;
+      z-index: 2;
+    }
+
+    /* Ensure arrow controls are visible and clickable (class-scoped) */
+    .announcement-bar .slideshow-control--previous,
+    .announcement-bar .slideshow-control--next {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 40px !important;
+      height: 40px !important;
+      color: var(--color-foreground) !important;
+    }
+
+    .announcement-bar .slideshow-control--previous { left: 8px !important; }
+    .announcement-bar .slideshow-control--next     { right: 8px !important; }
+
+    /* Make svg inherit color and size */
+    .announcement-bar .slideshow-control svg,
+    .announcement-bar .slideshow-control .svg-wrapper {
+      width: 16px !important;
+      height: 16px !important;
+      fill: currentColor !important;
+      stroke: none !important;
+    }
+
+
+    /* Ensure controls remain clickable if parent has overflow hidden */
+    .announcement-bar {
+      overflow: visible !important;
     }
   }
 
-  .announcement-bar__slides {
-    display: grid;
-    grid: [stack] auto / [stack] auto;
-    width: calc(100% - var(--button-size) * 2);
-    max-width: 680px;
-    margin-inline: auto;
-  }
+  /* Mobile: stacked, social hidden, announcements full-width & centered */
+  @media screen and (max-width: 749px) {
+    .announcement-bar__inner {
+      flex-direction: column;
+      gap: var(--gap-2xs);
+      align-items: stretch;
+      padding-block: calc(var(--padding-block-start) / 2);
+      padding-inline: var(--padding-3xs);
+    }
 
-  .announcement-bar__slides > * {
-    grid-area: stack;
-  }
+    /* make announcement area take full width on mobile */
+    .announcement-bar__left {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+    }
 
-  .announcement-bar__slide {
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    /* hide social icons on mobile (user requested) */
+    .announcement-bar__right {
+      display: none !important;
+      visibility: hidden;
+      height: 0;
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+    }
 
-    &[aria-hidden='true'] {
+    /* Reduce vertical spacing & icon sizes on mobile (if any remain elsewhere) */
+    .announcement-bar__right .social-icons__wrapper {
+      gap: var(--gap-2xs);
+    }
+
+    .announcement-bar__right .social-icons__icon,
+    .announcement-bar__right .social-icons__icon-wrapper {
+      width: calc(var(--icon-size-sm));
+      height: calc(var(--icon-size-sm));
+    }
+
+    /* Hide desktop arrow controls on mobile */
+    .announcement-bar__slider .slideshow-control {
+      display: none;
+    }
+
+    .announcement-bar__slider {
+      display: block;
+    }
+
+    .announcement-bar__slides {
+      width: 100%;
+      padding-inline: var(--padding-2xs);
+    }
+
+    /* Mobile slide flow: only one visible at a time with gentle motion */
+    .announcement-bar__slide {
+      position: relative;
       opacity: 0;
       visibility: hidden;
+      transition: opacity 0.48s ease-in-out, transform 0.28s ease;
+      transform: translateY(4px);
+    }
+
+    .announcement-bar__slide[aria-hidden="false"],
+    .announcement-bar__slides > *[aria-hidden="false"] {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
   }
 
-  .announcement-bar__slider slideshow-arrows {
-    padding: 0;
-    mix-blend-mode: normal;
-  }
-
-  .announcement-bar__slider slideshow-arrows .slideshow-control {
-    color: var(--color-foreground);
-  }
-
-  .announcement-bar__slider .slideshow-control {
-    display: flex;
-    padding: 0;
-    width: var(--button-size);
-    height: var(--button-size);
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    animation: none;
-
-    @media screen and (min-width: 750px) {
-      --slideshow-control-offset: calc((var(--button-size) - var(--icon-size-xs)) / 2);
-
-      .section--page-width &.slideshow-control--previous {
-        transform: translateX(var(--slideshow-control-offset));
-      }
-    }
-  }
-
-  .announcement-bar__slider .slideshow-control .svg-wrapper {
-    width: var(--icon-size-xs);
-    height: var(--icon-size-xs);
-  }
-
+  /* Common fade slider behavior */
   .announcement-bar__slide {
-    place-content: center;
-  }
-
-  .announcement-bar__text:first-child {
-    margin: 0;
-  }
-
-  .announcement-bar__link {
     position: absolute;
     inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-in-out;
+  }
+
+  .announcement-bar__slide[aria-hidden="false"],
+  .announcement-bar__slides > *[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+  }
+
+  /* Social icons (desktop only) */
+  .announcement-bar__right .social-icons__wrapper {
+    display: flex;
+    gap: var(--gap-sm);
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .announcement-bar__right .social-icons__icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Arrows visuals / hit area (fallback) */
+  .slideshow-control {
+    background: transparent;
+    border: none;
+    padding: calc(var(--padding-2xs) / 1.5);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (pointer: coarse) {
+    .slideshow-control {
+      padding: var(--padding-xs);
+    }
   }
 {% endstylesheet %}
+
+<script>
+  (function () {
+    const root = document.getElementById('announcement-bar-{{ section.id }}');
+    if (!root) return;
+
+    const slidesContainer = root.querySelector('.announcement-bar__slides');
+    const right = root.querySelector('.announcement-bar__right');
+    if (!slidesContainer || !right) return;
+
+    // Move social blocks out of slides into right column (for desktop).
+    // If on mobile (matchMedia), we still move them but CSS will hide right column.
+    const socialWrappers = slidesContainer.querySelectorAll('.social-icons__wrapper');
+    socialWrappers.forEach(wrapper => {
+      right.appendChild(wrapper);
+    });
+
+    // Build announcementSlides array from slidesContainer children,
+    // ignoring any nodes that are empty or purely social.
+    const allCandidates = Array.from(slidesContainer.children).filter(Boolean);
+    const announcementSlides = allCandidates.filter(node => !node.querySelector('.social-icons__wrapper'));
+
+    if (announcementSlides.length === 0) return;
+
+    if (announcementSlides.length === 1) {
+      announcementSlides[0].setAttribute('aria-hidden', 'false');
+      return;
+    }
+
+    // Controls
+    let prevBtn = root.querySelector('.slideshow-control--previous');
+    let nextBtn = root.querySelector('.slideshow-control--next');
+
+    // If buttons are missing (snippet didn't render them), create fallback buttons
+    function createArrowButton(kind) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'slideshow-control slideshow-control--' + kind;
+      btn.setAttribute('aria-label', kind === 'previous' ? 'Previous slide' : 'Next slide');
+
+      // Minimal chevron markup so it always displays (can be replaced with SVG if desired)
+      btn.innerHTML = kind === 'previous'
+        ? '<span class="svg-wrapper" aria-hidden="true" style="display:inline-block;width:16px;height:16px;color:currentColor;">‹</span>'
+        : '<span class="svg-wrapper" aria-hidden="true" style="display:inline-block;width:16px;height:16px;color:currentColor;">›</span>';
+
+      const slider = root.querySelector('.announcement-bar__slider') || slidesContainer.parentElement;
+      if (slider) {
+        slider.appendChild(btn);
+      }
+      return btn;
+    }
+
+    if (!prevBtn) prevBtn = createArrowButton('previous');
+    if (!nextBtn) nextBtn = createArrowButton('next');
+
+    // Expose functions for debugging/other scripts
+    root.__announcementPrev = function() { prevSlide(); };
+    root.__announcementNext = function() { nextSlide(); };
+
+    // Attach listeners
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        prevSlide();
+        resetAutoplay();
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        nextSlide();
+        resetAutoplay();
+      });
+    }
+
+    let currentIndex = 0;
+    const autoplayDelay = parseInt(root.dataset.autoplay, 10) || 5000;
+    let autoplayInterval = null;
+
+    function showSlide(index) {
+      announcementSlides.forEach((slide, i) => {
+        slide.setAttribute('aria-hidden', i !== index ? 'true' : 'false');
+      });
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      showSlide((currentIndex + 1) % announcementSlides.length);
+    }
+
+    function prevSlide() {
+      showSlide((currentIndex - 1 + announcementSlides.length) % announcementSlides.length);
+    }
+
+    function startAutoplay() {
+      if (autoplayInterval) clearInterval(autoplayInterval);
+      autoplayInterval = setInterval(nextSlide, autoplayDelay);
+    }
+    function stopAutoplay() {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+        autoplayInterval = null;
+      }
+    }
+    function resetAutoplay() {
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    startAutoplay();
+
+    root.addEventListener('mouseenter', stopAutoplay);
+    root.addEventListener('mouseleave', startAutoplay);
+    root.addEventListener('touchstart', stopAutoplay, { passive: true });
+    root.addEventListener('touchend', startAutoplay, { passive: true });
+
+    // Touch (swipe) support for mobile
+    let touchStartX = null;
+    let touchStartY = null;
+    const threshold = 30;
+
+    slidesContainer.addEventListener('touchstart', (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      stopAutoplay();
+    }, { passive: true });
+
+    slidesContainer.addEventListener('touchend', (e) => {
+      if (touchStartX === null) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
+        if (dx < 0) nextSlide(); else prevSlide();
+        resetAutoplay();
+      }
+      touchStartX = null;
+      touchStartY = null;
+    }, { passive: true });
+
+    showSlide(0);
+  })();
+</script>
+
+{%- if announcement_count > 1 -%}
+  <script
+    src="{{ 'announcement-bar.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{%- endif -%}
 
 {% schema %}
 {
@@ -128,6 +420,12 @@
   "blocks": [
     {
       "type": "_announcement"
+    },
+    {
+      "type": "_footer-social-icons"
+    },
+    {
+      "type": "social-links"
     }
   ],
   "enabled_on": {
