@@ -33,10 +33,10 @@
           "name": "t:names.social_media_links",
           "settings": {
             "facebook_url": "https://www.facebook.com/?locale=vi_VN",
-            "instagram_url": "",
+            "instagram_url": "https://www.instagram.com/",
             "youtube_url": "",
             "tiktok_url": "",
-            "twitter_url": "",
+            "twitter_url": "https://x.com/?lang=vi",
             "threads_url": "",
             "linkedin_url": "",
             "bluesky_url": "",
