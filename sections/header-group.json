@@ -14,6 +14,40 @@
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
+        "announcement_RczRjc": {
+          "type": "_announcement",
+          "name": "t:names.announcement",
+          "settings": {
+            "text": "Shop our latest arrivals!",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "social_links_TpmWcp": {
+          "type": "social-links",
+          "name": "t:names.social_media_links",
+          "settings": {
+            "facebook_url": "",
+            "instagram_url": "",
+            "youtube_url": "",
+            "tiktok_url": "",
+            "twitter_url": "",
+            "threads_url": "",
+            "linkedin_url": "",
+            "bluesky_url": "",
+            "snapchat_url": "",
+            "pinterest_url": "",
+            "tumblr_url": "",
+            "vimeo_url": "",
+            "custom_url": ""
+          },
+          "blocks": {}
+        },
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
@@ -29,14 +63,16 @@
         }
       },
       "block_order": [
+        "announcement_RczRjc",
+        "social_links_TpmWcp",
         "announcement_BxgCk9"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
         "speed": 5,
-        "section_width": "page-width",
-        "color_scheme": "scheme-1",
-        "divider_width": 1,
+        "section_width": "full-width",
+        "color_scheme": "scheme-4",
+        "divider_width": 0,
         "padding-block-start": 15,
         "padding-block-end": 15
       }
