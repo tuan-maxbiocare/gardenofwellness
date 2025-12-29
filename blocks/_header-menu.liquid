@@ -696,6 +696,93 @@
     /* preserves the inherited grid layout when this submenu wrapper is used */
     display: contents;
   }
+  /* ================== ICON MŨI TÊN XUỐNG CHO MENU CÓ SUBMENU ================== */
+/* Chỉ áp dụng cho menu cấp 1 có submenu */
+.menu-list__link[aria-haspopup="true"] {
+  gap: 8px; /* Khoảng cách giữa text và icon */
+  padding-right: 6px; /* Đảm bảo không bị cắt khi có icon */
+}
+
+/* Thêm icon mũi tên bằng ::after trên chính .menu-list__link */
+.menu-list__link[aria-haspopup="true"]::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4L6 7.5L9.5 4' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.8;
+  align-self: center;
+}
+
+/* Khi hover hoặc mở submenu: xoay 180° (cả hai đường đều xoay) */
+.menu-list__link[aria-haspopup="true"]:hover::after,
+.menu-list__link[aria-haspopup="true"][aria-expanded="true"]::after {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* Trang hiện tại (active) có submenu: vẫn giữ icon bình thường */
+.menu-list__link--active[aria-haspopup="true"]::after {
+  opacity: 0.8;
+}
+
+.menu-list__link--active[aria-haspopup="true"]:hover::after {
+  opacity: 1;
+}
+
+/* Mobile: icon lớn hơn một chút cho dễ chạm */
+@media screen and (max-width: 989px) {
+  .menu-list__link[aria-haspopup="true"] {
+    gap: 10px;
+  }
+  
+  .menu-list__link[aria-haspopup="true"]::after {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Đảm bảo icon không bị ảnh hưởng bởi gạch chân text */
+.menu-list__link-title::after {
+  /* Nếu bạn còn giữ gạch chân cũ, đảm bảo nó không chồng lên icon */
+  right: auto;
+  left: 0;
+  width: 0;
+}
+/* ================== TĂNG KHOẢNG CÁCH GIỮA CÁC MENU ITEM ================== */
+
+/* Tăng khoảng cách ngang giữa các menu cấp 1 */
+.menu-list__list {
+  gap: var(--menu-horizontal-gap) !important; /* Giữ nguyên biến gốc nếu có */
+}
+
+/* Nếu muốn cố định khoảng cách lớn hơn (ví dụ 40px thay vì giá trị mặc định) */
+.overflow-menu::part(list),
+.menu-list {
+  --menu-horizontal-gap: 40px; /* Tăng lên 40px - bạn có thể chỉnh thành 30px, 50px tùy thích */
+}
+
+/* Đảm bảo khoảng cách đều trên cả desktop và khi overflow (more menu) */
+.menu-list__list-item {
+  padding-inline: 0; /* Loại bỏ padding thừa nếu có */
+}
+
+/* Tùy chọn: tăng thêm trên desktop để rộng rãi hơn */
+@media screen and (min-width: 990px) {
+  .overflow-menu::part(list),
+  .menu-list {
+    --menu-horizontal-gap: 48px; /* Rộng hơn nữa trên màn hình lớn */
+  }
+}
+
+/* Mobile navigation bar (nếu có bật navigation_bar): cũng tăng khoảng cách */
+.menu-list--mobile .menu-list__list {
+  gap: 24px; /* Khoảng cách trên mobile navigation bar */
+}
 {% endstylesheet %}
 
 {% schema %}
