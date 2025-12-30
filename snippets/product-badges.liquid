@@ -1,0 +1,42 @@
+{%- liquid
+  assign is_sale = false
+  assign is_new = false
+  assign is_best_seller = false
+
+  if product.compare_at_price > product.price
+    assign is_sale = true
+  endif
+
+  if product.published_at
+    assign days_since_publish = 'now' | date: '%s' | minus: product.published_at | divided_by: 86400
+    if days_since_publish <= 30
+      assign is_new = true
+    endif
+  endif
+
+  if product.tags contains 'best-seller' or product.tags contains 'bestseller'
+    assign is_best_seller = true
+  endif
+-%}
+
+<div class="product-badges">
+
+  {% if is_best_seller %}
+    <span class="product-badge badge-best">
+      Best seller
+    </span>
+  {% endif %}
+
+  {% if is_new %}
+    <span class="product-badge badge-new">
+      New
+    </span>
+  {% endif %}
+
+  {% if is_sale %}
+    <span class="product-badge badge-sale">
+      Sale
+    </span>
+  {% endif %}
+
+</div>
