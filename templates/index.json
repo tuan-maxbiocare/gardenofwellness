@@ -103,6 +103,7 @@
           "clearance-sale"
         ],
         "max_products": 4,
+        "mobile_columns": "1",
         "show_view_all": true,
         "view_all_text": "View all products",
         "view_all_url": "",
