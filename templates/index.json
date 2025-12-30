@@ -107,7 +107,7 @@
         "show_view_all": true,
         "view_all_text": "View all products",
         "view_all_url": "",
-        "section_width": "page-width",
+        "section_width": "full-width",
         "color_scheme": "scheme-1",
         "section_bg": "#ffffff",
         "background_overlay": "#ffffff99",
