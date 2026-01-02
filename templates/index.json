@@ -212,10 +212,10 @@
           "name": "t:names.header",
           "settings": {
             "text": "<h3>Related products</h3>",
-            "width": "fit-content",
+            "width": "100%",
             "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "rte",
+            "alignment": "center",
+            "type_preset": "h2",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
