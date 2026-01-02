@@ -91,119 +91,6 @@
         "padding-block-end": 72
       }
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
-      "disabled": true,
-      "name": "Featured collection",
-      "settings": {
-        "heading": "Our holiday picks.",
-        "collection_list": [
-          "beauty-products",
-          "best-sellers",
-          "body-care",
-          "clearance-sale"
-        ],
-        "max_products": 4,
-        "mobile_columns": "1",
-        "show_view_all": true,
-        "view_all_text": "View all products",
-        "view_all_url": "",
-        "section_width": "full-width",
-        "color_scheme": "scheme-1",
-        "section_bg": "#ffffff",
-        "background_overlay": "#ffffff99",
-        "product_image_bg": "#eef1ea",
-        "heading_color": "#000000",
-        "tab_text_color": "#000000",
-        "tab_border_color": "#00000026",
-        "tab_active_bg": "#000000",
-        "tab_active_text": "#ffffff",
-        "tab_hover_bg": "#0000000d",
-        "tab_hover_text": "#000000",
-        "product_title_color": "#000000",
-        "cruelty_text_color": "#000000",
-        "price_regular_color": "#000000",
-        "price_sale_color": "#f94040",
-        "badge_bg": "#ff6b6b",
-        "badge_text": "#ffffff",
-        "atc_bg": "#000000",
-        "atc_text": "#ffffff",
-        "viewall_bg": "#ffffff",
-        "viewall_border": "#000000",
-        "viewall_hover_bg": "rgba(0,0,0,0)"
-      }
-    },
-    "feaure_category_8mYehU": {
-      "type": "feaure_category",
-      "blocks": {
-        "category_yQwxaz": {
-          "type": "category",
-          "settings": {
-            "collection": "clearance-sale",
-            "title": "Cleanser",
-            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-4_9b1bd37b-6a3c-4322-8af5-017db14c256e.webp"
-          }
-        },
-        "category_kCbEmV": {
-          "type": "category",
-          "settings": {
-            "collection": "beauty-products",
-            "title": "Serums",
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x799-2_d8656211-dfa1-4439-b418-7f0d01f10c75.webp"
-          }
-        },
-        "category_4884AT": {
-          "type": "category",
-          "settings": {
-            "collection": "contour-body-oil",
-            "title": "Toner",
-            "image": "shopify://shop_images/Untitled_design_46_88e8dc9a-88b6-4b07-9afb-cde49fa1a471.webp"
-          }
-        },
-        "category_brdjwi": {
-          "type": "category",
-          "settings": {
-            "collection": "body-care",
-            "title": "Bodycare",
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-1_99012931-73c6-42a4-85ac-65638645b17b.webp"
-          }
-        }
-      },
-      "block_order": [
-        "category_yQwxaz",
-        "category_kCbEmV",
-        "category_4884AT",
-        "category_brdjwi"
-      ],
-      "name": "Featured categories (List + pill image)",
-      "settings": {
-        "heading": "",
-        "marker_style": "underline",
-        "heading_size": 50,
-        "heading_tag": "h2",
-        "heading_align": "left",
-        "card_title_size": 100,
-        "image_style": "rounded",
-        "image_ratio": "wide_16_9",
-        "content_alignment": "left",
-        "content_position": "right",
-        "image_width": 160,
-        "image_width_mobile": 102,
-        "show_item_count": true,
-        "show_line_border": true,
-        "show_section_divider": false,
-        "padding_top": "100",
-        "padding_bottom": "100",
-        "padding_top_mobile": "48",
-        "padding_bottom_mobile": "48",
-        "bg_color": "#5c6350",
-        "title_color": "#ffffff",
-        "text_color": "#e1e3e1",
-        "line_color": "#ffffff",
-        "base_size": 110,
-        "color_scheme": "default"
-      }
-    },
     "product_recommendations_JhEgQx": {
       "type": "product-recommendations",
       "blocks": {
@@ -352,12 +239,82 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "feaure_category_8mYehU": {
+      "type": "feaure_category",
+      "blocks": {
+        "category_yQwxaz": {
+          "type": "category",
+          "settings": {
+            "collection": "clearance-sale",
+            "title": "Cleanser",
+            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-4_9b1bd37b-6a3c-4322-8af5-017db14c256e.webp"
+          }
+        },
+        "category_kCbEmV": {
+          "type": "category",
+          "settings": {
+            "collection": "beauty-products",
+            "title": "Serums",
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x799-2_d8656211-dfa1-4439-b418-7f0d01f10c75.webp"
+          }
+        },
+        "category_4884AT": {
+          "type": "category",
+          "settings": {
+            "collection": "contour-body-oil",
+            "title": "Toner",
+            "image": "shopify://shop_images/Untitled_design_46_88e8dc9a-88b6-4b07-9afb-cde49fa1a471.webp"
+          }
+        },
+        "category_brdjwi": {
+          "type": "category",
+          "settings": {
+            "collection": "body-care",
+            "title": "Bodycare",
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-1_99012931-73c6-42a4-85ac-65638645b17b.webp"
+          }
+        }
+      },
+      "block_order": [
+        "category_yQwxaz",
+        "category_kCbEmV",
+        "category_4884AT",
+        "category_brdjwi"
+      ],
+      "name": "Featured categories (List + pill image)",
+      "settings": {
+        "heading": "",
+        "marker_style": "underline",
+        "heading_size": 50,
+        "heading_tag": "h2",
+        "heading_align": "left",
+        "card_title_size": 100,
+        "image_style": "rounded",
+        "image_ratio": "wide_16_9",
+        "content_alignment": "left",
+        "content_position": "right",
+        "image_width": 160,
+        "image_width_mobile": 102,
+        "show_item_count": true,
+        "show_line_border": true,
+        "show_section_divider": false,
+        "padding_top": "100",
+        "padding_bottom": "100",
+        "padding_top_mobile": "48",
+        "padding_bottom_mobile": "48",
+        "bg_color": "#5c6350",
+        "title_color": "#ffffff",
+        "text_color": "#e1e3e1",
+        "line_color": "#ffffff",
+        "base_size": 110,
+        "color_scheme": "default"
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H",
-    "feaure_category_8mYehU",
-    "product_recommendations_JhEgQx"
+    "product_recommendations_JhEgQx",
+    "feaure_category_8mYehU"
   ]
 }
