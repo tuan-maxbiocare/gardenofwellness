@@ -311,11 +311,62 @@
         "base_size": 110,
         "color_scheme": "default"
       }
+    },
+    "image_product_grid_bjq3xR": {
+      "type": "image-product-grid",
+      "blocks": {
+        "static-product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 16,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "name": "Image + Products (full)",
+      "settings": {
+        "heading": "The Black Friday",
+        "heading_emphasis": "wellness kit.",
+        "subheading": "<p>Four travel-sized remedies for jet lag, tension, dry skin, and summer stress.</p>",
+        "image": "shopify://shop_images/image_7.png",
+        "products": [
+          "body-oil-discovery-set",
+          "garden-of-wellness-contour-body-oil-thirteen-petals",
+          "garden-of-wellness-nourishing-body-oil-frankincense",
+          "garden-of-wellness-nourishing-body-oil-geranium-breeze",
+          "garden-of-wellness-nourishing-body-oil-honey-citrus",
+          "garden-of-wellness-nourishing-body-oil-lavender-calm"
+        ],
+        "columns": 3,
+        "rows": 2,
+        "section_width": "page-width",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 48,
+        "padding_left": 0,
+        "padding_right": 0,
+        "padding_left_mobile": 16,
+        "padding_right_mobile": 16
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_recommendations_JhEgQx",
-    "feaure_category_8mYehU"
+    "feaure_category_8mYehU",
+    "image_product_grid_bjq3xR"
   ]
 }
