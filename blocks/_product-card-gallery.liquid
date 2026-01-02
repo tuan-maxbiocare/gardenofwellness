@@ -32,7 +32,11 @@
   {% endunless %}
 {% endcapture %}
 
-{% render 'card-gallery', children: children %}
+{% render 'card-gallery',
+  children: children,
+  media_bg: block.settings.media_background
+%}
+
 
 {% # Title and price for the zoomed out grid view %}
 <div class="product-grid-view-zoom-out--details">
@@ -122,6 +126,13 @@
       "label": "t:settings.aspect_ratio",
       "info": "t:info.aspect_ratio_adjusted"
     },
+    {
+      "type": "color",
+      "id": "media_background",
+      "label": "Product image background",
+      "default": "#F5F5F5"
+    },
+
     {
       "type": "header",
       "content": "t:content.borders"

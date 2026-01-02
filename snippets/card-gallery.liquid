@@ -67,6 +67,7 @@
   ref="cardGallery"
   class="card-gallery card-gallery-{{ block.id }} spacing-style border-style{% if has_badges %} card-gallery--badge-{{ badge_position }}{% endif %}"
   style="
+    background: {{ media_bg | default: 'transparent' }};
     {% render 'border-override', settings: block_settings %}
     {% render 'spacing-style', settings: block_settings %}
     --gallery-aspect-ratio: {{ ratio }};
@@ -365,4 +366,47 @@
   [product-grid-view='zoom-out'] .card-gallery .slideshow-control {
     min-width: auto;
   }
+  /* ===============================
+   PRODUCT IMAGE HOVER – SMOOTH & SOFT
+   =============================== */
+
+/* slideshow wrapper */
+.card-gallery .slideshow {
+  overflow: hidden;
+}
+
+/* slide */
+.card-gallery .slideshow-slide {
+  transition: opacity 0.5s ease;
+}
+
+/* media container */
+.card-gallery .product-media,
+.card-gallery .product-media img,
+.card-gallery .product-media picture {
+  transition:
+    transform 0.8s cubic-bezier(.22,.61,.36,1),
+    opacity 0.5s ease;
+  will-change: transform;
+}
+
+/* default state */
+.card-gallery .product-media {
+  transform: scale(1);
+}
+
+/* AFTER image swap → zoom nhẹ */
+.card-gallery:hover .product-media {
+  transform: scale(1.05);
+}
+
+/* làm mượt ảnh khi slideshow đổi slide */
+.card-gallery .slideshow-slide[aria-hidden="true"] {
+  opacity: 0;
+}
+
+.card-gallery .slideshow-slide[aria-hidden="false"] {
+  opacity: 1;
+}
+
 {% endstylesheet %}
