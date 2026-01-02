@@ -99,10 +99,44 @@
 {% stylesheet %}
 .collection-tabs {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
   margin-bottom: 32px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Desktop: cho phép wrap nếu quá nhiều tab */
+}
+
+/* ==================== MOBILE: CHỈ HIỂN THỊ TỐI ĐA 2 TAB MỖI HÀNG ==================== */
+@media (max-width: 768px) {
+  .collection-tabs {
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap; /* Cho phép xuống dòng */
+    padding: 0 16px; /* Thêm khoảng cách hai bên để không sát mép màn hình */
+  }
+
+  .collection-tab {
+    flex: 0 1 calc(50% - 8px); /* Mỗi tab chiếm tối đa ~50%, trừ đi gap */
+    box-sizing: border-box;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 8px 12px; /* Giữ padding hợp lý, không quá nhỏ */
+    font-size: 14px;
+  }
+
+  /* Nếu có hơn 2 tab, chúng sẽ tự động xuống hàng (2 tab/hàng) */
+  .collection-tab:nth-child(n+3) {
+    margin-top: 8px; /* Khoảng cách giữa các hàng */
+  }
+}
+
+/* Desktop: giữ nguyên căn giữa và wrap tự nhiên */
+@media (min-width: 769px) {
+  .collection-tabs {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 
 .collection-tab {
@@ -129,7 +163,7 @@
 .view-all-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px; /* khoảng cách giữa text và icon */
+  gap: 8px;
   padding: 10px 28px;
   border-radius: 999px;
   border: 1px solid #000;
@@ -142,33 +176,25 @@
   overflow: hidden;
 }
 
-/* tạo icon mũi tên ẩn mặc định */
 .view-all-btn::after {
-  content: '→'; /* mũi tên */
   display: inline-block;
   margin-left: 8px;
-  transform: translateX(-8px); /* ẩn trước hover */
+  transform: translateX(-8px);
   opacity: 0;
   transition: all 0.3s ease;
 }
 
-/* hover – đổi nền + màu chữ + hiển thị icon */
 .view-all-btn:hover {
   background: #000;
   color: #fff;
 }
 
-/* hover – icon hiện ra */
 .view-all-btn:hover::after {
   transform: translateX(0);
   opacity: 1;
 }
 
-/* =========================
-   PRODUCT IMAGE SWAP (MULTI IMAGE) – SOFT & SMOOTH
-   ========================= */
-
-/* media wrapper */
+/* ========================= PRODUCT IMAGE SWAP ========================= */
 .resource-list__item .card__media,
 .resource-list__item .product-card__media,
 .resource-list__item .media {
@@ -176,17 +202,13 @@
   overflow: hidden;
 }
 
-/* all images */
 .resource-list__item .card__media img,
 .resource-list__item .product-card__media img,
 .resource-list__item .media img {
-  transition:
-    opacity 0.55s ease,
-    transform 1s cubic-bezier(.22,1,.36,1);
+  transition: opacity 0.55s ease, transform 1s cubic-bezier(.22,1,.36,1);
   will-change: opacity, transform;
 }
 
-/* second image hidden by default */
 .resource-list__item .card__media img:nth-child(2),
 .resource-list__item .product-card__media img:nth-child(2),
 .resource-list__item .media img:nth-child(2) {
@@ -196,31 +218,26 @@
   transform: scale(1.02);
 }
 
-/* HOVER – ảnh 1 fade out nhẹ */
 .resource-list__item .card__media:hover img:first-child,
 .resource-list__item .product-card__media:hover img:first-child,
 .resource-list__item .media:hover img:first-child {
   opacity: 0;
 }
 
-/* HOVER – ảnh 2 fade in trước */
 .resource-list__item .card__media:hover img:nth-child(2),
 .resource-list__item .product-card__media:hover img:nth-child(2),
 .resource-list__item .media:hover img:nth-child(2) {
   opacity: 1;
 }
 
-/* HOVER – zoom nhẹ sau khi swap */
 .resource-list__item .card__media:hover img,
 .resource-list__item .product-card__media:hover img,
 .resource-list__item .media:hover img {
   transform: scale(1.06);
   transition-delay: 0.18s;
 }
-/* =========================
-   COLLECTION TRANSITION – FINAL
-   ========================= */
 
+/* ========================= COLLECTION TRANSITION ========================= */
 .collection-products {
   display: block;
 }
@@ -232,9 +249,7 @@
 .collection-products__inner {
   opacity: 0;
   transform: translateY(8px);
-  transition:
-    opacity 0.5s ease,
-    transform 0.65s cubic-bezier(.22,1,.36,1);
+  transition: opacity 0.5s ease, transform 0.65s cubic-bezier(.22,1,.36,1);
   will-change: opacity, transform;
 }
 
@@ -242,8 +257,6 @@
   opacity: 1;
   transform: translateY(0);
 }
-
-
 {% endstylesheet %}
 
 <script>

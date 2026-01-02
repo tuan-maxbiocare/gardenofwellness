@@ -44,6 +44,7 @@
     {% render 'typography-style', settings: block_settings %}
     {% render 'spacing-style', settings: block_settings %}
     --width: {{ block_settings.width }};
+    --price-color: {{ block_settings.price_color }};
   "
   {{ block.shopify_attributes }}
 >
@@ -86,6 +87,22 @@
 
 {% # theme-check-disable %}
 {% stylesheet %}
+/* ===== CURRENT PRICE (Eurus / OS 2.0 safe) ===== */
+product-price price,
+product-price .price,
+product-price [data-price],
+product-price .price__current {
+  color: var(--price-color) !important;
+}
+
+/* ===== COMPARE / STRIKETHROUGH PRICE (GIỮ NGUYÊN) ===== */
+product-price s,
+product-price del,
+product-price .price__compare,
+product-price [data-compare-price] {
+  color: inherit !important;
+}
+
   .tax-note:empty {
     display: none;
   }
@@ -399,6 +416,12 @@
       "default": "var(--color-foreground)",
       "visible_if": "{{ block.settings.type_preset != 'rte' }}"
     },
+    {
+  "type": "color",
+  "id": "price_color",
+  "label": "Price color",
+  "default": "#000000"
+},
     {
       "type": "header",
       "content": "t:content.padding"
