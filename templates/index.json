@@ -161,7 +161,7 @@
               "settings": {
                 "width": "100%",
                 "max_width": "normal",
-                "alignment": "center",
+                "alignment": "left",
                 "type_preset": "rte",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
@@ -180,6 +180,19 @@
               },
               "blocks": {}
             },
+            "review_KWmwFP": {
+              "type": "review",
+              "name": "t:names.product_review_stars",
+              "settings": {
+                "stars_style": "shaded",
+                "show_number": true,
+                "rating_color": "foreground",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "alignment": "left"
+              },
+              "blocks": {}
+            },
             "price_3btFDU": {
               "type": "price",
               "name": "t:names.product_price",
@@ -189,7 +202,7 @@
                 "show_tax_info": false,
                 "type_preset": "h4",
                 "width": "100%",
-                "alignment": "center",
+                "alignment": "left",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -208,6 +221,7 @@
           "block_order": [
             "product_card_gallery_PbE7nR",
             "product_title_N3XQQE",
+            "review_KWmwFP",
             "price_3btFDU"
           ]
         }
