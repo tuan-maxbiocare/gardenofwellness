@@ -461,12 +461,31 @@
         "padding_left_mobile": 0,
         "padding_right_mobile": 0
       }
+    },
+    "mega_deal_countdown_BMWEEM": {
+      "type": "mega-deal-countdown",
+      "name": "Mega Deal Countdown",
+      "settings": {
+        "overlay_color": "#000000",
+        "overlay_opacity": 0.6,
+        "heading": "Mega Deal 70% OFF",
+        "subheading": "Going fast! Secure your order while supplies last.",
+        "text_color": "#ffffff",
+        "enable_countdown": true,
+        "countdown_end_date": "2024-12-31 23:59:59",
+        "button_text": "Shop Sales",
+        "button_link": "/collections/all",
+        "button_bg_color": "#ff4444",
+        "button_text_color": "#ffffff",
+        "button_border_color": "#ff4444"
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_recommendations_JhEgQx",
     "feaure_category_8mYehU",
-    "image_product_grid_bjq3xR"
+    "image_product_grid_bjq3xR",
+    "mega_deal_countdown_BMWEEM"
   ]
 }
