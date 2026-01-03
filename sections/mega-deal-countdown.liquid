@@ -4,15 +4,30 @@
   .shopdev .mega-deal-hero {
     position: relative;
     width: 100%;
-    min-height: 600px;
+    height: 100vh;           /* Chiếm toàn bộ chiều cao viewport */
+    min-height: 500px;       /* Đảm bảo không quá nhỏ trên mobile nhỏ */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
   }
 
-  .shopdev .mega-deal-hero::before {
-    content: '';
+  .shopdev .mega-deal-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url({{ section.settings.background_image | image_url: width: 1920 }});
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  /* Fallback khi không có ảnh */
+  .shopdev .mega-deal-bg:no-cssref {
+    background: #808080;
+  }
+
+  .shopdev .mega-deal-overlay {
     position: absolute;
     inset: 0;
     background-color: {{ section.settings.overlay_color }};
@@ -21,10 +36,7 @@
   }
 
   .shopdev .mega-deal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 2;
     text-align: center;
     padding: 40px 20px;
@@ -36,10 +48,14 @@
     color: {{ section.settings.text_color }};
     font-weight: 700;
     line-height: 1.1;
+    margin: 0 0 16px;
+    font-size: 4.5rem;
   }
 
   .shopdev .mega-deal-content p {
     color: {{ section.settings.text_color }};
+    font-size: 1.25rem;
+    margin: 0 0 32px;
   }
 
   .shopdev .countdown-timer {
@@ -96,7 +112,7 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   }
 
-  /* MOBILE OPTIMIZATION */
+  /* ================== RESPONSIVE ================== */
   @media (max-width: 1024px) {
     .shopdev .mega-deal-hero {
       min-height: 500px;
@@ -105,10 +121,7 @@
       padding: 32px 16px;
     }
     .shopdev .mega-deal-content h1 {
-      font-size: 3rem; /* giảm kích thước heading */
-    }
-    .shopdev .mega-deal-content p {
-      font-size: 1.125rem; /* giảm kích thước subheading */
+      font-size: 3.5rem;
     }
     .shopdev .countdown-item {
       min-width: 80px;
@@ -117,98 +130,78 @@
     .shopdev .countdown-number {
       font-size: 36px;
     }
+  }
+
+  @media (max-width: 768px) {
+    .shopdev .mega-deal-hero {
+      height: 80vh;
+      min-height: 450px;
+    }
+    .shopdev .mega-deal-content h1 {
+      font-size: 2.75rem;
+    }
+    .shopdev .mega-deal-content p {
+      font-size: 1.125rem;
+    }
+    .shopdev .countdown-number {
+      font-size: 32px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .shopdev .mega-deal-hero {
+      height: 70vh;
+      min-height: 400px;
+    }
+    .shopdev .mega-deal-content h1 {
+      font-size: 2rem;
+    }
+    .shopdev .mega-deal-content p {
+      font-size: 1rem;
+    }
+    .shopdev .countdown-timer {
+    gap: 8px;          /* giảm khoảng cách */
+    flex-wrap: nowrap;  /* không xuống dòng */
+    overflow-x: auto;   /* scroll nếu quá dài */
+    justify-content: center;
+  }
+    .shopdev .countdown-item {
+      min-width: 70px;
+      padding: 12px 16px;
+    }
+    .shopdev .countdown-number {
+      font-size: 24px;
+    }
     .shopdev .countdown-label {
-      font-size: 12px;
+      font-size: 11px;
     }
     .shopdev .mega-deal-button {
       padding: 12px 32px;
       font-size: 14px;
     }
   }
-
-  @media (max-width: 768px) {
-    .shopdev .mega-deal-hero {
-      min-height: 450px;
-    }
-    .shopdev .mega-deal-content h1 {
-      font-size: 2.25rem;
-    }
-    .shopdev .mega-deal-content p {
-      font-size: 1rem;
-    }
-    .shopdev .countdown-number {
-      font-size: 28px;
-    }
-    .shopdev .mega-deal-button {
-      padding: 10px 24px;
-      font-size: 13px;
-    }
-  }
-
-  @media (max-width: 480px) {
-  .shopdev .mega-deal-hero {
-    min-height: 400px;
-  }
-
-  .shopdev .mega-deal-content h1 {
-    font-size: 1.75rem;
-  }
-
-  .shopdev .mega-deal-content p {
-    font-size: 0.875rem;
-  }
-
-  .shopdev .countdown-timer {
-    gap: 8px;          /* giảm khoảng cách */
-    flex-wrap: nowrap;  /* không xuống dòng */
-    overflow-x: auto;   /* scroll nếu quá dài */
-    justify-content: center;
-  }
-
-  .shopdev .countdown-item {
-    min-width: 60px;
-    padding: 10px 12px;
-  }
-
-  .shopdev .countdown-number {
-    font-size: 20px;
-  }
-
-  .shopdev .countdown-label {
-    font-size: 10px;
-  }
-
-  .shopdev .mega-deal-button {
-    padding: 8px 20px;
-    font-size: 12px;
-  }
-}
-
 </style>
 
 <div class="w-full">
-  <div class="mega-deal-hero">
-    {%- if section.settings.background_image != blank -%}
-      {{ section.settings.background_image | image_url: width: 1920 | image_tag: 
-        loading: 'lazy',
-        class: 'absolute inset-0 w-full h-full object-cover',
-        sizes: '100vw'
-      }}
-    {%- else -%}
-      {{ 'lifestyle-2' | placeholder_svg_tag: 'absolute inset-0 w-full h-full object-cover bg-gray-800' }}
-    {%- endif -%}
+  <div class="mega-deal-hero shopdev">
+    <!-- Background -->
+    <div class="mega-deal-bg">
+      {%- if section.settings.background_image == blank -%}
+        <div style="background:#808080;height:100%;width:100%;"></div>
+      {%- endif -%}
+    </div>
 
+    <!-- Overlay -->
+    <div class="mega-deal-overlay"></div>
+
+    <!-- Content -->
     <div class="mega-deal-content">
       {% if section.settings.heading != blank %}
-        <h1>
-          {{ section.settings.heading }}
-        </h1>
+        <h1>{{ section.settings.heading }}</h1>
       {% endif %}
 
       {% if section.settings.subheading != blank %}
-        <p>
-          {{ section.settings.subheading }}
-        </p>
+        <p>{{ section.settings.subheading }}</p>
       {% endif %}
 
       {% if section.settings.enable_countdown %}
@@ -279,7 +272,7 @@
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      this.daysEl.textContent = String(days).padStart(2, '0');
+      this.daysEl.textContent = String(days).padStart(3, '0'); /* giữ 727 ngày */
       this.hoursEl.textContent = String(hours).padStart(2, '0');
       this.minutesEl.textContent = String(minutes).padStart(2, '0');
       this.secondsEl.textContent = String(seconds).padStart(2, '0');
@@ -287,18 +280,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const countdownElements = document.querySelectorAll('.countdown-timer');
-    countdownElements.forEach(element => {
-      new MegaDealCountdown(element);
-    });
+    document.querySelectorAll('.countdown-timer').forEach(el => new MegaDealCountdown(el));
   });
 
   if (window.Shopify && window.Shopify.designMode) {
     document.addEventListener('shopify:section:load', () => {
-      const countdownElements = document.querySelectorAll('.countdown-timer');
-      countdownElements.forEach(element => {
-        new MegaDealCountdown(element);
-      });
+      document.querySelectorAll('.countdown-timer').forEach(el => new MegaDealCountdown(el));
     });
   }
 </script>
@@ -331,7 +318,7 @@
       "max": 1,
       "step": 0.1,
       "label": "Overlay Opacity",
-      "default": 0.5
+      "default": 0.6
     },
     {
       "type": "header",
@@ -369,8 +356,8 @@
       "type": "text",
       "id": "countdown_end_date",
       "label": "End Date & Time",
-      "info": "Format: YYYY-MM-DD HH:MM:SS (e.g., 2024-12-31 23:59:59)",
-      "default": "2024-12-31 23:59:59"
+      "info": "Format: YYYY-MM-DD HH:MM:SS (e.g., 2026-12-31 23:59:59)",
+      "default": "2026-12-31 23:59:59"
     },
     {
       "type": "header",
@@ -391,38 +378,37 @@
       "type": "color",
       "id": "button_bg_color",
       "label": "Button Background Color",
-      "default": "#FFFFFF"
+      "default": "#FF4444"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#000000"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "button_border_color",
       "label": "Button Border Color",
-      "default": "#FFFFFF"
+      "default": "#FF4444"
     }
   ],
   "presets": [
     {
       "name": "Mega Deal Countdown",
       "settings": {
-        "background_image": "shopify://shop_images/close-up-of-female-yoga-outfit.jpg",
-        "overlay_color": "#000000",
-        "overlay_opacity": 0.6,
         "heading": "Mega Deal 70% OFF",
         "subheading": "Going fast! Secure your order while supplies last.",
         "text_color": "#FFFFFF",
         "enable_countdown": true,
-        "countdown_end_date": "2024-12-31 23:59:59",
+        "countdown_end_date": "2026-12-31 23:59:59",
         "button_text": "Shop Sales",
         "button_link": "/collections/all",
         "button_bg_color": "#FF4444",
         "button_text_color": "#FFFFFF",
-        "button_border_color": "#FF4444"
+        "button_border_color": "#FF4444",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0.6
       }
     }
   ]
