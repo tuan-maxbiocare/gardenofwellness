@@ -462,12 +462,13 @@
         "padding_right_mobile": 0
       }
     },
-    "mega_deal_countdown_BMWEEM": {
+    "mega_deal_countdown_KcUUWk": {
       "type": "mega-deal-countdown",
       "name": "Mega Deal Countdown",
       "settings": {
+        "background_image": "shopify://shop_images/image_c0bc3ff8-786f-482f-a3ec-61e53acce9d9.png",
         "overlay_color": "#000000",
-        "overlay_opacity": 0.6,
+        "overlay_opacity": 0.4,
         "heading": "Mega Deal 70% OFF",
         "subheading": "Going fast! Secure your order while supplies last.",
         "text_color": "#ffffff",
@@ -486,6 +487,6 @@
     "product_recommendations_JhEgQx",
     "feaure_category_8mYehU",
     "image_product_grid_bjq3xR",
-    "mega_deal_countdown_BMWEEM"
+    "mega_deal_countdown_KcUUWk"
   ]
 }
