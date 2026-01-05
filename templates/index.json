@@ -473,7 +473,7 @@
         "subheading": "Going fast! Secure your order while supplies last.",
         "text_color": "#ffffff",
         "enable_countdown": true,
-        "countdown_end_date": "2024-12-31 23:59:59",
+        "countdown_end_date": "2027-12-31 23:59:59",
         "button_text": "Shop Sales",
         "button_link": "/collections/all",
         "button_bg_color": "#ff4444",
