@@ -1,0 +1,2020 @@
+
+<div class="bundle-sticky-wrapper" id="bundle-sticky-wrapper">
+<section class="bundle-wrapper">
+  <!-- HEADING -->
+  <div class="bundle-heading">
+    <h2 style="color: {{ section.settings.heading_color }}; font-size: {{ section.settings.heading_size }}px;">{{ section.settings.heading }}</h2>
+    <p style="color: {{ section.settings.subheading_color }}; font-size: {{ section.settings.subheading_size }}px;">{{ section.settings.subheading }}</p>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="bundle-section">
+    <!-- LEFT: PRODUCTS WITH TABS -->
+    <div class="bundle-products">
+      <!-- TABS - ĐÃ THÊM WRAPPER STICKY -->
+      <div class="bundle-tabs-sticky-container">
+        <div class="bundle-tabs-wrapper">
+          <div class="bundle-tabs-container">
+            <div class="bundle-tabs">
+              {% for block in section.blocks %}
+                <button
+                  class="bundle-tab {% if forloop.first %}active{% endif %}"
+                  data-tab="{{ block.id }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <span class="tab-icon" style="
+                    border-color: {{ block.settings.tab_icon_border | default: section.settings.tab_icon_border }};
+                    background: {{ block.settings.tab_icon_bg | default: section.settings.tab_icon_bg }};
+                  ">
+                    {{ block.settings.icon_svg }}
+                  </span>
+                  <span style="color: {{ block.settings.tab_text_color | default: section.settings.tab_text_color }};">
+                    {{ block.settings.title }}
+                  </span>
+                </button>
+              {% endfor %}
+            </div>
+
+            <div class="tab-arrows">
+              <button class="tab-arrow prev" style="background: {{ section.settings.arrow_bg }}; color: {{ section.settings.arrow_color }};">‹</button>
+              <button class="tab-arrow next" style="background: {{ section.settings.arrow_bg }}; color: {{ section.settings.arrow_color }};">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT PANELS -->
+      {% for block in section.blocks %}
+        <div class="bundle-panel {% if forloop.first %}active{% endif %}" data-panel="{{ block.id }}">
+          <div class="bundle-grid">
+            {% for product in block.settings.products %}
+              <div class="bundle-item-new">
+                <!-- PHẦN ẢNH RIÊNG BIỆT -->
+                <div class="bundle-item-image-wrapper" style="
+                  background: {{ section.settings.image_bg_color }};
+                  {% if section.settings.image_bg_gradient != blank %}
+                    background: {{ section.settings.image_bg_gradient }};
+                  {% endif %}
+                  border-radius: {{ section.settings.image_radius }}px;
+                ">
+                  <a href="{{ product.url }}" class="image-link">
+                    {% if product.featured_media %}
+                      <div class="media media--hover-effect">
+                        {{ product.featured_media | image_url: width: 800 | image_tag:
+                          loading: 'lazy',
+                          widths: '300,400,500,600,700,800',
+                          class: 'product-card__image'
+                        }}
+                      </div>
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {% endif %}
+                  </a>
+                </div>
+
+                <!-- PHẦN THÔNG TIN + NÚT ADD -->
+                <div class="bundle-item-info">
+                  <a href="{{ product.url }}" class="card-wrapper">
+                    <div class="card-information" style="text-align: {{ section.settings.card_text_align }};">
+                      <h3 class="product-card__title" style="
+                        color: {{ section.settings.product_title_color }};
+                        font-size: {{ section.settings.product_title_size }}px;
+                      ">
+                        {{ product.title | truncate: 60 }}
+                      </h3>
+
+                      <div class="price price--large" style="
+                        color: {{ section.settings.price_color }};
+                        font-size: {{ section.settings.price_size }}px;
+                      ">
+                        {% assign variant = product.selected_or_first_available_variant %}
+                        {% if variant.compare_at_price > variant.price %}
+                          <span class="price-item price-item--sale">
+                            {{ variant.price | money }}
+                          </span>
+                          <s class="price-item price-item--regular" style="color: {{ section.settings.compare_price_color }};">
+                            {{ variant.compare_at_price | money }}
+                          </s>
+                        {% else %}
+                          <span class="price-item">
+                            {{ variant.price | money }}
+                          </span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </a>
+
+                  <button
+                    class="add-to-bundle"
+                    style="
+                      background: {{ section.settings.button_bg }};
+                      color: {{ section.settings.button_text_color }};
+                      border-radius: {{ section.settings.button_radius }}px;
+                      font-size: {{ section.settings.button_size }}px;
+                      margin-top: {{ section.settings.button_margin }}px;
+                    "
+                    data-variant-id="{{ variant.id }}"
+                    data-price="{{ variant.price | divided_by: 100.0 }}"
+                  >
+                    {{ section.settings.add_button_text | default: 'ADD TO BUNDLE' }}
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- RIGHT: SUMMARY PANEL -->
+    <div class="bundle-summary" style="
+      background: {{ section.settings.summary_bg }};
+      border: 2px solid {{ section.settings.summary_border }};
+      border-radius: {{ section.settings.summary_radius }}px;
+      padding: {{ section.settings.summary_padding }}px;
+      max-width: {{ section.settings.summary_width }}px;
+    ">
+      <!-- Summary content giữ nguyên như trước -->
+      <h3 style="color: {{ section.settings.summary_heading_color }}; font-size: {{ section.settings.summary_heading_size }}px;">
+        {{ section.settings.summary_heading | default: 'Your Bundle' }}
+      </h3>
+
+      <p class="bundle-hint" style="color: {{ section.settings.hint_text_color }}; font-size: {{ section.settings.hint_size }}px; text-align: center; margin: 20px 0 30px;">
+        <span class="bundle-hint-default">
+          Add <span class="bundle-remaining">5</span> more to get <span class="bundle-current-discount">5%</span> off.
+        </span>
+        <span class="bundle-hint-congrats" style="display: none;">
+          Congratulations! You've unlocked all rewards in your bundle!
+        </span>
+      </p>
+
+      <div class="bundle-progress">
+        <span class="progress-line"></span>
+        <span class="progress-line-active"></span>
+        <span class="progress-dot" data-threshold="5">5%</span>
+        <span class="progress-dot" data-threshold="8">10%</span>
+        <span class="progress-dot" data-threshold="10">15%</span>
+      </div>
+
+      <div class="bundle-steps">
+        <!-- Steps giữ nguyên -->
+        <div class="bundle-step">
+          <div class="step-header">
+            <div>
+              <strong style="color: {{ section.settings.step_title_color }}">{{ section.settings.step1_title }}</strong>
+              <em style="color: {{ section.settings.step_desc_color }}">{{ section.settings.step1_desc }}</em>
+            </div>
+            <span class="step-count step-1" style="color: {{ section.settings.step_count_color }}">0 item(s) added</span>
+          </div>
+          <div class="step-content"></div>
+        </div>
+        <div class="bundle-step">
+          <div class="step-header">
+            <div>
+              <strong style="color: {{ section.settings.step_title_color }}">{{ section.settings.step2_title }}</strong>
+              <em style="color: {{ section.settings.step_desc_color }}">{{ section.settings.step2_desc }}</em>
+            </div>
+            <span class="step-count step-2" style="color: {{ section.settings.step_count_color }}">0 item(s) added</span>
+          </div>
+          <div class="step-content"></div>
+        </div>
+        <div class="bundle-step">
+          <div class="step-header">
+            <strong style="color: {{ section.settings.step_title_color }}">{{ section.settings.step3_title }}</strong>
+            <span class="step-count step-3" style="color: {{ section.settings.step_count_color }}">0 item(s) added</span>
+          </div>
+          <div class="step-content"></div>
+        </div>
+      </div>
+
+      <div class="bundle-total-wrapper">
+        <div class="bundle-total-row">
+          <span class="total-label">Total</span>
+          <span class="bundle-total-price">$0.00</span>
+        </div>
+        <div class="bundle-save-row" style="display: none;">
+          <span class="save-label">Save</span>
+          <span class="bundle-save-amount">$0.00</span>
+        </div>
+      </div>
+
+      <button class="add-all-to-cart" disabled style="
+        background: {{ section.settings.cart_button_bg }};
+        color: {{ section.settings.cart_button_text_color }};
+        border-radius: {{ section.settings.cart_button_radius }}px;
+        font-size: {{ section.settings.cart_button_size }}px;
+        margin-top: {{ section.settings.cart_button_margin }}px;
+      ">
+        {{ section.settings.cart_button_text | default: 'Add all to cart' }}
+      </button>
+    </div>
+  </div>
+  
+  <!-- MOBILE SUMMARY STICKY BAR - ĐÃ SỬA -->
+  <div class="mobile-summary-sticky-wrapper">
+    <div class="mobile-summary-bar">
+      <!-- Dạng mở rộng (giống nguyên bản) -->
+      <div class="mobile-summary-expanded">
+        <div class="mobile-progress-info">
+          <span class="mobile-remaining-text">
+            Add <span class="mobile-remaining-count">5</span> more to get 
+            <span class="mobile-current-discount">5%</span> off
+          </span>
+          <div class="mobile-progress-dots">
+            <span class="mobile-progress-dot active" data-threshold="5">5%</span>
+            <span class="mobile-progress-dot" data-threshold="8">10%</span>
+            <span class="mobile-progress-dot" data-threshold="10">15%</span>
+          </div>
+        </div>
+        
+        <div class="mobile-steps-summary">
+          <div class="mobile-step">
+            <span class="mobile-step-label">STEP 1</span>
+            <span class="mobile-step-count step-1-mobile">0</span>
+          </div>
+          <div class="mobile-step">
+            <span class="mobile-step-label">STEP 2</span>
+            <span class="mobile-step-count step-2-mobile">0</span>
+          </div>
+          <div class="mobile-step">
+            <span class="mobile-step-label">STEP 3</span>
+            <span class="mobile-step-count step-3-mobile">0</span>
+          </div>
+        </div>
+        
+        <div class="mobile-total-section">
+          <div class="mobile-total-row">
+            <span>Total</span>
+            <span class="mobile-total-price">$0.00</span>
+          </div>
+          <div class="mobile-save-row" style="display: none;">
+            <span>Save</span>
+            <span class="mobile-save-amount">$0.00</span>
+          </div>
+        </div>
+        
+        <button class="mobile-add-all-btn" disabled>
+          Add all to cart
+        </button>
+      </div>
+      
+      <!-- Dạng thu gọn -->
+      <div class="mobile-summary-collapsed" style="display: none;">
+        <div class="collapsed-content">
+          <div class="collapsed-total">
+            <span class="collapsed-label">Total</span>
+            <span class="collapsed-price">$0.00</span>
+          </div>
+          <button class="collapsed-add-btn" disabled>
+            Add all
+          </button>
+        </div>
+      </div>
+      
+      <!-- Nút toggle -->
+      <button class="mobile-summary-toggle" aria-label="Toggle summary">
+        <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+        <svg class="toggle-icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+</div>
+
+<style>
+  /* ===================================
+     GENERAL & LAYOUT
+  =================================== */
+  .bundle-sticky-wrapper {
+    position: relative;
+  }
+  
+  .bundle-wrapper {
+    padding: {{ section.settings.section_padding }};
+    background: {{ section.settings.section_bg }};
+    position: relative;
+  }
+
+  .bundle-heading {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .bundle-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 10px;
+    display: flex;
+    gap: 30px;
+  }
+
+  .bundle-products {
+    position: relative;
+    align-self: start;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .bundle-summary {
+    flex: 0 0 380px;
+    background: #fff;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    height: fit-content;
+  }
+
+  /* ===================================
+     STICKY TABS
+  =================================== */
+  .bundle-tabs-sticky-container {
+    position: sticky;
+    z-index: 100;
+    width: 100%;
+    top: 0;
+    margin-top: 0;
+    transition: top 0.3s ease;
+  }
+  
+  .bundle-tabs-wrapper {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .bundle-tabs-container {
+    position: relative;
+    top: 0;
+    z-index: 30;
+    background: #fff;
+    border-radius: 999px;
+    padding: 10px 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    backdrop-filter: blur(8px);
+  }
+
+  .bundle-tabs {
+    display: flex;
+    gap: 48px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+  }
+
+  .bundle-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bundle-tab {
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #b5b5b5;
+    transition: color .25s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .bundle-tab.active {
+    color: #1e1e1e;
+  }
+
+  .tab-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid #d6d6d6;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s ease;
+  }
+
+  .bundle-tab.active .tab-icon {
+    background: #5f6b58;
+    border-color: #5f6b58;
+  }
+
+  .tab-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #9e9e9e;
+  }
+
+  .bundle-tab.active svg {
+    stroke: #fff;
+  }
+
+  .tab-arrows {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+  }
+
+  .tab-arrow {
+    width: 42px;
+    height: 42px;
+    background: #ededed;
+    color: #666;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .tab-arrow:hover {
+    background: #e0e0e0;
+  }
+
+  /* ===================================
+     PRODUCT GRID & CARDS
+  =================================== */
+  .bundle-grid {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .bundle-item-new {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bundle-item-image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 24px;
+    border-radius: {{ section.settings.image_radius }}px;
+    background: {{ section.settings.image_bg_color }};
+  }
+
+  {% if section.settings.image_bg_gradient != blank %}
+  .bundle-item-image-wrapper {
+    background: {{ section.settings.image_bg_gradient }};
+  }
+  {% endif %}
+
+  .media {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: {{ section.settings.image_height }}px;
+  }
+
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .image-link:hover .product-card__image {
+    transform: scale(1.05);
+  }
+
+  .bundle-item-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .card-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+  }
+
+  .product-card__title {
+    margin: 10px 0;
+    line-height: 1.3;
+  }
+
+  .price--large {
+    margin: 15px 0;
+  }
+
+  .add-to-bundle {
+    width: 100%;
+    padding: 16px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: auto;
+    transition: background 0.3s ease;
+  }
+
+  .add-to-bundle:hover {
+    background: #222;
+  }
+
+  /* ===================================
+     PANEL TRANSITION
+  =================================== */
+  .bundle-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(24px);
+    pointer-events: none;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .bundle-panel.active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* ===================================
+     SUMMARY PANEL
+  =================================== */
+  .bundle-hint {
+    line-height: 1.5;
+    color: {{ section.settings.hint_text_color }};
+    font-size: {{ section.settings.hint_size }}px;
+    text-align: center;
+    margin: 20px 0 30px;
+  }
+
+  .bundle-hint-default span,
+  .bundle-current-discount,
+  .bundle-remaining {
+    font-weight: 600;
+  }
+
+  .bundle-hint-congrats {
+    font-weight: 600;
+    color: #2e7d32;
+    font-size: 17px;
+    display: none;
+  }
+
+  .bundle-progress {
+    position: relative;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+  }
+
+  .progress-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #eee;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .progress-line-active {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: #2e7d32;
+    transform: translateY(-50%);
+    z-index: 2;
+    transition: width 0.3s ease;
+  }
+
+  .progress-dot {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    z-index: 3;
+  }
+
+  .progress-dot.active {
+    border-color: #2e7d32;
+    color: #2e7d32;
+    font-weight: bold;
+  }
+
+  .bundle-step {
+    padding: 18px 0;
+    border-top: 1px solid #eee;
+  }
+
+  .bundle-step:first-child {
+    border-top: none;
+  }
+
+  .step-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .step-count {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: {{ section.settings.step_count_color }};
+  }
+
+  .step-count::after {
+    content: "";
+    display: inline-block;
+    margin-left: 8px;
+    width: 12px;
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5' stroke='%23d4a574' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: contain;
+    transition: transform 0.25s ease;
+  }
+
+  .bundle-step.active .step-count::after {
+    transform: rotate(180deg);
+  }
+
+  .step-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+
+  .bundle-step.active .step-content {
+    max-height: 2000px;
+    padding-top: 12px;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f8fff8;
+    border-radius: 16px;
+    margin-bottom: 12px;
+  }
+
+  .step-item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .step-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bundle-total-wrapper {
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+  }
+
+  .bundle-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .bundle-save-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bundle-save-amount {
+    background: #e8f5e8;
+    color: #2e7d32;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .add-all-to-cart {
+    width: 100%;
+    padding: 18px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .add-all-to-cart:hover:not([disabled]) {
+    background: #222;
+  }
+
+  .add-all-to-cart[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* ===================================
+     MOBILE SUMMARY STICKY BAR - ĐÃ SỬA
+  =================================== */
+  .mobile-summary-sticky-wrapper {
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
+    width: 100%;
+    display: none; /* Chỉ hiển thị trên mobile */
+  }
+
+  .mobile-summary-bar {
+    background: white;
+    border-top: 2px solid #eee;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  /* Dạng mở rộng */
+  .mobile-summary-expanded {
+    display: block;
+  }
+
+  .mobile-progress-info {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .mobile-remaining-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 500;
+  }
+
+  .mobile-remaining-count,
+  .mobile-current-discount {
+    font-weight: 700;
+    color: #000;
+  }
+
+  .mobile-progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 8px;
+  }
+
+  .mobile-progress-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #999;
+  }
+
+  .mobile-progress-dot.active {
+    background: #5f6b58;
+    border-color: #5f6b58;
+    color: white;
+  }
+
+  .mobile-steps-summary {
+    display: flex;
+    justify-content: space-between;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .mobile-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .mobile-step-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .mobile-step-count {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .mobile-total-section {
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  .mobile-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-total-row span:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .mobile-total-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .mobile-save-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #e8f5e8;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  .mobile-save-row span:first-child {
+    font-size: 14px;
+    color: #2e7d32;
+    font-weight: 500;
+  }
+
+  .mobile-save-amount {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2e7d32;
+  }
+
+  .mobile-add-all-btn,
+  .collapsed-add-btn {
+    width: 100%;
+    padding: 16px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .mobile-add-all-btn:hover:not(:disabled),
+  .collapsed-add-btn:hover:not(:disabled) {
+    background: #222;
+  }
+
+  .mobile-add-all-btn:disabled,
+  .collapsed-add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Dạng thu gọn */
+  .mobile-summary-collapsed {
+    display: none;
+  }
+
+  .collapsed-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .collapsed-total {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .collapsed-label {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .collapsed-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .collapsed-add-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  /* Nút toggle */
+  .mobile-summary-toggle {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    background: white;
+    border: 2px solid #eee;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: -1;
+  }
+
+  .mobile-summary-toggle svg {
+    stroke: #666;
+    transition: transform 0.3s ease;
+  }
+
+  /* ===================================
+     RESPONSIVE
+  =================================== */
+  @media (max-width: 1024px) {
+    .bundle-section {
+      flex-direction: column;
+    }
+
+    .bundle-summary {
+      max-width: 100%;
+      margin-top: 50px;
+    }
+
+    .tab-arrows {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .bundle-tabs-container {
+      padding: 10px 15px;
+    }
+
+    .bundle-tabs {
+      gap: 16px;
+    }
+
+    .bundle-tab {
+      font-size: 16px;
+      gap: 10px;
+    }
+
+    .tab-icon {
+      width: 34px;
+      height: 34px;
+    }
+
+    .tab-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .tab-arrows {
+      display: none !important;
+    }
+
+    .bundle-grid {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .bundle-item-image-wrapper {
+      margin-bottom: 14px;
+    }
+
+    .media {
+      height: 280px;
+    }
+
+    .product-card__title {
+      font-size: 17px !important;
+    }
+
+    .price--large {
+      margin: 10px 0;
+    }
+
+    .add-to-bundle {
+      padding: 14px;
+      font-size: 15px;
+    }
+    
+    /* Mobile summary bar */
+    .mobile-summary-sticky-wrapper {
+      display: block;
+    }
+    
+    .bundle-summary {
+      display: none !important;
+    }
+    
+    /* Điều chỉnh padding cho bundle-products */
+    .bundle-products {
+      padding-bottom: 150px; /* Tạo không gian cho sticky bar */
+    }
+  }
+
+  @media (min-width: 769px) {
+    .mobile-summary-sticky-wrapper {
+      display: none !important;
+    }
+    
+    .bundle-summary {
+      display: block !important;
+    }
+  }
+
+  /* Mobile image height adjustment */
+  @media (max-width: 768px) {
+    .bundle-item-image-wrapper .media {
+      height: calc({{ section.settings.image_height }}px - 80px);
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const items = [];
+    let originalTotal = 0;
+
+    const totalEl = document.querySelector('.bundle-total-price');
+    const saveRow = document.querySelector('.bundle-save-row');
+    const saveAmountEl = document.querySelector('.bundle-save-amount');
+    const remainingEl = document.querySelector('.bundle-remaining');
+    const discountEl = document.querySelector('.bundle-current-discount');
+    const defaultHint = document.querySelector('.bundle-hint-default');
+    const congratsHint = document.querySelector('.bundle-hint-congrats');
+    const addAllBtn = document.querySelector('.add-all-to-cart');
+    const dots = document.querySelectorAll('.progress-dot');
+    const lineActive = document.querySelector('.progress-line-active');
+    const panels = document.querySelectorAll('.bundle-panel');
+    const stepContents = document.querySelectorAll('.step-content');
+    const tabs = Array.from(document.querySelectorAll('.bundle-tab'));
+
+    // ==============================================
+    // STICKY TABS với HEADER COORDINATION
+    // ==============================================
+    function initStickyTabsWithHeader() {
+      const header = document.querySelector('header-component');
+      const tabsStickyContainer = document.querySelector('.bundle-tabs-sticky-container');
+      const bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
+      
+      if (!header || !tabsStickyContainer) return;
+      
+      function updateTabsPosition() {
+        const headerHeight = header.offsetHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const headerState = header.dataset.scrollDirection || 'none';
+        
+        // Kiểm tra xem header có đang hiện không
+        const isHeaderVisible = headerState === 'up' || headerState === 'none';
+        
+        // Tính toán vị trí của bundle section
+        const bundleRect = bundleWrapper.getBoundingClientRect();
+        const bundleTopFromViewport = bundleRect.top + scrollTop;
+        
+        // Nếu đã scroll qua phần đầu của section
+        if (scrollTop >= bundleTopFromViewport) {
+          // Section đã vào viewport
+          if (isHeaderVisible) {
+            // Header đang hiện: tabs ở dưới header
+            tabsStickyContainer.style.top = `${headerHeight}px`;
+          } else {
+            // Header đang ẩn: tabs ở top viewport
+            tabsStickyContainer.style.top = '0px';
+          }
+        } else {
+          // Chưa scroll đến section: reset
+          tabsStickyContainer.style.top = '0px';
+        }
+      }
+      
+      // Debounce function
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+      
+      const debouncedUpdate = debounce(updateTabsPosition, 10);
+      
+      // Event listeners
+      window.addEventListener('scroll', debouncedUpdate);
+      window.addEventListener('resize', debouncedUpdate);
+      
+      // Theo dõi thay đổi của header
+      if (header) {
+        const observer = new MutationObserver(debouncedUpdate);
+        observer.observe(header, { 
+          attributes: true, 
+          attributeFilter: ['data-scroll-direction', 'data-sticky-state'] 
+        });
+      }
+      
+      // Initial call
+      updateTabsPosition();
+    }
+
+    // ==============================================
+    // MOBILE SUMMARY STICKY BAR
+    // ==============================================
+    function initMobileSummaryBar() {
+      const mobileSummaryBar = document.querySelector('.mobile-summary-bar');
+      const mobileStickyWrapper = document.querySelector('.mobile-summary-sticky-wrapper');
+      const bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
+      
+      if (!mobileSummaryBar || !mobileStickyWrapper || window.innerWidth > 768) {
+        return;
+      }
+      
+      // Elements
+      const expandedView = mobileSummaryBar.querySelector('.mobile-summary-expanded');
+      const collapsedView = mobileSummaryBar.querySelector('.mobile-summary-collapsed');
+      const toggleBtn = mobileSummaryBar.querySelector('.mobile-summary-toggle');
+      const toggleIconCollapse = mobileSummaryBar.querySelector('.toggle-icon-collapse');
+      const toggleIconExpand = mobileSummaryBar.querySelector('.toggle-icon-expand');
+      const mobileAddAllBtn = mobileSummaryBar.querySelector('.mobile-add-all-btn');
+      const collapsedAddBtn = mobileSummaryBar.querySelector('.collapsed-add-btn');
+      
+      let isCollapsed = false;
+      
+      // Update mobile summary data
+      function updateMobileSummary() {
+        // Update remaining count
+        const remainingEl = mobileSummaryBar.querySelector('.mobile-remaining-count');
+        const discountEl = mobileSummaryBar.querySelector('.mobile-current-discount');
+        if (remainingEl && discountEl) {
+          remainingEl.textContent = document.querySelector('.bundle-remaining')?.textContent || '5';
+          discountEl.textContent = document.querySelector('.bundle-current-discount')?.textContent || '5%';
+        }
+        
+        // Update progress dots
+        const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+        mobileSummaryBar.querySelectorAll('.mobile-progress-dot').forEach(dot => {
+          const threshold = parseInt(dot.dataset.threshold);
+          dot.classList.toggle('active', totalCount >= threshold);
+        });
+        
+        // Update step counts
+        const counts = [0, 0, 0];
+        items.forEach(i => counts[i.step - 1] += i.quantity);
+        
+        mobileSummaryBar.querySelectorAll('.step-1-mobile').forEach(el => el.textContent = counts[0]);
+        mobileSummaryBar.querySelectorAll('.step-2-mobile').forEach(el => el.textContent = counts[1]);
+        mobileSummaryBar.querySelectorAll('.step-3-mobile').forEach(el => el.textContent = counts[2]);
+        
+        // Update prices
+        const totalPrice = document.querySelector('.bundle-total-price')?.textContent || '$0.00';
+        const saveAmount = document.querySelector('.bundle-save-amount')?.textContent;
+        
+        mobileSummaryBar.querySelectorAll('.mobile-total-price, .collapsed-price').forEach(el => {
+          el.textContent = totalPrice;
+        });
+        
+        const mobileSaveRow = mobileSummaryBar.querySelector('.mobile-save-row');
+        if (mobileSaveRow && saveAmount && saveAmount !== '$0.00') {
+          mobileSaveRow.style.display = 'flex';
+          mobileSaveRow.querySelector('.mobile-save-amount').textContent = saveAmount;
+        } else if (mobileSaveRow) {
+          mobileSaveRow.style.display = 'none';
+        }
+        
+        // Update button state
+        const isDisabled = items.length === 0;
+        if (mobileAddAllBtn) {
+          mobileAddAllBtn.disabled = isDisabled;
+          mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
+        }
+        if (collapsedAddBtn) {
+          collapsedAddBtn.disabled = isDisabled;
+          collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
+        }
+      }
+      
+      // Toggle between expanded and collapsed view
+      function toggleView() {
+        isCollapsed = !isCollapsed;
+        
+        if (isCollapsed) {
+          expandedView.style.display = 'none';
+          collapsedView.style.display = 'block';
+          toggleIconCollapse.style.display = 'none';
+          toggleIconExpand.style.display = 'block';
+          mobileSummaryBar.style.padding = '12px 16px';
+        } else {
+          expandedView.style.display = 'block';
+          collapsedView.style.display = 'none';
+          toggleIconCollapse.style.display = 'block';
+          toggleIconExpand.style.display = 'none';
+          mobileSummaryBar.style.padding = '16px';
+        }
+      }
+      
+      // Update sticky wrapper position (giống như tabs)
+      function updateMobileSummaryPosition() {
+        const header = document.querySelector('header-component');
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (!header || !bundleWrapper) return;
+        
+        const bundleRect = bundleWrapper.getBoundingClientRect();
+        const bundleTopFromViewport = bundleRect.top + scrollTop;
+        const bundleBottomFromViewport = bundleRect.bottom + scrollTop;
+        
+        // Kiểm tra nếu section đã scroll vào viewport
+        if (scrollTop >= bundleTopFromViewport && scrollTop <= bundleBottomFromViewport - window.innerHeight) {
+          // Section đang trong viewport - hiển thị sticky bar
+          mobileStickyWrapper.style.display = 'block';
+          
+          // Tính toán nếu cần điều chỉnh vị trí khi có header
+          const headerState = header.dataset.scrollDirection || 'none';
+          if (headerState === 'down') {
+            // Header đang ẩn - không cần điều chỉnh
+            mobileStickyWrapper.style.bottom = '0';
+          } else {
+            // Header đang hiện - đảm bảo không bị che
+            mobileStickyWrapper.style.bottom = '0';
+          }
+        } else {
+          // Section không trong viewport - ẩn sticky bar
+          mobileStickyWrapper.style.display = 'none';
+        }
+      }
+      
+      // Add to cart từ mobile buttons
+      function handleMobileAddToCart() {
+        if (items.length === 0) return;
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: items.map(i => ({ id: i.id, quantity: i.quantity })) })
+        }).then(() => location.href = '/cart');
+      }
+      
+      if (mobileAddAllBtn) {
+        mobileAddAllBtn.addEventListener('click', handleMobileAddToCart);
+      }
+      
+      if (collapsedAddBtn) {
+        collapsedAddBtn.addEventListener('click', handleMobileAddToCart);
+      }
+      
+      // Event listeners
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleView);
+      }
+      
+      window.addEventListener('scroll', updateMobileSummaryPosition);
+      window.addEventListener('resize', updateMobileSummaryPosition);
+      
+      // Initial setup
+      updateMobileSummary();
+      updateMobileSummaryPosition();
+      
+      // Update mobile summary khi bundle thay đổi
+      const originalUpdateUI = updateUI;
+      updateUI = function() {
+        originalUpdateUI();
+        updateMobileSummary();
+      };
+    }
+
+    // ==============================================
+    // ORIGINAL BUNDLE FUNCTIONALITY
+    // ==============================================
+    function updateAddButtonsState() {
+      const step2Qty = items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
+      document.querySelectorAll('.add-to-bundle').forEach(btn => {
+        const panel = btn.closest('.bundle-panel');
+        if (!panel) return;
+        const step = Array.from(panels).indexOf(panel) + 1;
+        if (step === 2 && step2Qty >= 3) {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+        } else {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+        }
+      });
+    }
+
+    function renderStepContents() {
+      stepContents.forEach(c => c.innerHTML = '');
+      items.forEach(item => {
+        const content = stepContents[item.step - 1];
+        if (!content) return;
+        content.insertAdjacentHTML('beforeend', `
+          <div class="step-item" data-variant-id="${item.id}">
+            <div class="step-item-img"><img src="${item.img}" alt="${item.title}"></div>
+            <div class="step-item-info">
+              <div class="step-item-title">${item.title}</div>
+              <div class="step-item-quantity">Qty: ${item.quantity}</div>
+              <div class="step-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    function updateUI() {
+      const counts = [0,0,0];
+      items.forEach(i => counts[i.step - 1] += i.quantity);
+      const totalCount = counts.reduce((a,b) => a + b, 0);
+
+      document.querySelector('.step-1').textContent = `${counts[0]} item(s) added`;
+      document.querySelector('.step-2').textContent = `${counts[1]} item(s) added`;
+      document.querySelector('.step-3').textContent = `${counts[2]} item(s) added`;
+
+      let discount = 0;
+      if (totalCount >= 10) discount = 15;
+      else if (totalCount >= 8) discount = 10;
+      else if (totalCount >= 5) discount = 5;
+
+      discountEl.textContent = discount + '%';
+
+      dots.forEach(dot => {
+        const t = Number(dot.dataset.threshold);
+        dot.classList.toggle('active', totalCount >= t);
+      });
+
+      lineActive.style.width = totalCount >= 10 ? '100%' : totalCount >= 8 ? '66%' : totalCount >= 5 ? '33%' : '0%';
+
+      if (totalCount >= 10) {
+        defaultHint.style.display = 'none';
+        congratsHint.style.display = 'block';
+      } else {
+        defaultHint.style.display = 'block';
+        congratsHint.style.display = 'none';
+        const next = totalCount < 5 ? 5 : totalCount < 8 ? 8 : 10;
+        remainingEl.textContent = next - totalCount;
+      }
+
+      const saved = (originalTotal * discount / 100).toFixed(2);
+      if (discount > 0 && originalTotal > 0) {
+        saveAmountEl.textContent = '$' + saved;
+        saveRow.style.display = 'flex';
+      } else {
+        saveRow.style.display = 'none';
+      }
+
+      totalEl.textContent = '$' + (originalTotal - parseFloat(saved || 0)).toFixed(2);
+      addAllBtn.disabled = totalCount === 0;
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.tab;
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        panels.forEach(p => p.classList.remove('active'));
+        document.querySelector(`[data-panel="${id}"]`)?.classList.add('active');
+        updateAddButtonsState();
+      });
+    });
+
+    document.querySelectorAll('.add-to-bundle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = btn.closest('.bundle-panel');
+        const step = Array.from(panels).indexOf(panel) + 1;
+        const currentQty = items.filter(i => i.step === step).reduce((s, i) => s + i.quantity, 0);
+        if (step === 2 && currentQty >= 3) return;
+
+        const variantId = btn.dataset.variantId;
+        const price = parseFloat(btn.dataset.price);
+        const img = btn.closest('.bundle-item-new').querySelector('.product-card__image')?.src || '';
+        const title = btn.closest('.bundle-item-new').querySelector('.product-card__title').textContent.trim();
+
+        const existing = items.find(i => i.id === variantId && i.step === step);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          items.push({ id: variantId, price, quantity: 1, img, title, step });
+          btn.textContent = 'ADDED ✓';
+        }
+
+        originalTotal += price;
+        renderStepContents();
+        updateUI();
+        updateAddButtonsState();
+      });
+    });
+
+    document.querySelectorAll('.step-header').forEach(h => {
+      h.addEventListener('click', () => h.closest('.bundle-step').classList.toggle('active'));
+    });
+
+    addAllBtn.addEventListener('click', () => {
+      if (items.length === 0) return;
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: items.map(i => ({ id: i.id, quantity: i.quantity })) })
+      }).then(() => location.href = '/cart');
+    });
+
+    const prev = document.querySelector('.tab-arrow.prev');
+    const next = document.querySelector('.tab-arrow.next');
+    if (prev && next) {
+      prev.addEventListener('click', () => {
+        const idx = tabs.findIndex(t => t.classList.contains('active'));
+        tabs[idx <= 0 ? tabs.length - 1 : idx - 1].click();
+      });
+      next.addEventListener('click', () => {
+        const idx = tabs.findIndex(t => t.classList.contains('active'));
+        tabs[idx >= tabs.length - 1 ? 0 : idx + 1].click();
+      });
+    }
+
+    // Initialize everything
+    renderStepContents();
+    updateUI();
+    updateAddButtonsState();
+    
+    // Initialize sticky tabs
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initStickyTabsWithHeader();
+        initMobileSummaryBar();
+      });
+    } else {
+      initStickyTabsWithHeader();
+      initMobileSummaryBar();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bundle Builder with Tabs",
+  "class": "bundle-wrapper-section",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#fafafa"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section Padding",
+      "default": "80px 20px 100px"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build Your Perfect Bundle"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 28,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Mix and match your favorites and save more."
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+
+    {
+      "type": "header",
+      "content": "Product Image"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Image Height",
+      "min": 350,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image Border Radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "image_bg_color",
+      "label": "Image Background Color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "text",
+      "id": "image_bg_gradient",
+      "label": "Image Background Gradient (optional)",
+      "info": "Ví dụ: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)",
+      "placeholder": "Để trống nếu dùng màu đơn"
+    },
+
+    {
+      "type": "header",
+      "content": "Product Info"
+    },
+    {
+      "type": "select",
+      "id": "card_text_align",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "label": "Title Size",
+      "min": 16,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price Size",
+      "min": 18,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 23
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare Price Color",
+      "default": "#888888"
+    },
+
+    {
+      "type": "header",
+      "content": "Add to Bundle Button"
+    },
+    {
+      "type": "text",
+      "id": "add_button_text",
+      "label": "Button Text",
+      "default": "ADD TO BUNDLE"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Font Size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_margin",
+      "label": "Top Margin",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+
+    {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Inactive Text Color",
+      "default": "#a5a5a5"
+    },
+    {
+      "type": "color",
+      "id": "tab_icon_bg",
+      "label": "Active Icon Background",
+      "default": "#5f6b58"
+    },
+    {
+      "type": "color",
+      "id": "tab_icon_border",
+      "label": "Icon Border Color",
+      "default": "#cfcfcf"
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg",
+      "label": "Arrow Background",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow Color",
+      "default": "#000000"
+    },
+
+    {
+      "type": "header",
+      "content": "Summary Panel"
+    },
+    {
+      "type": "color",
+      "id": "summary_bg",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "summary_border",
+      "label": "Border Color",
+      "default": "#e6e6e2"
+    },
+    {
+      "type": "range",
+      "id": "summary_radius",
+      "label": "Border Radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "summary_padding",
+      "label": "Padding",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "summary_width",
+      "label": "Max Width",
+      "min": 300,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 380
+    },
+    {
+      "type": "text",
+      "id": "summary_heading",
+      "label": "Heading",
+      "default": "Your Bundle"
+    },
+    {
+      "type": "color",
+      "id": "summary_heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "summary_heading_size",
+      "label": "Heading Size",
+      "min": 20,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "hint_text_color",
+      "label": "Hint Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "hint_size",
+      "label": "Hint Font Size",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+
+    {
+      "type": "header",
+      "content": "Steps Text"
+    },
+    {
+      "type": "text",
+      "id": "step1_title",
+      "label": "Step 1 Title",
+      "default": "STEP 1"
+    },
+    {
+      "type": "text",
+      "id": "step1_desc",
+      "label": "Step 1 Description",
+      "default": "Choose your base"
+    },
+    {
+      "type": "text",
+      "id": "step2_title",
+      "label": "Step 2 Title",
+      "default": "STEP 2"
+    },
+    {
+      "type": "text",
+      "id": "step2_desc",
+      "label": "Step 2 Description",
+      "default": "Max 3 add-ons"
+    },
+    {
+      "type": "text",
+      "id": "step3_title",
+      "label": "Step 3 Title",
+      "default": "STEP 3"
+    },
+    {
+      "type": "color",
+      "id": "step_title_color",
+      "label": "Step Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "step_desc_color",
+      "label": "Description Color",
+      "default": "#777777"
+    },
+    {
+      "type": "color",
+      "id": "step_count_color",
+      "label": "Count Color",
+      "default": "#d4a574"
+    },
+
+    {
+      "type": "header",
+      "content": "Add All to Cart Button"
+    },
+    {
+      "type": "text",
+      "id": "cart_button_text",
+      "label": "Button Text",
+      "default": "Add all to cart"
+    },
+    {
+      "type": "color",
+      "id": "cart_button_bg",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "cart_button_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "cart_button_radius",
+      "label": "Border Radius",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "cart_button_size",
+      "label": "Font Size",
+      "min": 15,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "cart_button_margin",
+      "label": "Top Margin",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle_tab",
+      "name": "Bundle Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Title",
+          "default": "Step 1"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg",
+          "label": "Icon SVG",
+          "default": "<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><circle cx='12' cy='12' r='10' stroke='currentColor' stroke-width='2' fill='none'/><path d='M8 12l4 4 8-8' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products",
+          "limit": 20
+        },
+        {
+          "type": "header",
+          "content": "Custom Tab Styling (optional)"
+        },
+        {
+          "type": "color",
+          "id": "tab_text_color",
+          "label": "Custom Text Color"
+        },
+        {
+          "type": "color",
+          "id": "tab_icon_bg",
+          "label": "Custom Active Icon Background"
+        },
+        {
+          "type": "color",
+          "id": "tab_icon_border",
+          "label": "Custom Icon Border"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Builder with Tabs",
+      "settings": {
+        "heading": "Build Your Perfect Bundle",
+        "subheading": "Mix and match your favorites and save more.",
+        "image_height": 500,
+        "image_radius": 20,
+        "button_size": 16,
+        "cart_button_size": 17,
+        "cart_button_margin": 30,
+        "image_bg_color": "#f8f8f8"
+      },
+      "blocks": [
+        { "type": "bundle_tab", "settings": { "title": "Step 1" } },
+        { "type": "bundle_tab", "settings": { "title": "Step 2" } },
+        { "type": "bundle_tab", "settings": { "title": "Step 3" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

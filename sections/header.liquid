@@ -743,6 +743,52 @@
   .header-menu .menu-list__submenu[data-active] {
     content-visibility: visible;
   }
+  /* Custom hide/show header effect */
+.header[sticky].custom-hide-show {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.header[sticky].custom-hide-show[data-scroll-direction="down"]:not([data-sticky-state="idle"]) {
+  transform: translateY(-100%);
+}
+
+.header[sticky].custom-hide-show[data-scroll-direction="up"]:not([data-sticky-state="idle"]) {
+  transform: translateY(0);
+}
+
+/* Adjust for header group when using custom hide/show effect */
+#header-group:has(.header.custom-hide-show) {
+  position: relative;
+}
+
+.header.custom-hide-show[data-sticky-state="active"] {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: var(--layer-sticky);
+}
+
+/* When header is hidden, adjust the next element's margin */
+:root {
+  --custom-header-height: 0px;
+}
+
+.header.custom-hide-show[data-sticky-state="active"]:not([data-scroll-direction="down"]) ~ * {
+  margin-top: var(--custom-header-height);
+}
+
+/* Simple hide/show effect */
+.header[sticky='always'] {
+  transition: transform 0.3s ease;
+}
+
+.header[sticky='always'][data-scroll-direction="down"]:not([data-sticky-state="inactive"]) {
+  transform: translateY(-100%);
+}
+
+.header[sticky='always'][data-scroll-direction="up"]:not([data-sticky-state="inactive"]) {
+  transform: translateY(0);
+}
 {% endstylesheet %}
 
 {% unless request.design_mode %}

@@ -20,6 +20,55 @@ import { onDocumentLoaded, changeMetaThemeColor } from '@theme/utilities';
 
 class HeaderComponent extends Component {
   requiredRefs = ['headerDrawerContainer', 'headerMenu', 'headerRowTop'];
+  /**
+ * Enables or disables custom hide/show effect
+ * @param {boolean} enable - Whether to enable the custom effect
+ */
+enableCustomHideShow(enable = true) {
+  if (enable) {
+    this.classList.add('custom-hide-show');
+    // Disable original sticky behavior
+    this.setAttribute('sticky', 'never');
+    this.setAttribute('data-sticky-state', 'inactive');
+    
+    // Force observation for custom effect
+    this.#observeStickyPosition(true);
+  } else {
+    this.classList.remove('custom-hide-show');
+    // Restore original sticky setting
+    const originalSticky = this.getAttribute('data-original-sticky');
+    if (originalSticky) {
+      this.setAttribute('sticky', originalSticky);
+    }
+  }
+}
+
+connectedCallback() {
+  super.connectedCallback();
+  this.#resizeObserver.observe(this);
+  this.addEventListener('overflowMinimum', this.#handleOverflowMinimum);
+
+  // Store original sticky setting
+  const stickyMode = this.getAttribute('sticky');
+  if (stickyMode) {
+    this.setAttribute('data-original-sticky', stickyMode);
+  }
+
+  // Check if custom effect should be enabled
+  // You can enable this based on a data attribute or condition
+  if (this.hasAttribute('data-custom-hide-show')) {
+    this.enableCustomHideShow(true);
+  } else {
+    const stickyMode = this.getAttribute('sticky');
+    if (stickyMode) {
+      this.#observeStickyPosition(stickyMode === 'always');
+
+      if (stickyMode === 'scroll-up' || stickyMode === 'always') {
+        document.addEventListener('scroll', this.#handleWindowScroll);
+      }
+    }
+  }
+}
 
   /**
    * Width of window when header drawer was hidden
@@ -141,62 +190,93 @@ class HeaderComponent extends Component {
     });
   };
 
-  #updateScrollState = () => {
-    const stickyMode = this.getAttribute('sticky');
-    if (!this.#offscreen && stickyMode !== 'always') return;
+#updateScrollState = () => {
+  const stickyMode = this.getAttribute('sticky');
+  const hasCustomEffect = this.classList.contains('custom-hide-show');
+  
+  if (!this.#offscreen && stickyMode !== 'always' && !hasCustomEffect) return;
 
-    const scrollTop = document.scrollingElement?.scrollTop ?? 0;
-    const headerTop = this.getBoundingClientRect().top;
-    const isScrollingUp = scrollTop < this.#lastScrollTop;
-    const isAtTop = headerTop >= 0;
+  const scrollTop = document.scrollingElement?.scrollTop ?? 0;
+  const headerTop = this.getBoundingClientRect().top;
+  const isScrollingUp = scrollTop < this.#lastScrollTop;
+  const isAtTop = headerTop >= 0;
 
-    if (this.#timeout) {
-      clearTimeout(this.#timeout);
-      this.#timeout = null;
-    }
+  if (this.#timeout) {
+    clearTimeout(this.#timeout);
+    this.#timeout = null;
+  }
 
-    if (stickyMode === 'always') {
-      if (isAtTop) {
-        this.dataset.scrollDirection = 'none';
-      } else if (isScrollingUp) {
+  // For custom hide/show effect
+  if (hasCustomEffect) {
+    const scrollThreshold = 100; // Ngưỡng cuộn để bắt đầu hiệu ứng
+    const headerHeight = this.offsetHeight;
+    
+    // Update custom CSS variable for header height
+    document.documentElement.style.setProperty('--custom-header-height', `${headerHeight}px`);
+    
+    if (scrollTop > scrollThreshold) {
+      if (isScrollingUp) {
+        // Cuộn lên - hiện header
         this.dataset.scrollDirection = 'up';
-      } else {
-        this.dataset.scrollDirection = 'down';
-      }
-
-      this.#lastScrollTop = scrollTop;
-      return;
-    }
-
-    if (isScrollingUp) {
-      this.removeAttribute('data-animating');
-
-      if (isAtTop) {
-        // reset sticky state when header is scrolled up to natural position
-        this.#offscreen = false;
-        this.dataset.stickyState = 'inactive';
-        this.dataset.scrollDirection = 'none';
-      } else {
-        // show sticky header when scrolling up
         this.dataset.stickyState = 'active';
-        this.dataset.scrollDirection = 'up';
-      }
-    } else if (this.dataset.stickyState === 'active') {
-      this.dataset.scrollDirection = 'none';
-      // delay transitioning to idle hidden state for hiding animation
-      this.setAttribute('data-animating', '');
-
-      this.#timeout = setTimeout(() => {
-        this.dataset.stickyState = 'idle';
         this.removeAttribute('data-animating');
-      }, this.#animationDelay);
+      } else {
+        // Cuộn xuống - ẩn header
+        this.dataset.scrollDirection = 'down';
+        this.dataset.stickyState = 'active';
+        this.removeAttribute('data-animating');
+      }
     } else {
+      // Ở đầu trang - hiện header bình thường
       this.dataset.scrollDirection = 'none';
-      this.dataset.stickyState = 'idle';
+      this.dataset.stickyState = isAtTop ? 'inactive' : 'active';
+    }
+    
+    this.#lastScrollTop = scrollTop;
+    return;
+  }
+
+  // Original logic for other sticky modes
+  if (stickyMode === 'always') {
+    if (isAtTop) {
+      this.dataset.scrollDirection = 'none';
+    } else if (isScrollingUp) {
+      this.dataset.scrollDirection = 'up';
+    } else {
+      this.dataset.scrollDirection = 'down';
     }
 
     this.#lastScrollTop = scrollTop;
-  };
+    return;
+  }
+
+  // Original scroll-up logic
+  if (isScrollingUp) {
+    this.removeAttribute('data-animating');
+
+    if (isAtTop) {
+      this.#offscreen = false;
+      this.dataset.stickyState = 'inactive';
+      this.dataset.scrollDirection = 'none';
+    } else {
+      this.dataset.stickyState = 'active';
+      this.dataset.scrollDirection = 'up';
+    }
+  } else if (this.dataset.stickyState === 'active') {
+    this.dataset.scrollDirection = 'none';
+    this.setAttribute('data-animating', '');
+
+    this.#timeout = setTimeout(() => {
+      this.dataset.stickyState = 'idle';
+      this.removeAttribute('data-animating');
+    }, this.#animationDelay);
+  } else {
+    this.dataset.scrollDirection = 'none';
+    this.dataset.stickyState = 'idle';
+  }
+
+  this.#lastScrollTop = scrollTop;
+};
 
   connectedCallback() {
     super.connectedCallback();
