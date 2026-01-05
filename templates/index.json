@@ -480,6 +480,117 @@
         "button_text_color": "#ffffff",
         "button_border_color": "#ff4444"
       }
+    },
+    "unbeatable_prices_wPMB9Q": {
+      "type": "unbeatable-prices",
+      "blocks": {
+        "bundle_tab_dcPqWQ": {
+          "type": "bundle_tab",
+          "settings": {
+            "title": "Step 1",
+            "icon_svg": "<svg viewbox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></circle><path d=\"M8 12l4 4 8-8\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></path></svg>",
+            "products": [
+              "body-oil-discovery-set",
+              "garden-of-wellness-contour-body-oil-thirteen-petals",
+              "garden-of-wellness-nourishing-body-oil-frankincense"
+            ],
+            "tab_text_color": "",
+            "tab_icon_bg": "",
+            "tab_icon_border": ""
+          }
+        },
+        "bundle_tab_d8MUfz": {
+          "type": "bundle_tab",
+          "settings": {
+            "title": "Step 2",
+            "icon_svg": "<svg viewbox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></circle><path d=\"M8 12l4 4 8-8\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></path></svg>",
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-geranium-breeze",
+              "garden-of-wellness-nourishing-body-oil-lavender-calm",
+              "garden-of-wellness-nourishing-body-oil-honey-citrus"
+            ],
+            "tab_text_color": "",
+            "tab_icon_bg": "",
+            "tab_icon_border": ""
+          }
+        },
+        "bundle_tab_VJWbyC": {
+          "type": "bundle_tab",
+          "settings": {
+            "title": "Step 3",
+            "icon_svg": "<svg viewbox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></circle><path d=\"M8 12l4 4 8-8\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></path></svg>",
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-tropical-glimpse",
+              "garden-of-wellness-nourishing-body-oil-sage-clarity",
+              "garden-of-wellness-nourishing-body-oil-rosemary-touch"
+            ],
+            "tab_text_color": "",
+            "tab_icon_bg": "",
+            "tab_icon_border": ""
+          }
+        }
+      },
+      "block_order": [
+        "bundle_tab_dcPqWQ",
+        "bundle_tab_d8MUfz",
+        "bundle_tab_VJWbyC"
+      ],
+      "name": "Bundle Builder with Tabs",
+      "settings": {
+        "section_bg": "#fafafa",
+        "section_padding": "80px 20px 100px",
+        "heading": "Build Your Perfect Bundle",
+        "heading_color": "#000000",
+        "heading_size": 44,
+        "subheading": "Mix and match your favorites and save more.",
+        "subheading_color": "#666666",
+        "subheading_size": 18,
+        "image_height": 500,
+        "image_radius": 20,
+        "image_bg_color": "#f8f8f8",
+        "image_bg_gradient": "",
+        "card_text_align": "center",
+        "product_title_color": "#000000",
+        "product_title_size": 19,
+        "price_color": "#000000",
+        "price_size": 23,
+        "compare_price_color": "#888888",
+        "add_button_text": "ADD TO BUNDLE",
+        "button_bg": "#000000",
+        "button_text_color": "#ffffff",
+        "button_radius": 50,
+        "button_size": 16,
+        "button_margin": 20,
+        "tab_text_color": "#a5a5a5",
+        "tab_icon_bg": "#5f6b58",
+        "tab_icon_border": "#cfcfcf",
+        "arrow_bg": "#eeeeee",
+        "arrow_color": "#000000",
+        "summary_bg": "#ffffff",
+        "summary_border": "#e6e6e2",
+        "summary_radius": 28,
+        "summary_padding": 28,
+        "summary_width": 380,
+        "summary_heading": "Your Bundle",
+        "summary_heading_color": "#000000",
+        "summary_heading_size": 24,
+        "hint_text_color": "#666666",
+        "hint_size": 15,
+        "step1_title": "STEP 1",
+        "step1_desc": "Choose your base",
+        "step2_title": "STEP 2",
+        "step2_desc": "Max 3 add-ons",
+        "step3_title": "STEP 3",
+        "step_title_color": "#000000",
+        "step_desc_color": "#777777",
+        "step_count_color": "#d4a574",
+        "cart_button_text": "Add all to cart",
+        "cart_button_bg": "#000000",
+        "cart_button_text_color": "#ffffff",
+        "cart_button_radius": 50,
+        "cart_button_size": 17,
+        "cart_button_margin": 30
+      }
     }
   },
   "order": [
@@ -487,6 +598,7 @@
     "product_recommendations_JhEgQx",
     "feaure_category_8mYehU",
     "image_product_grid_bjq3xR",
-    "mega_deal_countdown_KcUUWk"
+    "mega_deal_countdown_KcUUWk",
+    "unbeatable_prices_wPMB9Q"
   ]
 }
