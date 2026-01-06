@@ -594,6 +594,68 @@
         "cart_button_margin": 30
       }
     },
+    "image_grid_FjbTTA": {
+      "type": "image_grid",
+      "blocks": {
+        "item_tdwmNp": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/garden-of-wellness-images-820x1256-7.webp",
+            "heading": "The ultimate <i>body care.</i>",
+            "heading_font": "sans_serif_n4",
+            "heading_size": 38,
+            "heading_weight": "400",
+            "heading_color": "#ffffff",
+            "text_align": "left",
+            "button_text": "Shop now",
+            "button_link": "",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        },
+        "item_iqWUH6": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/0f37696c915cd1132aef521469560d491f580f7b.jpg",
+            "heading": "The ultimate <i>skin retouch.</i>",
+            "heading_font": "sans_serif_n4",
+            "heading_size": 32,
+            "heading_weight": "400",
+            "heading_color": "#ffffff",
+            "text_align": "left",
+            "button_text": "Shop skin retouch",
+            "button_link": "",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        },
+        "item_JJJTGV": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/image_1.png",
+            "heading": "Serum for <i>sensetive.</i>",
+            "heading_font": "sans_serif_n4",
+            "heading_size": 32,
+            "heading_weight": "400",
+            "heading_color": "#ffffff",
+            "text_align": "left",
+            "button_text": "Shop serum",
+            "button_link": "",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "item_tdwmNp",
+        "item_iqWUH6",
+        "item_JJJTGV"
+      ],
+      "name": "Image grid hover",
+      "settings": {
+        "bg_color": "#ffffff"
+      }
+    },
     "marquee_wqwR3C": {
       "type": "marquee",
       "blocks": {
@@ -692,68 +754,6 @@
         "gap_between_elements": 43
       }
     },
-    "image_grid_FjbTTA": {
-      "type": "image_grid",
-      "blocks": {
-        "item_tdwmNp": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/garden-of-wellness-images-820x1256-7.webp",
-            "heading": "The ultimate <i>body care.</i>",
-            "heading_font": "sans_serif_n4",
-            "heading_size": 38,
-            "heading_weight": "400",
-            "heading_color": "#ffffff",
-            "text_align": "left",
-            "button_text": "Shop now",
-            "button_link": "",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#ffffff"
-          }
-        },
-        "item_iqWUH6": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/0f37696c915cd1132aef521469560d491f580f7b.jpg",
-            "heading": "The ultimate <i>skin retouch.</i>",
-            "heading_font": "sans_serif_n4",
-            "heading_size": 32,
-            "heading_weight": "400",
-            "heading_color": "#ffffff",
-            "text_align": "left",
-            "button_text": "Shop skin retouch",
-            "button_link": "",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#ffffff"
-          }
-        },
-        "item_JJJTGV": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/image_1.png",
-            "heading": "Serum for <i>sensetive.</i>",
-            "heading_font": "sans_serif_n4",
-            "heading_size": 32,
-            "heading_weight": "400",
-            "heading_color": "#ffffff",
-            "text_align": "left",
-            "button_text": "Shop serum",
-            "button_link": "",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#ffffff"
-          }
-        }
-      },
-      "block_order": [
-        "item_tdwmNp",
-        "item_iqWUH6",
-        "item_JJJTGV"
-      ],
-      "name": "Image grid hover",
-      "settings": {
-        "bg_color": "#ffffff"
-      }
-    },
     "skin_comparison_table_PxB9GD": {
       "type": "skin-comparison-table",
       "blocks": {
@@ -849,8 +849,8 @@
     "image_product_grid_bjq3xR",
     "mega_deal_countdown_KcUUWk",
     "unbeatable_prices_wPMB9Q",
-    "marquee_wqwR3C",
     "image_grid_FjbTTA",
+    "marquee_wqwR3C",
     "skin_comparison_table_PxB9GD"
   ]
 }
