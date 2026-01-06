@@ -1,4 +1,6 @@
-
+{% comment %}
+  Thêm wrapper bên ngoài section để kiểm soát sticky behavior
+{% endcomment %}
 <div class="bundle-sticky-wrapper" id="bundle-sticky-wrapper">
 <section class="bundle-wrapper">
   <!-- HEADING -->
@@ -315,7 +317,6 @@
   .bundle-products {
     position: relative;
     align-self: start;
-    min-height: 100vh;
     width: 100%;
   }
 
@@ -345,7 +346,7 @@
 
   .bundle-tabs-container {
     position: relative;
-    top: 0;
+    top: 10px;
     z-index: 30;
     background: #fff;
     border-radius: 999px;
@@ -548,6 +549,7 @@
     visibility: visible;
     transform: translateY(0);
     pointer-events: auto;
+    padding-top: 15px;
   }
 
   /* ===================================
@@ -986,6 +988,38 @@
   }
 
   /* ===================================
+     PERFORMANCE OPTIMIZATIONS
+  =================================== */
+  .bundle-tabs-sticky-container,
+  .mobile-summary-sticky-wrapper {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Smooth transitions */
+  .bundle-tabs-sticky-container {
+    transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-summary-sticky-wrapper {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  /* Fix for initial load */
+  .bundle-sticky-wrapper {
+    min-height: 1px; /* Prevent collapse */
+  }
+
+  /* Ensure elements are visible during initialization */
+  .bundle-tabs-container,
+  .mobile-summary-bar {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* ===================================
      RESPONSIVE
   =================================== */
   @media (max-width: 1024px) {
@@ -1091,267 +1125,132 @@
 </style>
 
 <script>
-  (() => {
-    const items = [];
-    let originalTotal = 0;
-
-    const totalEl = document.querySelector('.bundle-total-price');
-    const saveRow = document.querySelector('.bundle-save-row');
-    const saveAmountEl = document.querySelector('.bundle-save-amount');
-    const remainingEl = document.querySelector('.bundle-remaining');
-    const discountEl = document.querySelector('.bundle-current-discount');
-    const defaultHint = document.querySelector('.bundle-hint-default');
-    const congratsHint = document.querySelector('.bundle-hint-congrats');
-    const addAllBtn = document.querySelector('.add-all-to-cart');
-    const dots = document.querySelectorAll('.progress-dot');
-    const lineActive = document.querySelector('.progress-line-active');
-    const panels = document.querySelectorAll('.bundle-panel');
-    const stepContents = document.querySelectorAll('.step-content');
-    const tabs = Array.from(document.querySelectorAll('.bundle-tab'));
-
-    // ==============================================
-    // STICKY TABS với HEADER COORDINATION
-    // ==============================================
-    function initStickyTabsWithHeader() {
-      const header = document.querySelector('header-component');
-      const tabsStickyContainer = document.querySelector('.bundle-tabs-sticky-container');
-      const bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
-      
-      if (!header || !tabsStickyContainer) return;
-      
-      function updateTabsPosition() {
-        const headerHeight = header.offsetHeight;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const headerState = header.dataset.scrollDirection || 'none';
-        
-        // Kiểm tra xem header có đang hiện không
-        const isHeaderVisible = headerState === 'up' || headerState === 'none';
-        
-        // Tính toán vị trí của bundle section
-        const bundleRect = bundleWrapper.getBoundingClientRect();
-        const bundleTopFromViewport = bundleRect.top + scrollTop;
-        
-        // Nếu đã scroll qua phần đầu của section
-        if (scrollTop >= bundleTopFromViewport) {
-          // Section đã vào viewport
-          if (isHeaderVisible) {
-            // Header đang hiện: tabs ở dưới header
-            tabsStickyContainer.style.top = `${headerHeight}px`;
-          } else {
-            // Header đang ẩn: tabs ở top viewport
-            tabsStickyContainer.style.top = '0px';
-          }
-        } else {
-          // Chưa scroll đến section: reset
-          tabsStickyContainer.style.top = '0px';
-        }
-      }
-      
-      // Debounce function
-      function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      }
-      
-      const debouncedUpdate = debounce(updateTabsPosition, 10);
-      
-      // Event listeners
-      window.addEventListener('scroll', debouncedUpdate);
-      window.addEventListener('resize', debouncedUpdate);
-      
-      // Theo dõi thay đổi của header
-      if (header) {
-        const observer = new MutationObserver(debouncedUpdate);
-        observer.observe(header, { 
-          attributes: true, 
-          attributeFilter: ['data-scroll-direction', 'data-sticky-state'] 
-        });
-      }
-      
-      // Initial call
-      updateTabsPosition();
+  // ==============================================
+  // MAIN BUNDLE FUNCTIONALITY - VIẾT LẠI ĐỂ CHẠY NGAY
+  // ==============================================
+  class BundleBuilder {
+    constructor() {
+      this.items = [];
+      this.originalTotal = 0;
+      this.initialized = false;
+      this.scrollTimeout = null;
+      this.positionTimeout = null;
     }
 
-    // ==============================================
-    // MOBILE SUMMARY STICKY BAR
-    // ==============================================
-    function initMobileSummaryBar() {
-      const mobileSummaryBar = document.querySelector('.mobile-summary-bar');
-      const mobileStickyWrapper = document.querySelector('.mobile-summary-sticky-wrapper');
-      const bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
+    // Khởi tạo mọi thứ
+    init() {
+      if (this.initialized) return;
       
-      if (!mobileSummaryBar || !mobileStickyWrapper || window.innerWidth > 768) {
+      console.log('Initializing Bundle Builder...');
+      
+      // Cache tất cả elements
+      this.cacheElements();
+      
+      // Kiểm tra nếu các elements cần thiết tồn tại
+      if (!this.validateElements()) {
+        console.warn('Required elements not found, retrying in 100ms...');
+        setTimeout(() => this.init(), 100);
         return;
       }
       
-      // Elements
-      const expandedView = mobileSummaryBar.querySelector('.mobile-summary-expanded');
-      const collapsedView = mobileSummaryBar.querySelector('.mobile-summary-collapsed');
-      const toggleBtn = mobileSummaryBar.querySelector('.mobile-summary-toggle');
-      const toggleIconCollapse = mobileSummaryBar.querySelector('.toggle-icon-collapse');
-      const toggleIconExpand = mobileSummaryBar.querySelector('.toggle-icon-expand');
-      const mobileAddAllBtn = mobileSummaryBar.querySelector('.mobile-add-all-btn');
-      const collapsedAddBtn = mobileSummaryBar.querySelector('.collapsed-add-btn');
+      // Bind events
+      this.bindEvents();
       
-      let isCollapsed = false;
+      // Khởi tạo các chức năng
+      this.initStickyTabs();
+      this.initMobileSummaryBar();
       
-      // Update mobile summary data
-      function updateMobileSummary() {
-        // Update remaining count
-        const remainingEl = mobileSummaryBar.querySelector('.mobile-remaining-count');
-        const discountEl = mobileSummaryBar.querySelector('.mobile-current-discount');
-        if (remainingEl && discountEl) {
-          remainingEl.textContent = document.querySelector('.bundle-remaining')?.textContent || '5';
-          discountEl.textContent = document.querySelector('.bundle-current-discount')?.textContent || '5%';
-        }
-        
-        // Update progress dots
-        const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
-        mobileSummaryBar.querySelectorAll('.mobile-progress-dot').forEach(dot => {
-          const threshold = parseInt(dot.dataset.threshold);
-          dot.classList.toggle('active', totalCount >= threshold);
-        });
-        
-        // Update step counts
-        const counts = [0, 0, 0];
-        items.forEach(i => counts[i.step - 1] += i.quantity);
-        
-        mobileSummaryBar.querySelectorAll('.step-1-mobile').forEach(el => el.textContent = counts[0]);
-        mobileSummaryBar.querySelectorAll('.step-2-mobile').forEach(el => el.textContent = counts[1]);
-        mobileSummaryBar.querySelectorAll('.step-3-mobile').forEach(el => el.textContent = counts[2]);
-        
-        // Update prices
-        const totalPrice = document.querySelector('.bundle-total-price')?.textContent || '$0.00';
-        const saveAmount = document.querySelector('.bundle-save-amount')?.textContent;
-        
-        mobileSummaryBar.querySelectorAll('.mobile-total-price, .collapsed-price').forEach(el => {
-          el.textContent = totalPrice;
-        });
-        
-        const mobileSaveRow = mobileSummaryBar.querySelector('.mobile-save-row');
-        if (mobileSaveRow && saveAmount && saveAmount !== '$0.00') {
-          mobileSaveRow.style.display = 'flex';
-          mobileSaveRow.querySelector('.mobile-save-amount').textContent = saveAmount;
-        } else if (mobileSaveRow) {
-          mobileSaveRow.style.display = 'none';
-        }
-        
-        // Update button state
-        const isDisabled = items.length === 0;
-        if (mobileAddAllBtn) {
-          mobileAddAllBtn.disabled = isDisabled;
-          mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
-        }
-        if (collapsedAddBtn) {
-          collapsedAddBtn.disabled = isDisabled;
-          collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
-        }
+      this.initialized = true;
+      
+      // Update UI lần đầu
+      this.updateUI();
+      
+      console.log('Bundle Builder initialized successfully!');
+    }
+
+    // Cache tất cả elements
+    cacheElements() {
+      // Bundle elements
+      this.totalEl = document.querySelector('.bundle-total-price');
+      this.saveRow = document.querySelector('.bundle-save-row');
+      this.saveAmountEl = document.querySelector('.bundle-save-amount');
+      this.remainingEl = document.querySelector('.bundle-remaining');
+      this.discountEl = document.querySelector('.bundle-current-discount');
+      this.defaultHint = document.querySelector('.bundle-hint-default');
+      this.congratsHint = document.querySelector('.bundle-hint-congrats');
+      this.addAllBtn = document.querySelector('.add-all-to-cart');
+      this.dots = document.querySelectorAll('.progress-dot');
+      this.lineActive = document.querySelector('.progress-line-active');
+      this.panels = document.querySelectorAll('.bundle-panel');
+      this.stepContents = document.querySelectorAll('.step-content');
+      this.tabs = Array.from(document.querySelectorAll('.bundle-tab'));
+      
+      // Mobile summary elements
+      this.mobileSummaryBar = document.querySelector('.mobile-summary-bar');
+      this.mobileStickyWrapper = document.querySelector('.mobile-summary-sticky-wrapper');
+      
+      // Tab navigation
+      this.prevBtn = document.querySelector('.tab-arrow.prev');
+      this.nextBtn = document.querySelector('.tab-arrow.next');
+      
+      // Sticky elements
+      this.header = document.querySelector('header-component');
+      this.tabsStickyContainer = document.querySelector('.bundle-tabs-sticky-container');
+      this.bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
+    }
+
+    // Kiểm tra các elements cần thiết
+    validateElements() {
+      const requiredElements = [
+        this.totalEl,
+        this.panels.length > 0,
+        this.tabs.length > 0
+      ];
+      
+      return requiredElements.every(Boolean);
+    }
+
+    // Bind tất cả events
+    bindEvents() {
+      // Tab switching
+      this.tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => this.switchTab(e));
+      });
+
+      // Add to bundle buttons
+      document.querySelectorAll('.add-to-bundle').forEach(btn => {
+        btn.addEventListener('click', (e) => this.addToBundle(e));
+      });
+
+      // Step headers (accordion)
+      document.querySelectorAll('.step-header').forEach(h => {
+        h.addEventListener('click', (e) => this.toggleStep(e));
+      });
+
+      // Add all to cart
+      if (this.addAllBtn) {
+        this.addAllBtn.addEventListener('click', () => this.addAllToCart());
       }
-      
-      // Toggle between expanded and collapsed view
-      function toggleView() {
-        isCollapsed = !isCollapsed;
-        
-        if (isCollapsed) {
-          expandedView.style.display = 'none';
-          collapsedView.style.display = 'block';
-          toggleIconCollapse.style.display = 'none';
-          toggleIconExpand.style.display = 'block';
-          mobileSummaryBar.style.padding = '12px 16px';
-        } else {
-          expandedView.style.display = 'block';
-          collapsedView.style.display = 'none';
-          toggleIconCollapse.style.display = 'block';
-          toggleIconExpand.style.display = 'none';
-          mobileSummaryBar.style.padding = '16px';
-        }
+
+      // Tab arrows navigation
+      if (this.prevBtn && this.nextBtn) {
+        this.prevBtn.addEventListener('click', () => this.navigateTabs('prev'));
+        this.nextBtn.addEventListener('click', () => this.navigateTabs('next'));
       }
-      
-      // Update sticky wrapper position (giống như tabs)
-      function updateMobileSummaryPosition() {
-        const header = document.querySelector('header-component');
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (!header || !bundleWrapper) return;
-        
-        const bundleRect = bundleWrapper.getBoundingClientRect();
-        const bundleTopFromViewport = bundleRect.top + scrollTop;
-        const bundleBottomFromViewport = bundleRect.bottom + scrollTop;
-        
-        // Kiểm tra nếu section đã scroll vào viewport
-        if (scrollTop >= bundleTopFromViewport && scrollTop <= bundleBottomFromViewport - window.innerHeight) {
-          // Section đang trong viewport - hiển thị sticky bar
-          mobileStickyWrapper.style.display = 'block';
-          
-          // Tính toán nếu cần điều chỉnh vị trí khi có header
-          const headerState = header.dataset.scrollDirection || 'none';
-          if (headerState === 'down') {
-            // Header đang ẩn - không cần điều chỉnh
-            mobileStickyWrapper.style.bottom = '0';
-          } else {
-            // Header đang hiện - đảm bảo không bị che
-            mobileStickyWrapper.style.bottom = '0';
-          }
-        } else {
-          // Section không trong viewport - ẩn sticky bar
-          mobileStickyWrapper.style.display = 'none';
-        }
-      }
-      
-      // Add to cart từ mobile buttons
-      function handleMobileAddToCart() {
-        if (items.length === 0) return;
-        fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: items.map(i => ({ id: i.id, quantity: i.quantity })) })
-        }).then(() => location.href = '/cart');
-      }
-      
-      if (mobileAddAllBtn) {
-        mobileAddAllBtn.addEventListener('click', handleMobileAddToCart);
-      }
-      
-      if (collapsedAddBtn) {
-        collapsedAddBtn.addEventListener('click', handleMobileAddToCart);
-      }
-      
-      // Event listeners
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', toggleView);
-      }
-      
-      window.addEventListener('scroll', updateMobileSummaryPosition);
-      window.addEventListener('resize', updateMobileSummaryPosition);
-      
-      // Initial setup
-      updateMobileSummary();
-      updateMobileSummaryPosition();
-      
-      // Update mobile summary khi bundle thay đổi
-      const originalUpdateUI = updateUI;
-      updateUI = function() {
-        originalUpdateUI();
-        updateMobileSummary();
-      };
+
+      // Window resize và scroll
+      window.addEventListener('resize', () => this.handleResize());
     }
 
     // ==============================================
-    // ORIGINAL BUNDLE FUNCTIONALITY
+    // CORE BUNDLE FUNCTIONS
     // ==============================================
-    function updateAddButtonsState() {
-      const step2Qty = items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
+    updateAddButtonsState() {
+      const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
       document.querySelectorAll('.add-to-bundle').forEach(btn => {
         const panel = btn.closest('.bundle-panel');
         if (!panel) return;
-        const step = Array.from(panels).indexOf(panel) + 1;
+        const step = Array.from(this.panels).indexOf(panel) + 1;
         if (step === 2 && step2Qty >= 3) {
           btn.disabled = true;
           btn.style.opacity = '0.5';
@@ -1364,10 +1263,10 @@
       });
     }
 
-    function renderStepContents() {
-      stepContents.forEach(c => c.innerHTML = '');
-      items.forEach(item => {
-        const content = stepContents[item.step - 1];
+    renderStepContents() {
+      this.stepContents.forEach(c => c.innerHTML = '');
+      this.items.forEach(item => {
+        const content = this.stepContents[item.step - 1];
         if (!content) return;
         content.insertAdjacentHTML('beforeend', `
           <div class="step-item" data-variant-id="${item.id}">
@@ -1382,131 +1281,450 @@
       });
     }
 
-    function updateUI() {
+    updateUI() {
       const counts = [0,0,0];
-      items.forEach(i => counts[i.step - 1] += i.quantity);
+      this.items.forEach(i => counts[i.step - 1] += i.quantity);
       const totalCount = counts.reduce((a,b) => a + b, 0);
 
+      // Update desktop step counts
       document.querySelector('.step-1').textContent = `${counts[0]} item(s) added`;
       document.querySelector('.step-2').textContent = `${counts[1]} item(s) added`;
       document.querySelector('.step-3').textContent = `${counts[2]} item(s) added`;
 
+      // Calculate discount
       let discount = 0;
       if (totalCount >= 10) discount = 15;
       else if (totalCount >= 8) discount = 10;
       else if (totalCount >= 5) discount = 5;
 
-      discountEl.textContent = discount + '%';
+      if (this.discountEl) this.discountEl.textContent = discount + '%';
 
-      dots.forEach(dot => {
+      // Update progress dots
+      this.dots.forEach(dot => {
         const t = Number(dot.dataset.threshold);
         dot.classList.toggle('active', totalCount >= t);
       });
 
-      lineActive.style.width = totalCount >= 10 ? '100%' : totalCount >= 8 ? '66%' : totalCount >= 5 ? '33%' : '0%';
+      // Update progress line
+      if (this.lineActive) {
+        this.lineActive.style.width = totalCount >= 10 ? '100%' : totalCount >= 8 ? '66%' : totalCount >= 5 ? '33%' : '0%';
+      }
 
+      // Update hints
       if (totalCount >= 10) {
-        defaultHint.style.display = 'none';
-        congratsHint.style.display = 'block';
+        if (this.defaultHint) this.defaultHint.style.display = 'none';
+        if (this.congratsHint) this.congratsHint.style.display = 'block';
       } else {
-        defaultHint.style.display = 'block';
-        congratsHint.style.display = 'none';
+        if (this.defaultHint) this.defaultHint.style.display = 'block';
+        if (this.congratsHint) this.congratsHint.style.display = 'none';
         const next = totalCount < 5 ? 5 : totalCount < 8 ? 8 : 10;
-        remainingEl.textContent = next - totalCount;
+        if (this.remainingEl) this.remainingEl.textContent = next - totalCount;
       }
 
-      const saved = (originalTotal * discount / 100).toFixed(2);
-      if (discount > 0 && originalTotal > 0) {
-        saveAmountEl.textContent = '$' + saved;
-        saveRow.style.display = 'flex';
+      // Calculate savings
+      const saved = (this.originalTotal * discount / 100).toFixed(2);
+      if (discount > 0 && this.originalTotal > 0) {
+        if (this.saveAmountEl) this.saveAmountEl.textContent = '$' + saved;
+        if (this.saveRow) this.saveRow.style.display = 'flex';
       } else {
-        saveRow.style.display = 'none';
+        if (this.saveRow) this.saveRow.style.display = 'none';
       }
 
-      totalEl.textContent = '$' + (originalTotal - parseFloat(saved || 0)).toFixed(2);
-      addAllBtn.disabled = totalCount === 0;
+      // Update total
+      const finalTotal = (this.originalTotal - parseFloat(saved || 0)).toFixed(2);
+      if (this.totalEl) this.totalEl.textContent = '$' + finalTotal;
+      if (this.addAllBtn) this.addAllBtn.disabled = totalCount === 0;
+
+      // Update mobile summary
+      this.updateMobileSummary();
+      this.updateAddButtonsState();
     }
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const id = tab.dataset.tab;
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        panels.forEach(p => p.classList.remove('active'));
-        document.querySelector(`[data-panel="${id}"]`)?.classList.add('active');
-        updateAddButtonsState();
-      });
-    });
+    // ==============================================
+    // EVENT HANDLERS
+    // ==============================================
+    switchTab(e) {
+      const tab = e.currentTarget;
+      const id = tab.dataset.tab;
+      
+      // Update active tab
+      this.tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // Show corresponding panel
+      this.panels.forEach(p => p.classList.remove('active'));
+      const activePanel = document.querySelector(`[data-panel="${id}"]`);
+      if (activePanel) {
+        activePanel.classList.add('active');
+      }
+      
+      this.updateAddButtonsState();
+    }
 
-    document.querySelectorAll('.add-to-bundle').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const panel = btn.closest('.bundle-panel');
-        const step = Array.from(panels).indexOf(panel) + 1;
-        const currentQty = items.filter(i => i.step === step).reduce((s, i) => s + i.quantity, 0);
-        if (step === 2 && currentQty >= 3) return;
+    addToBundle(e) {
+      const btn = e.currentTarget;
+      const panel = btn.closest('.bundle-panel');
+      const step = Array.from(this.panels).indexOf(panel) + 1;
+      
+      // Check step 2 limit
+      if (step === 2) {
+        const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
+        if (step2Qty >= 3) return;
+      }
 
-        const variantId = btn.dataset.variantId;
-        const price = parseFloat(btn.dataset.price);
-        const img = btn.closest('.bundle-item-new').querySelector('.product-card__image')?.src || '';
-        const title = btn.closest('.bundle-item-new').querySelector('.product-card__title').textContent.trim();
+      const variantId = btn.dataset.variantId;
+      const price = parseFloat(btn.dataset.price);
+      const img = btn.closest('.bundle-item-new').querySelector('.product-card__image')?.src || '';
+      const title = btn.closest('.bundle-item-new').querySelector('.product-card__title').textContent.trim();
 
-        const existing = items.find(i => i.id === variantId && i.step === step);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          items.push({ id: variantId, price, quantity: 1, img, title, step });
-          btn.textContent = 'ADDED ✓';
-        }
+      // Check if item already exists
+      const existing = this.items.find(i => i.id === variantId && i.step === step);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        this.items.push({ 
+          id: variantId, 
+          price, 
+          quantity: 1, 
+          img, 
+          title, 
+          step 
+        });
+        btn.textContent = 'ADDED ✓';
+        
+        // Reset button text after 1.5 seconds
+        setTimeout(() => {
+          btn.textContent = 'ADD TO BUNDLE';
+        }, 1500);
+      }
 
-        originalTotal += price;
-        renderStepContents();
-        updateUI();
-        updateAddButtonsState();
-      });
-    });
+      this.originalTotal += price;
+      this.renderStepContents();
+      this.updateUI();
+    }
 
-    document.querySelectorAll('.step-header').forEach(h => {
-      h.addEventListener('click', () => h.closest('.bundle-step').classList.toggle('active'));
-    });
+    toggleStep(e) {
+      const step = e.currentTarget.closest('.bundle-step');
+      step.classList.toggle('active');
+    }
 
-    addAllBtn.addEventListener('click', () => {
-      if (items.length === 0) return;
+    addAllToCart() {
+      if (this.items.length === 0) return;
+      
       fetch('/cart/add.js', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: items.map(i => ({ id: i.id, quantity: i.quantity })) })
-      }).then(() => location.href = '/cart');
-    });
-
-    const prev = document.querySelector('.tab-arrow.prev');
-    const next = document.querySelector('.tab-arrow.next');
-    if (prev && next) {
-      prev.addEventListener('click', () => {
-        const idx = tabs.findIndex(t => t.classList.contains('active'));
-        tabs[idx <= 0 ? tabs.length - 1 : idx - 1].click();
-      });
-      next.addEventListener('click', () => {
-        const idx = tabs.findIndex(t => t.classList.contains('active'));
-        tabs[idx >= tabs.length - 1 ? 0 : idx + 1].click();
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ 
+          items: this.items.map(i => ({ 
+            id: i.id, 
+            quantity: i.quantity 
+          })) 
+        })
+      })
+      .then(response => response.json())
+      .then(() => {
+        window.location.href = '/cart';
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
       });
     }
 
-    // Initialize everything
-    renderStepContents();
-    updateUI();
-    updateAddButtonsState();
+    navigateTabs(direction) {
+      const currentIndex = this.tabs.findIndex(t => t.classList.contains('active'));
+      let newIndex;
+      
+      if (direction === 'prev') {
+        newIndex = currentIndex <= 0 ? this.tabs.length - 1 : currentIndex - 1;
+      } else {
+        newIndex = currentIndex >= this.tabs.length - 1 ? 0 : currentIndex + 1;
+      }
+      
+      this.tabs[newIndex].click();
+    }
+
+    handleResize() {
+      // Re-initialize mobile summary bar on resize
+      if (window.innerWidth <= 768) {
+        this.initMobileSummaryBar();
+      }
+      
+      // Update sticky positions
+      if (this.tabsStickyContainer) {
+        this.updateTabsPosition();
+      }
+    }
+
+    // ==============================================
+    // STICKY TABS với HEADER COORDINATION
+    // ==============================================
+    initStickyTabs() {
+      if (!this.header || !this.tabsStickyContainer || !this.bundleWrapper) {
+        console.warn('Sticky tabs elements not found');
+        return;
+      }
+      
+      // Initial call
+      this.updateTabsPosition();
+      
+      // Event listeners với debounce
+      window.addEventListener('scroll', () => this.debouncedUpdateTabs(), { passive: true });
+      window.addEventListener('resize', () => this.debouncedUpdateTabs());
+      
+      // Theo dõi thay đổi của header
+      const headerObserver = new MutationObserver(() => this.debouncedUpdateTabs());
+      headerObserver.observe(this.header, { 
+        attributes: true, 
+        attributeFilter: ['data-scroll-direction', 'data-sticky-state'] 
+      });
+    }
+
+    updateTabsPosition() {
+      if (!this.header || !this.tabsStickyContainer || !this.bundleWrapper) return;
+      
+      const headerHeight = this.header.offsetHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const headerState = this.header.dataset.scrollDirection || 'none';
+      
+      // Kiểm tra xem header có đang hiện không
+      const isHeaderVisible = headerState === 'up' || headerState === 'none';
+      
+      // Tính toán vị trí của bundle section
+      const bundleRect = this.bundleWrapper.getBoundingClientRect();
+      const bundleTopFromViewport = bundleRect.top + scrollTop;
+      
+      // Nếu đã scroll qua phần đầu của section
+      if (scrollTop >= bundleTopFromViewport) {
+        // Section đã vào viewport
+        if (isHeaderVisible) {
+          // Header đang hiện: tabs ở dưới header
+          this.tabsStickyContainer.style.top = `${headerHeight}px`;
+        } else {
+          // Header đang ẩn: tabs ở top viewport
+          this.tabsStickyContainer.style.top = '0px';
+        }
+      } else {
+        // Chưa scroll đến section: reset
+        this.tabsStickyContainer.style.top = '0px';
+      }
+    }
+
+    debouncedUpdateTabs() {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = setTimeout(() => this.updateTabsPosition(), 10);
+    }
+
+    // ==============================================
+    // MOBILE SUMMARY STICKY BAR
+    // ==============================================
+    initMobileSummaryBar() {
+      if (!this.mobileSummaryBar || !this.mobileStickyWrapper || window.innerWidth > 768) {
+        if (this.mobileStickyWrapper) this.mobileStickyWrapper.style.display = 'none';
+        return;
+      }
+      
+      // Show on mobile
+      this.mobileStickyWrapper.style.display = 'block';
+      
+      // Elements
+      this.expandedView = this.mobileSummaryBar.querySelector('.mobile-summary-expanded');
+      this.collapsedView = this.mobileSummaryBar.querySelector('.mobile-summary-collapsed');
+      this.toggleBtn = this.mobileSummaryBar.querySelector('.mobile-summary-toggle');
+      this.toggleIconCollapse = this.mobileSummaryBar.querySelector('.toggle-icon-collapse');
+      this.toggleIconExpand = this.mobileSummaryBar.querySelector('.toggle-icon-expand');
+      this.mobileAddAllBtn = this.mobileSummaryBar.querySelector('.mobile-add-all-btn');
+      this.collapsedAddBtn = this.mobileSummaryBar.querySelector('.collapsed-add-btn');
+      
+      this.isCollapsed = false;
+      
+      // Bind mobile events
+      this.bindMobileEvents();
+      
+      // Initial setup
+      this.updateMobileSummaryPosition();
+    }
+
+    bindMobileEvents() {
+      // Toggle between expanded and collapsed view
+      if (this.toggleBtn) {
+        this.toggleBtn.addEventListener('click', () => this.toggleMobileView());
+      }
+      
+      // Add to cart từ mobile buttons
+      if (this.mobileAddAllBtn) {
+        this.mobileAddAllBtn.addEventListener('click', () => this.addAllToCart());
+      }
+      
+      if (this.collapsedAddBtn) {
+        this.collapsedAddBtn.addEventListener('click', () => this.addAllToCart());
+      }
+      
+      // Listeners với debounce
+      window.addEventListener('scroll', () => this.debouncedUpdateMobilePosition(), { passive: true });
+      window.addEventListener('resize', () => this.debouncedUpdateMobilePosition());
+    }
+
+    toggleMobileView() {
+      this.isCollapsed = !this.isCollapsed;
+      
+      if (this.isCollapsed) {
+        this.expandedView.style.display = 'none';
+        this.collapsedView.style.display = 'block';
+        if (this.toggleIconCollapse) this.toggleIconCollapse.style.display = 'none';
+        if (this.toggleIconExpand) this.toggleIconExpand.style.display = 'block';
+        this.mobileSummaryBar.style.padding = '12px 16px';
+      } else {
+        this.expandedView.style.display = 'block';
+        this.collapsedView.style.display = 'none';
+        if (this.toggleIconCollapse) this.toggleIconCollapse.style.display = 'block';
+        if (this.toggleIconExpand) this.toggleIconExpand.style.display = 'none';
+        this.mobileSummaryBar.style.padding = '16px';
+      }
+    }
+
+    updateMobileSummaryPosition() {
+      if (!this.header || !this.bundleWrapper || !this.mobileStickyWrapper) return;
+      
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      const bundleRect = this.bundleWrapper.getBoundingClientRect();
+      const bundleTopFromViewport = bundleRect.top + scrollTop;
+      const bundleBottomFromViewport = bundleRect.bottom + scrollTop;
+      
+      // Kiểm tra nếu section đã scroll vào viewport
+      const isInViewport = scrollTop >= bundleTopFromViewport && 
+                          scrollTop <= bundleBottomFromViewport - window.innerHeight;
+      
+      if (isInViewport) {
+        // Section đang trong viewport - hiển thị sticky bar
+        this.mobileStickyWrapper.style.display = 'block';
+      } else {
+        // Section không trong viewport - ẩn sticky bar
+        this.mobileStickyWrapper.style.display = 'none';
+      }
+    }
+
+    debouncedUpdateMobilePosition() {
+      clearTimeout(this.positionTimeout);
+      this.positionTimeout = setTimeout(() => this.updateMobileSummaryPosition(), 10);
+    }
+
+    // Update mobile summary data
+    updateMobileSummary() {
+      if (!this.mobileSummaryBar || window.innerWidth > 768) return;
+      
+      // Update remaining count
+      const remainingEl = this.mobileSummaryBar.querySelector('.mobile-remaining-count');
+      const discountEl = this.mobileSummaryBar.querySelector('.mobile-current-discount');
+      if (remainingEl && this.remainingEl) {
+        remainingEl.textContent = this.remainingEl.textContent;
+      }
+      if (discountEl && this.discountEl) {
+        discountEl.textContent = this.discountEl.textContent;
+      }
+      
+      // Update progress dots
+      const totalCount = this.items.reduce((sum, item) => sum + item.quantity, 0);
+      this.mobileSummaryBar.querySelectorAll('.mobile-progress-dot').forEach(dot => {
+        const threshold = parseInt(dot.dataset.threshold);
+        dot.classList.toggle('active', totalCount >= threshold);
+      });
+      
+      // Update step counts
+      const counts = [0, 0, 0];
+      this.items.forEach(i => counts[i.step - 1] += i.quantity);
+      
+      this.mobileSummaryBar.querySelectorAll('.step-1-mobile').forEach(el => el.textContent = counts[0]);
+      this.mobileSummaryBar.querySelectorAll('.step-2-mobile').forEach(el => el.textContent = counts[1]);
+      this.mobileSummaryBar.querySelectorAll('.step-3-mobile').forEach(el => el.textContent = counts[2]);
+      
+      // Update prices
+      if (this.totalEl) {
+        const totalPrice = this.totalEl.textContent;
+        const saveAmount = this.saveAmountEl ? this.saveAmountEl.textContent : null;
+        
+        this.mobileSummaryBar.querySelectorAll('.mobile-total-price, .collapsed-price').forEach(el => {
+          el.textContent = totalPrice;
+        });
+        
+        const mobileSaveRow = this.mobileSummaryBar.querySelector('.mobile-save-row');
+        if (mobileSaveRow && saveAmount && saveAmount !== '$0.00') {
+          mobileSaveRow.style.display = 'flex';
+          mobileSaveRow.querySelector('.mobile-save-amount').textContent = saveAmount;
+        } else if (mobileSaveRow) {
+          mobileSaveRow.style.display = 'none';
+        }
+      }
+      
+      // Update button state
+      const isDisabled = this.items.length === 0;
+      
+      if (this.mobileAddAllBtn) {
+        this.mobileAddAllBtn.disabled = isDisabled;
+        this.mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
+      }
+      if (this.collapsedAddBtn) {
+        this.collapsedAddBtn.disabled = isDisabled;
+        this.collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
+      }
+    }
+  }
+
+  // ==============================================
+  // INITIALIZATION - CHẠY NGAY KHI DOM SẴN SÀNG
+  // ==============================================
+  let bundleBuilder;
+
+  // Khởi tạo ngay khi DOM sẵn sàng
+  function initializeBundle() {
+    if (bundleBuilder && bundleBuilder.initialized) return;
     
-    // Initialize sticky tabs
+    console.log('Starting bundle initialization...');
+    
+    bundleBuilder = new BundleBuilder();
+    
+    // Kiểm tra nếu DOM đã sẵn sàng
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
-        initStickyTabsWithHeader();
-        initMobileSummaryBar();
+        console.log('DOM loaded, initializing bundle...');
+        bundleBuilder.init();
       });
     } else {
-      initStickyTabsWithHeader();
-      initMobileSummaryBar();
+      // DOM đã sẵn sàng, chạy ngay
+      console.log('DOM already ready, initializing bundle immediately...');
+      bundleBuilder.init();
     }
-  })();
+  }
+
+  // Khởi tạo ngay lập tức
+  initializeBundle();
+
+  // Backup: Nếu không chạy, thử lại sau 100ms
+  setTimeout(() => {
+    if (!bundleBuilder || !bundleBuilder.initialized) {
+      console.log('Retrying bundle initialization (100ms)...');
+      initializeBundle();
+    }
+  }, 100);
+
+  // Backup 2: Thử lại sau 500ms nếu vẫn chưa chạy
+  setTimeout(() => {
+    if (!bundleBuilder || !bundleBuilder.initialized) {
+      console.log('Retrying bundle initialization (500ms)...');
+      initializeBundle();
+    }
+  }, 500);
+
+  // Backup 3: Thử lại sau 1000ms
+  setTimeout(() => {
+    if (!bundleBuilder || !bundleBuilder.initialized) {
+      console.log('Force initializing bundle (1000ms)...');
+      initializeBundle();
+    }
+  }, 1000);
 </script>
 
 {% schema %}
