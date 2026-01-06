@@ -730,13 +730,14 @@
         "item_JJJTGV": {
           "type": "item",
           "settings": {
-            "heading": "The ultimate body care.",
+            "image": "shopify://shop_images/image_1.png",
+            "heading": "Serum for <i>sensetive.</i>",
             "heading_font": "sans_serif_n4",
             "heading_size": 32,
             "heading_weight": "400",
             "heading_color": "#ffffff",
             "text_align": "left",
-            "button_text": "Shop now",
+            "button_text": "Shop serum",
             "button_link": "",
             "button_text_color": "#ffffff",
             "button_border_color": "#ffffff"
