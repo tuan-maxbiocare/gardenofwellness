@@ -18,6 +18,7 @@
           "settings": {
             "text": "<p>Browse our latest products</p>",
             "width": "fit-content",
+            "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
             "type_preset": "h2",
@@ -100,6 +101,7 @@
           "settings": {
             "text": "<h3>Related products</h3>",
             "width": "100%",
+            "text_style": "solid",
             "max_width": "normal",
             "alignment": "center",
             "type_preset": "h2",
@@ -591,6 +593,48 @@
         "cart_button_size": 17,
         "cart_button_margin": 30
       }
+    },
+    "marquee_wqwR3C": {
+      "type": "marquee",
+      "blocks": {
+        "text_eKPNJ7": {
+          "type": "text",
+          "settings": {
+            "text": "<p>CREUL - FREE</p>",
+            "width": "fit-content",
+            "text_style": "solid",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_eKPNJ7"
+      ],
+      "name": "t:names.marquee_section",
+      "settings": {
+        "movement_direction": "normal",
+        "color_scheme": "scheme-4",
+        "padding-block-start": 43,
+        "padding-block-end": 43,
+        "gap_between_elements": 43
+      }
     }
   },
   "order": [
@@ -599,6 +643,7 @@
     "feaure_category_8mYehU",
     "image_product_grid_bjq3xR",
     "mega_deal_countdown_KcUUWk",
-    "unbeatable_prices_wPMB9Q"
+    "unbeatable_prices_wPMB9Q",
+    "marquee_wqwR3C"
   ]
 }
