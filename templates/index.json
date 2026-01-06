@@ -600,14 +600,14 @@
         "text_eKPNJ7": {
           "type": "text",
           "settings": {
-            "text": "<p>CREUL - FREE</p>",
+            "text": "<p>CREULTY- FREE</p>",
             "width": "fit-content",
             "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2.5rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
