@@ -1,0 +1,1199 @@
+<section
+  class="skin-compare-section"
+  style="
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  "
+>
+  <div class="page-width">
+
+    <h2 class="skin-compare-heading">
+      {{ section.settings.heading }}
+    </h2>
+
+    <!-- PRODUCT IMAGES ON TOP - ALL DEVICES -->
+    <div class="skin-compare-top-products">
+      {% assign col_index = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'product_image' %}
+          {% assign col_index = col_index | plus: 1 %}
+          <div
+            class="skin-compare-top-product"
+            data-row="{{ col_index }}"
+            {{ block.shopify_attributes }}
+          >
+            {% if block.settings.image %}
+              <img
+                src="{{ block.settings.image | image_url: width: 300 }}"
+                alt="{{ block.settings.title }}"
+                loading="lazy"
+                class="product-image-top"
+                width="auto"
+                height="auto"
+              >
+            {% endif %}
+            <p class="product-title-top">{{ block.settings.title }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- MOBILE TABLES (HIDDEN BY DEFAULT) -->
+    <div class="skin-compare-mobile-tables">
+      {% assign row_index = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'product_row' %}
+          {% assign row_index = row_index | plus: 1 %}
+          <div class="mobile-product-table" data-row="{{ row_index }}">
+            <div class="mobile-table-header">
+              <h3 class="mobile-product-name">{{ block.settings.product_name }}</h3>
+            </div>
+            <div class="mobile-table-content">
+              {% for i in (1..5) %}
+                {% assign skin_type_key = 'skin_type_' | append: i %}
+                {% assign cell_key = 'cell_' | append: i %}
+                <div class="mobile-table-row">
+                  <div class="mobile-table-cell mobile-table-cell-title">
+                    {{ section.settings[skin_type_key] }}
+                  </div>
+                  <div class="mobile-table-cell mobile-table-cell-icon">
+                    {% if block.settings[cell_key] %}
+                      <div class="check-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="8" fill="{{ section.settings.check_color }}"/>
+                          <path d="M7 10L9 12L13 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    {% else %}
+                      <div class="cross-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="8" stroke="{{ section.settings.cross_color }}" stroke-width="2"/>
+                          <path d="M7 7L13 13" stroke="{{ section.settings.cross_color }}" stroke-width="2" stroke-linecap="round"/>
+                          <path d="M13 7L7 13" stroke="{{ section.settings.cross_color }}" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- DESKTOP TABLE -->
+    <div class="skin-compare-table-wrapper">
+      <table class="skin-compare-table">
+        <thead>
+          <tr>
+            <th class="row-title-header"></th>
+            {% for i in (1..5) %}
+              {% assign skin_type_key = 'skin_type_' | append: i %}
+              <th class="skin-type-header">
+                <span class="skin-type-title">{{ section.settings[skin_type_key] }}</span>
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+
+        <tbody>
+          {% assign row_index = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'product_row' %}
+              {% assign row_index = row_index | plus: 1 %}
+              <tr class="comparison-row" data-row="{{ row_index }}" {{ block.shopify_attributes }}>
+                <td class="product-title-cell">
+                  <span class="product-name-cell">{{ block.settings.product_name }}</span>
+                </td>
+                
+                {% for i in (1..5) %}
+                  {% assign cell_key = 'cell_' | append: i %}
+                  <td class="comparison-cell" data-row="{{ row_index }}">
+                    {% if block.settings[cell_key] %}
+                      <div class="check-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="8" fill="{{ section.settings.check_color }}"/>
+                          <path d="M7 10L9 12L13 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    {% else %}
+                      <div class="cross-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="8" stroke="{{ section.settings.cross_color }}" stroke-width="2"/>
+                          <path d="M7 7L13 13" stroke="{{ section.settings.cross_color }}" stroke-width="2" stroke-linecap="round"/>
+                          <path d="M13 7L7 13" stroke="{{ section.settings.cross_color }}" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      </div>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if section.settings.show_conclusion %}
+      <div class="skin-compare-conclusion">
+        <p class="conclusion-label">{{ section.settings.conclusion_label }}</p>
+        <div class="conclusion-text">{{ section.settings.conclusion }}</div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+.skin-compare-section {
+  transition: background-color 0.3s ease;
+}
+
+.skin-compare-heading {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 50px;
+  font-weight: 400;
+  color: {{ section.settings.heading_color }};
+  letter-spacing: 0.5px;
+}
+
+/* Top Product Images - ALL DEVICES */
+.skin-compare-top-products {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-bottom: 60px;
+  flex-wrap: wrap;
+}
+
+.skin-compare-top-product {
+  text-align: center;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.skin-compare-top-product.active {
+  opacity: 1;
+}
+
+.product-image-top {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  border: 2px solid transparent;
+}
+
+.skin-compare-top-product.active .product-image-top {
+  transform: scale(1.08);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  border-color: {{ section.settings.active_border_color }};
+}
+
+.product-title-top {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: {{ section.settings.text_color }};
+  line-height: 1.4;
+  max-width: 150px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* DESKTOP TABLE */
+.skin-compare-table-wrapper {
+  overflow-x: auto;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.skin-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  min-width: 800px;
+  border: 1px solid #e3e3e3;
+}
+
+/* Table Headers */
+.skin-compare-table thead th {
+  padding: 20px 16px;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #e3e3e3;
+  border-right: 1px solid #e3e3e3;
+  background: #eef1ea;
+  color: #333333;
+  font-size: 14px;
+}
+
+.skin-compare-table .row-title-header {
+  background: #eef1ea;
+  text-align: left;
+  padding-left: 24px;
+  min-width: 200px;
+  font-weight: 500;
+  color: #333333;
+  border-right: 1px solid #e3e3e3;
+}
+
+.skin-compare-table .skin-type-header {
+  position: relative;
+  font-size: 14px;
+  color: #333333;
+  border-right: 1px solid #e3e3e3;
+}
+
+.skin-compare-table .skin-type-header:last-child {
+  border-right: 1px solid #e3e3e3;
+}
+
+.skin-type-title {
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.3;
+  display: block;
+  max-width: 150px;
+  margin: 0 auto;
+}
+
+/* Table Body */
+.skin-compare-table tbody tr {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.skin-compare-table tbody tr:last-child {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.skin-compare-table tbody tr.active-row {
+  background: #fff4e0 !important;
+}
+
+.skin-compare-table .product-title-cell {
+  background: #f5f5f5;
+  padding: 18px 24px;
+  text-align: left;
+  font-weight: 500;
+  color: #333333;
+  border-right: 1px solid #e3e3e3;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.skin-compare-table .product-title-cell.active-cell {
+  background: #fff4e0;
+}
+
+.product-name-cell {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.skin-compare-table .comparison-cell {
+  padding: 18px 16px;
+  text-align: center;
+  border-right: 1px solid #e3e3e3;
+  transition: all 0.3s ease;
+  position: relative;
+  vertical-align: middle;
+  background: #fff;
+}
+
+.skin-compare-table .comparison-cell:last-child {
+  border-right: 1px solid #e3e3e3;
+}
+
+.skin-compare-table .comparison-cell.active-cell {
+  background: #fff4e0;
+}
+
+/* Icons */
+.check-icon, .cross-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 0 auto;
+}
+
+/* MOBILE TABLES (HIDDEN ON DESKTOP) */
+.skin-compare-mobile-tables {
+  display: none;
+  margin-bottom: 40px;
+}
+
+.mobile-product-table {
+  display: none;
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.mobile-product-table.active {
+  display: block;
+}
+
+.mobile-table-header {
+  background: #eef1ea;
+  padding: 20px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.mobile-product-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333333;
+  margin: 0;
+  text-align: center;
+}
+
+.mobile-table-content {
+  padding: 0;
+}
+
+.mobile-table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-table-row:last-child {
+  border-bottom: none;
+}
+
+.mobile-table-cell {
+  font-size: 15px;
+  color: #333333;
+}
+
+.mobile-table-cell-title {
+  font-weight: 500;
+  flex: 1;
+}
+
+.mobile-table-cell-icon {
+  flex-shrink: 0;
+  margin-left: 15px;
+}
+
+/* Conclusion */
+.skin-compare-conclusion {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid #e3e3e3;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.conclusion-label {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333333;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.conclusion-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #666666;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* RESPONSIVE */
+/* MOBILE RESPONSIVE STYLES */
+@media (max-width: 768px) {
+  .skin-compare-heading {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+  
+  .skin-compare-top-products {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    padding: 0 20px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .skin-compare-top-products::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .skin-compare-top-product {
+    flex: 0 0 auto;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+  }
+  
+  .skin-compare-top-product.viewing {
+    opacity: 1;
+  }
+  
+  .product-image-top {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .skin-compare-top-product.viewing .product-image-top {
+    border-color: {{ section.settings.active_border_color }};
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  
+  .product-title-top {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    text-align: center;
+    line-height: 1.4;
+    width: 100%;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  
+  /* Mobile tables */
+  .skin-compare-table-wrapper {
+    display: none;
+  }
+  
+  .skin-compare-mobile-tables {
+    display: block;
+    padding: 0 20px;
+  }
+  
+  .mobile-product-table {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border: 1px solid #e8e8e8;
+  }
+  
+  .mobile-table-header {
+    background: #eef1ea;
+    padding: 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .mobile-product-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+    line-height: 1.3;
+  }
+  
+  .mobile-table-content {
+    padding: 0;
+  }
+  
+  .mobile-table-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  
+  .mobile-table-row:last-child {
+    border-bottom: none;
+  }
+  
+  .mobile-table-cell {
+    font-size: 15px;
+    color: #333333;
+  }
+  
+  .mobile-table-cell-title {
+    font-weight: 500;
+    flex: 1;
+  }
+  
+  .mobile-table-cell-icon {
+    flex-shrink: 0;
+    margin-left: 15px;
+  }
+  
+  .conclusion-label {
+    font-size: 15px;
+  }
+  
+  .conclusion-text {
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skin-compare-heading {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+  
+  .skin-compare-top-products {
+    gap: 20px;
+    padding: 0 15px;
+  }
+  
+  .skin-compare-top-product {
+    width: 90px;
+  }
+  
+  .product-image-top {
+    width: 70px;
+    height: 70px;
+    border-width: 2px;
+  }
+  
+  .product-title-top {
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  
+  .mobile-product-table {
+    border-radius: 12px;
+    margin-bottom: 25px;
+  }
+  
+  .mobile-table-header {
+    padding: 20px 16px;
+  }
+  
+  .mobile-product-name {
+    font-size: 16px;
+  }
+  
+  .mobile-table-row {
+    padding: 16px;
+  }
+  
+  .mobile-table-cell {
+    font-size: 14px;
+  }
+  
+  .mobile-table-cell-icon {
+    margin-left: 12px;
+  }
+  
+  .skin-compare-conclusion {
+    margin-top: 40px;
+    padding-top: 25px;
+  }
+  
+  .conclusion-label {
+    font-size: 14px;
+  }
+  
+  .conclusion-text {
+    font-size: 13px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 360px) {
+  .skin-compare-top-products {
+    gap: 15px;
+  }
+  
+  .skin-compare-top-product {
+    width: 80px;
+  }
+  
+  .product-image-top {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .product-title-top {
+    font-size: 11px;
+  }
+  
+  .mobile-table-header {
+    padding: 18px 14px;
+  }
+  
+  .mobile-table-row {
+    padding: 14px;
+  }
+  
+  .mobile-table-cell {
+    font-size: 13px;
+  }
+}
+
+/* Desktop hover và active states */
+.skin-compare-top-product.active .product-image-top {
+  transform: scale(1.08);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  border-color: {{ section.settings.active_border_color }};
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const topProducts = document.querySelectorAll('.skin-compare-top-product');
+  const productRows = document.querySelectorAll('.comparison-row');
+  const productTitleCells = document.querySelectorAll('.product-title-cell');
+  const comparisonCells = document.querySelectorAll('.comparison-cell');
+  
+  // Mobile tables
+  const mobileTables = document.querySelectorAll('.mobile-product-table');
+  
+  // Smooth scroll cho mobile khi click sản phẩm
+  function scrollToProduct(productElement) {
+    if (window.innerWidth <= 768) {
+      const container = document.querySelector('.skin-compare-top-products');
+      const productRect = productElement.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      
+      // Tính toán vị trí để căn giữa
+      const scrollLeft = productElement.offsetLeft - (containerRect.width / 2) + (productRect.width / 2);
+      
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  }
+  
+  // Khởi tạo: trên mobile hiển thị table sản phẩm đầu tiên (không highlight)
+  function initializeMobile() {
+    if (window.innerWidth <= 768 && mobileTables.length > 0) {
+      // Hiển thị table sản phẩm đầu tiên
+      mobileTables[0].classList.add('active');
+      
+      // Đánh dấu sản phẩm đầu tiên là đang xem
+      topProducts[0].classList.add('viewing');
+      
+      // Scroll sản phẩm đầu tiên vào giữa
+      setTimeout(() => {
+        scrollToProduct(topProducts[0]);
+      }, 100);
+      
+      // Không active highlight
+      clearAllActive();
+    }
+  }
+  
+  // Không set active row mặc định cho desktop
+  let activeRow = null;
+  
+  // Hàm kích hoạt hàng (highlight)
+  function activateRow(rowIndex) {
+    // Xóa active class từ tất cả
+    topProducts.forEach(p => p.classList.remove('active'));
+    productRows.forEach(r => r.classList.remove('active-row'));
+    productTitleCells.forEach(c => c.classList.remove('active-cell'));
+    comparisonCells.forEach(c => c.classList.remove('active-cell'));
+    
+    // Thêm active class cho hàng tương ứng
+    topProducts.forEach(p => {
+      if (p.dataset.row === rowIndex) {
+        p.classList.add('active');
+      }
+    });
+    
+    productRows.forEach(r => {
+      if (r.dataset.row === rowIndex) {
+        r.classList.add('active-row');
+      }
+    });
+    
+    productTitleCells.forEach(c => {
+      if (c.parentElement.dataset.row === rowIndex) {
+        c.classList.add('active-cell');
+      }
+    });
+    
+    comparisonCells.forEach(c => {
+      if (c.dataset.row === rowIndex) {
+        c.classList.add('active-cell');
+      }
+    });
+    
+    activeRow = rowIndex;
+  }
+
+  // Hàm xóa tất cả active (chỉ highlight)
+  function clearAllActive() {
+    topProducts.forEach(p => p.classList.remove('active'));
+    productRows.forEach(r => r.classList.remove('active-row'));
+    productTitleCells.forEach(c => c.classList.remove('active-cell'));
+    comparisonCells.forEach(c => c.classList.remove('active-cell'));
+    activeRow = null;
+  }
+
+  // Hàm chuyển đổi sản phẩm đang xem (mobile)
+  function switchMobileProduct(rowIndex) {
+    // Ẩn tất cả mobile tables
+    mobileTables.forEach(t => t.classList.remove('active'));
+    
+    // Xóa viewing class từ tất cả sản phẩm
+    topProducts.forEach(p => p.classList.remove('viewing'));
+    
+    // Hiển thị table sản phẩm được chọn
+    mobileTables.forEach(t => {
+      if (t.dataset.row === rowIndex) {
+        t.classList.add('active');
+      }
+    });
+    
+    // Đánh dấu sản phẩm đang xem
+    topProducts.forEach(p => {
+      if (p.dataset.row === rowIndex) {
+        p.classList.add('viewing');
+      }
+    });
+  }
+
+  // Xử lý hover cho top product images (desktop)
+  topProducts.forEach(product => {
+    product.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) { // Chỉ trên desktop
+        activateRow(product.dataset.row);
+      }
+    });
+    
+    product.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) {
+        clearAllActive();
+      }
+    });
+    
+    // Click để chuyển đổi sản phẩm (mobile) hoặc highlight (desktop)
+    product.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      if (window.innerWidth <= 768) {
+        // MOBILE: chuyển sang sản phẩm được click
+        switchMobileProduct(product.dataset.row);
+        // Không highlight trên mobile
+        clearAllActive();
+        // Scroll để sản phẩm vào giữa
+        scrollToProduct(product);
+      } else {
+        // DESKTOP: toggle highlight
+        if (product.classList.contains('active')) {
+          // Nếu đang active, thì clear
+          clearAllActive();
+        } else {
+          // Nếu chưa active, thì active
+          activateRow(product.dataset.row);
+        }
+      }
+    });
+  });
+
+  // Desktop event handlers (chỉ trên desktop)
+  productTitleCells.forEach(cell => {
+    cell.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) {
+        const rowIndex = cell.parentElement.dataset.row;
+        activateRow(rowIndex);
+      }
+    });
+    
+    cell.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) {
+        clearAllActive();
+      }
+    });
+    
+    cell.addEventListener('click', (e) => {
+      if (window.innerWidth > 768) {
+        e.preventDefault();
+        const rowIndex = cell.parentElement.dataset.row;
+        
+        if (cell.parentElement.classList.contains('active-row')) {
+          // Nếu đang active, thì clear
+          clearAllActive();
+        } else {
+          // Nếu chưa active, thì active
+          activateRow(rowIndex);
+        }
+      }
+    });
+  });
+
+  productRows.forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) {
+        const rowIndex = row.dataset.row;
+        activateRow(rowIndex);
+      }
+    });
+    
+    row.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) {
+        clearAllActive();
+      }
+    });
+    
+    row.addEventListener('click', (e) => {
+      if (window.innerWidth > 768) {
+        e.preventDefault();
+        
+        if (row.classList.contains('active-row')) {
+          // Nếu đang active, thì clear
+          clearAllActive();
+        } else {
+          // Nếu chưa active, thì active
+          activateRow(row.dataset.row);
+        }
+      }
+    });
+  });
+
+  // Touch events cho mobile (để tránh delay)
+  topProducts.forEach(product => {
+    product.addEventListener('touchend', (e) => {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        switchMobileProduct(product.dataset.row);
+        clearAllActive();
+        scrollToProduct(product);
+      }
+    });
+  });
+
+  // Click ra ngoài để clear active (chỉ trên desktop)
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth > 768) {
+      if (!e.target.closest('.skin-compare-top-product') && 
+          !e.target.closest('.comparison-row') &&
+          !e.target.closest('.product-title-cell') &&
+          !e.target.closest('.comparison-cell')) {
+        clearAllActive();
+      }
+    }
+  });
+
+  // Xử lý resize
+  window.addEventListener('resize', () => {
+    // Clear highlight khi resize
+    clearAllActive();
+    
+    // Nếu chuyển sang mobile và chưa có sản phẩm nào đang viewing
+    if (window.innerWidth <= 768) {
+      const hasViewingProduct = document.querySelector('.skin-compare-top-product.viewing');
+      const hasActiveTable = document.querySelector('.mobile-product-table.active');
+      
+      if (!hasViewingProduct && topProducts.length > 0) {
+        // Đặt sản phẩm đầu tiên là đang xem
+        topProducts[0].classList.add('viewing');
+      }
+      
+      if (!hasActiveTable && mobileTables.length > 0) {
+        // Hiển thị table sản phẩm đầu tiên
+        mobileTables[0].classList.add('active');
+      }
+    }
+    
+    // Nếu chuyển sang desktop, xóa viewing class
+    if (window.innerWidth > 768) {
+      topProducts.forEach(p => p.classList.remove('viewing'));
+    }
+  });
+
+  // Khởi tạo
+  initializeMobile();
+});
+</script>
+{% schema %}
+{
+  "name": "Skin Comparison Table",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find the best."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Skin Type Labels"
+    },
+    {
+      "type": "text",
+      "id": "skin_type_1",
+      "label": "Skin Type 1",
+      "default": "Sensitive skin"
+    },
+    {
+      "type": "text",
+      "id": "skin_type_2",
+      "label": "Skin Type 2",
+      "default": "Dry skin"
+    },
+    {
+      "type": "text",
+      "id": "skin_type_3",
+      "label": "Skin Type 3",
+      "default": "Oily skin"
+    },
+    {
+      "type": "text",
+      "id": "skin_type_4",
+      "label": "Skin Type 4",
+      "default": "Normal skin"
+    },
+    {
+      "type": "text",
+      "id": "skin_type_5",
+      "label": "Skin Type 5",
+      "default": "Combination skin"
+    },
+    {
+      "type": "header",
+      "content": "Conclusion"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_conclusion",
+      "label": "Show Conclusion",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "conclusion_label",
+      "label": "Conclusion Label",
+      "default": "Conclusion:"
+    },
+    {
+      "type": "textarea",
+      "id": "conclusion",
+      "label": "Conclusion Text",
+      "default": "HC+ Complex™ is carefully blended to support your body and skin as hormones fluctuate over time. From mid 40s and beyond (including all stages of the menopause), Blended to give you and your skin more."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background",
+      "default": "#f7f8f3"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "active_border_color",
+      "label": "Active Border Color",
+      "default": "#ffc107"
+    },
+    {
+      "type": "color",
+      "id": "check_color",
+      "label": "Check Icon Color",
+      "default": "#4CAF50"
+    },
+    {
+      "type": "color",
+      "id": "cross_color",
+      "label": "Cross Icon Color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_image",
+      "name": "Product Image",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "Product Name"
+        }
+      ]
+    },
+    {
+      "type": "product_row",
+      "name": "Product Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Name",
+          "default": "Argan Milk Serum"
+        },
+        {
+          "type": "checkbox",
+          "id": "cell_1",
+          "label": "Sensitive skin",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "cell_2",
+          "label": "Dry skin",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "cell_3",
+          "label": "Oily skin",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "cell_4",
+          "label": "Normal skin",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "cell_5",
+          "label": "Combination skin",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Comparison Table",
+      "blocks": [
+        {
+          "type": "product_image",
+          "settings": {
+            "title": "Argan Milk Serum"
+          }
+        },
+        {
+          "type": "product_image",
+          "settings": {
+            "title": "Whipped Argan Oil Body Butter"
+          }
+        },
+        {
+          "type": "product_image",
+          "settings": {
+            "title": "Beautifying Oil Face"
+          }
+        },
+        {
+          "type": "product_row",
+          "settings": {
+            "product_name": "Argan Milk Serum",
+            "cell_1": true,
+            "cell_2": true,
+            "cell_3": true,
+            "cell_4": true,
+            "cell_5": true
+          }
+        },
+        {
+          "type": "product_row",
+          "settings": {
+            "product_name": "Whipped Argan Oil Body Butter",
+            "cell_1": true,
+            "cell_2": true,
+            "cell_3": true,
+            "cell_4": true,
+            "cell_5": true
+          }
+        },
+        {
+          "type": "product_row",
+          "settings": {
+            "product_name": "Beautifying Oil Face",
+            "cell_1": true,
+            "cell_2": true,
+            "cell_3": true,
+            "cell_4": true,
+            "cell_5": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
