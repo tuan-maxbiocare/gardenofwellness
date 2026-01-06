@@ -761,21 +761,21 @@
           "type": "product_image",
           "settings": {
             "image": "shopify://shop_images/Garden-of-wellness-shop_GOWMC013_1000x1000_4bed998f-4f4c-41e4-82e6-35e0149a69a1.webp",
-            "title": "Argan Milk Serum"
+            "title": ""
           }
         },
         "product_image_EWm3AK": {
           "type": "product_image",
           "settings": {
             "image": "shopify://shop_images/Garden-of-wellness-shop_GOWMC014_1000x1000_632c1805-1c12-435f-a67c-90f922f50fca.webp",
-            "title": "Whipped Argan Oil Body Butter"
+            "title": ""
           }
         },
         "product_image_NaJG6L": {
           "type": "product_image",
           "settings": {
             "image": "shopify://shop_images/Garden-of-wellness-shop_GOWMC015_1000x1000_3a2d2973-88eb-4377-a6fb-96c6d4bc9bde.webp",
-            "title": "Beautifying Oil Face"
+            "title": ""
           }
         },
         "product_row_zr6mQX": {
@@ -835,7 +835,7 @@
         "background_color": "#f7f8f3",
         "text_color": "#333333",
         "active_border_color": "#ffc107",
-        "check_color": "#4CAF50",
+        "check_color": "#4caf50",
         "cross_color": "#e0e0e0",
         "padding_top": 80,
         "padding_bottom": 80
