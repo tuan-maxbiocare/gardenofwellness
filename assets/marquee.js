@@ -36,6 +36,10 @@ class MarqueeComponent extends Component {
     window.addEventListener('resize', this.#handleResize);
     this.addEventListener('pointerenter', this.#slowDown);
     this.addEventListener('pointerleave', this.#speedUp);
+
+    this.addEventListener('touchstart', this.#slowDown, { passive: true });
+    this.addEventListener('touchend', this.#speedUp);
+    this.addEventListener('touchcancel', this.#speedUp);
   }
 
   disconnectedCallback() {
@@ -43,6 +47,10 @@ class MarqueeComponent extends Component {
     window.removeEventListener('resize', this.#handleResize);
     this.removeEventListener('pointerenter', this.#slowDown);
     this.removeEventListener('pointerleave', this.#speedUp);
+
+    this.removeEventListener('touchstart', this.#slowDown);
+    this.removeEventListener('touchend', this.#speedUp);
+    this.removeEventListener('touchcancel', this.#speedUp);
   }
 
   /**
