@@ -51,6 +51,7 @@
 {% capture attributes %}
   class="{{ class }} spacing-style text-block text-block--{{ block.id }} {{ block_settings.type_preset }}
     {{ text_block_classes }}
+    text--{{ block_settings.text_style | default: 'solid' }}
   "
 
   style="
@@ -216,4 +217,24 @@
   .custom-color > :is(h1, h2, h3, h4, h5, h6, p, *) {
     color: var(--color);
   }
+  /* ========================= */
+/* TEXT STYLE: SOLID / OUTLINE */
+/* ========================= */
+
+.text--solid,
+.text--solid > :is(h1, h2, h3, h4, h5, h6, p, span, div) {
+  color: currentColor;
+  -webkit-text-stroke: 0;
+}
+
+.text--outline,
+.text--outline > :is(h1, h2, h3, h4, h5, h6, p, span, div) {
+  color: transparent;
+  -webkit-text-stroke: 1.5px currentColor;
+}
+.text--outline,
+.text--outline > :is(h1, h2, h3, h4, h5, h6, p, span, div) {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-outline-color, #fff);
+}
 {% endstylesheet %}
