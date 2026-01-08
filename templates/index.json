@@ -594,6 +594,68 @@
         "cart_button_margin": 30
       }
     },
+    "image_grid_FjbTTA": {
+      "type": "image_grid",
+      "blocks": {
+        "item_tdwmNp": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/garden-of-wellness-images-820x1256-7.webp",
+            "heading": "The ultimate <i> body care.</i>",
+            "heading_font": "sans_serif_n4",
+            "heading_size": 38,
+            "heading_weight": "400",
+            "heading_color": "#ffffff",
+            "text_align": "left",
+            "button_text": "Shop now",
+            "button_link": "",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        },
+        "item_iqWUH6": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/0f37696c915cd1132aef521469560d491f580f7b.jpg",
+            "heading": "The ultimate <i>skin retouch.</i>",
+            "heading_font": "sans_serif_n4",
+            "heading_size": 32,
+            "heading_weight": "400",
+            "heading_color": "#ffffff",
+            "text_align": "left",
+            "button_text": "Shop skin retouch",
+            "button_link": "",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        },
+        "item_JJJTGV": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/image_1.png",
+            "heading": "Serum for <i>sensetive.</i>",
+            "heading_font": "sans_serif_n4",
+            "heading_size": 32,
+            "heading_weight": "400",
+            "heading_color": "#ffffff",
+            "text_align": "left",
+            "button_text": "Shop serum",
+            "button_link": "",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "item_tdwmNp",
+        "item_iqWUH6",
+        "item_JJJTGV"
+      ],
+      "name": "Image grid hover",
+      "settings": {
+        "bg_color": "#ffffff"
+      }
+    },
     "marquee_wqwR3C": {
       "type": "marquee",
       "blocks": {
@@ -692,66 +754,91 @@
         "gap_between_elements": 43
       }
     },
-    "image_grid_FjbTTA": {
-      "type": "image_grid",
+    "skin_comparison_table_PxB9GD": {
+      "type": "skin-comparison-table",
       "blocks": {
-        "item_tdwmNp": {
-          "type": "item",
+        "product_image_aJADTm": {
+          "type": "product_image",
           "settings": {
-            "image": "shopify://shop_images/garden-of-wellness-images-820x1256-7.webp",
-            "heading": "The ultimate <i>body care.</i>",
-            "heading_font": "sans_serif_n4",
-            "heading_size": 38,
-            "heading_weight": "400",
-            "heading_color": "#ffffff",
-            "text_align": "left",
-            "button_text": "Shop now",
-            "button_link": "",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#ffffff"
+            "image": "shopify://shop_images/Garden-of-wellness-shop_GOWMC013_1000x1000_4bed998f-4f4c-41e4-82e6-35e0149a69a1.webp",
+            "title": ""
           }
         },
-        "item_iqWUH6": {
-          "type": "item",
+        "product_image_EWm3AK": {
+          "type": "product_image",
           "settings": {
-            "image": "shopify://shop_images/0f37696c915cd1132aef521469560d491f580f7b.jpg",
-            "heading": "The ultimate <i>skin retouch.</i>",
-            "heading_font": "sans_serif_n4",
-            "heading_size": 32,
-            "heading_weight": "400",
-            "heading_color": "#ffffff",
-            "text_align": "left",
-            "button_text": "Shop skin retouch",
-            "button_link": "",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#ffffff"
+            "image": "shopify://shop_images/Garden-of-wellness-shop_GOWMC014_1000x1000_632c1805-1c12-435f-a67c-90f922f50fca.webp",
+            "title": ""
           }
         },
-        "item_JJJTGV": {
-          "type": "item",
+        "product_image_NaJG6L": {
+          "type": "product_image",
           "settings": {
-            "image": "shopify://shop_images/image_1.png",
-            "heading": "Serum for <i>sensetive.</i>",
-            "heading_font": "sans_serif_n4",
-            "heading_size": 32,
-            "heading_weight": "400",
-            "heading_color": "#ffffff",
-            "text_align": "left",
-            "button_text": "Shop serum",
-            "button_link": "",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#ffffff"
+            "image": "shopify://shop_images/Garden-of-wellness-shop_GOWMC015_1000x1000_3a2d2973-88eb-4377-a6fb-96c6d4bc9bde.webp",
+            "title": ""
+          }
+        },
+        "product_row_zr6mQX": {
+          "type": "product_row",
+          "settings": {
+            "product_name": "Argan Milk Serum",
+            "cell_1": true,
+            "cell_2": true,
+            "cell_3": true,
+            "cell_4": true,
+            "cell_5": true
+          }
+        },
+        "product_row_YNTQCn": {
+          "type": "product_row",
+          "settings": {
+            "product_name": "Whipped Argan Oil Body Butter",
+            "cell_1": true,
+            "cell_2": true,
+            "cell_3": true,
+            "cell_4": true,
+            "cell_5": true
+          }
+        },
+        "product_row_pXFdte": {
+          "type": "product_row",
+          "settings": {
+            "product_name": "Beautifying Oil Face",
+            "cell_1": true,
+            "cell_2": true,
+            "cell_3": true,
+            "cell_4": true,
+            "cell_5": true
           }
         }
       },
       "block_order": [
-        "item_tdwmNp",
-        "item_iqWUH6",
-        "item_JJJTGV"
+        "product_image_aJADTm",
+        "product_image_EWm3AK",
+        "product_image_NaJG6L",
+        "product_row_zr6mQX",
+        "product_row_YNTQCn",
+        "product_row_pXFdte"
       ],
-      "name": "Image grid hover",
+      "name": "Skin Comparison Table",
       "settings": {
-        "bg_color": "#ffffff"
+        "heading": "Find the best.",
+        "heading_color": "#333333",
+        "skin_type_1": "Sensitive skin",
+        "skin_type_2": "Dry skin",
+        "skin_type_3": "Oily skin",
+        "skin_type_4": "Normal skin",
+        "skin_type_5": "Combination skin",
+        "show_conclusion": true,
+        "conclusion_label": "Conclusion:",
+        "conclusion": "HC+ Complex™ is carefully blended to support your body and skin as hormones fluctuate over time. From mid 40s and beyond (including all stages of the menopause), Blended to give you and your skin more.",
+        "background_color": "#f7f8f3",
+        "text_color": "#333333",
+        "active_border_color": "#ffc107",
+        "check_color": "#4caf50",
+        "cross_color": "#e0e0e0",
+        "padding_top": 80,
+        "padding_bottom": 80
       }
     }
   },
@@ -762,7 +849,8 @@
     "image_product_grid_bjq3xR",
     "mega_deal_countdown_KcUUWk",
     "unbeatable_prices_wPMB9Q",
+    "image_grid_FjbTTA",
     "marquee_wqwR3C",
-    "image_grid_FjbTTA"
+    "skin_comparison_table_PxB9GD"
   ]
 }

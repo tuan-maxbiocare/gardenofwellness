@@ -1,0 +1,242 @@
+{% style %} 
+.image-grid-section { 
+  width: 100%; 
+  line-height: 0; 
+  overflow: hidden; 
+} 
+
+.image-grid { 
+  display: grid; 
+  /* Mặc định cho Mobile: Xếp dọc (1 cột) */
+  grid-template-columns: 1fr; 
+  gap: 2px; 
+  width: 100%; 
+  margin: 0; 
+  padding: 0;
+  box-sizing: border-box;
+} 
+
+/* Khi màn hình lớn hơn 768px (Tablet ngang/Desktop): Hiện 3 block 1 hàng */
+@media (min-width: 768px) {
+  .image-grid { 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 2px; /* Line trắng nhỏ giữa các block như bạn muốn */
+  }
+}
+
+.image-grid__item { 
+  position: relative; 
+  overflow: hidden; 
+  width: 100%; 
+  aspect-ratio: 2 / 3; /* Tỉ lệ dài sang trọng */
+} 
+
+/* Mobile: Nếu muốn ảnh bớt dài có thể chỉnh tỉ lệ vuông hơn */
+@media (max-width: 767px) {
+  .image-grid__item {
+    aspect-ratio: 1 / 1; 
+  }
+}
+
+.image-grid__image, .image-grid__image img { 
+  width: 100%; 
+  height: 100%; 
+  display: block; 
+} 
+
+.image-grid__image img { 
+  object-fit: cover; 
+  transition: transform 0.8s ease; 
+} 
+
+.image-grid__item:hover img { 
+  transform: scale(1.05); 
+} 
+
+.image-grid__content { 
+  position: absolute; 
+  inset: 0; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: flex-end; 
+  align-items: center; 
+  padding: 10% 20px; 
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 40%, transparent 100%);
+  z-index: 2; 
+  line-height: normal; 
+  text-align: center; 
+}
+
+.image-grid__heading { 
+  margin: 0 0 20px 0; 
+  color: #fff; 
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  word-break: break-word;
+  font-size: clamp(18px, 3vw + 1rem, 40px) !important;
+} 
+
+.image-grid__heading i, .image-grid__heading em {
+  font-family: serif; 
+  font-style: italic;
+  text-transform: lowercase;
+  font-weight: 400;
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.image-grid__button {
+  display: inline-block; 
+  padding: clamp(8px, 1vw, 12px) clamp(20px, 2vw, 30px);
+  border: 1px solid #fff; 
+  border-radius: 50px;
+  font-size: clamp(10px, 1vw, 13px); 
+  text-decoration: none; 
+  color: #fff !important;
+  background: transparent; 
+  transition: all 0.3s ease; 
+} 
+
+.image-grid__button:hover { 
+  background: transparent !important; 
+  border-width: 1.5px; 
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); 
+  transform: translateY(-2px); 
+}
+{% endstyle %}
+
+<section class="image-grid-section" style="background: {{ section.settings.bg_color }}">
+  <div class="image-grid">
+    {% for block in section.blocks %}
+      {% if block.settings.image %}
+        <div class="image-grid__item" {{ block.shopify_attributes }}>
+          <div class="image-grid__image">
+            <img src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.heading | escape }}" loading="lazy">
+          </div>
+          <div class="image-grid__content">
+            <h2 class="image-grid__heading" style="
+                color: {{ block.settings.heading_color }}; 
+                font-size: {{ block.settings.heading_size }}px; 
+                font-family: {{ block.settings.heading_font.family }}; 
+                font-weight: {{ block.settings.heading_weight }};">
+              {{ block.settings.heading }}
+            </h2>
+            {% if block.settings.button_text != blank %}
+              <a href="{{ block.settings.button_link }}" class="image-grid__button">{{ block.settings.button_text }}</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Image grid hover",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Image block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "The ultimate body care."
+        },
+        {
+          "type": "font_picker",
+          "id": "heading_font",
+          "label": "Heading font",
+          "default": "helvetica_n4"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "label": "Heading size",
+          "min": 16,
+          "max": 64,
+          "step": 1,
+          "default": 32
+        },
+        {
+          "type": "select",
+          "id": "heading_weight",
+          "label": "Font weight",
+          "options": [
+            { "value": "300", "label": "Light" },
+            { "value": "400", "label": "Regular" },
+            { "value": "600", "label": "Semi Bold" },
+            { "value": "700", "label": "Bold" }
+          ],
+          "default": "400"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button text color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_border_color",
+          "label": "Button border color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Image grid hover",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
