@@ -1,340 +1,283 @@
 import { Component } from '@theme/component';
-import { QuickAddComponent } from '@theme/quick-add';
-import { isClickedOutside, isMobileBreakpoint, mediaQueryLarge } from '@theme/utilities';
-
-/**
- * A custom element that manages a dialog.
- *
- * @typedef {object} Refs
- * @property {HTMLDialogElement} dialog - The dialog element.
- * @property {HTMLButtonElement} trigger - The button element.
- * @property {HTMLAnchorElement} productLink - The product link element.
- *
- * @extends Component<Refs>
- */
 
 export class ProductHotspotComponent extends Component {
-  requiredRefs = ['trigger', 'dialog'];
-  /** @type {(() => void) | null} */
-  #pointerenterHandler = null;
-  timer = /** @type {number | null} */ (null);
+  requiredRefs = ['trigger'];
+  
+  static instances = [];
+  static activeIndex = 0;
+  static prevButton = null;
+  static nextButton = null;
+  static totalItems = 0;
 
   connectedCallback() {
     super.connectedCallback();
+    console.log('Hotspot connected:', this.dataset.index);
+    
+    // Lưu instance
+    const index = parseInt(this.dataset.index || '0');
+    
+    // Check if this instance already exists
+    const existingIndex = ProductHotspotComponent.instances.findIndex(
+      inst => inst.dataset.blockId === this.dataset.blockId
+    );
+    
+    if (existingIndex === -1) {
+      ProductHotspotComponent.instances.push(this);
+      ProductHotspotComponent.totalItems = ProductHotspotComponent.instances.length;
+    }
+    
+    // Setup events
+    this.setupEvents();
+    
+    // Initialize on first hotspot
+    if (ProductHotspotComponent.instances.length === 1) {
+      setTimeout(() => {
+        this.initializeSlider();
+      }, 100);
+    }
+  }
 
-    // Set up initial event listeners based on current breakpoint
-    this.#handleBreakpointChange();
+  setupEvents() {
+    const { trigger } = this.refs;
+    if (!trigger) return;
+    
+    // Click event
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleClick();
+    });
+    
+    // Hover event (desktop only)
+    if (!this.isMobile()) {
+      trigger.addEventListener('mouseenter', () => {
+        this.handleHover();
+      });
+    }
+  }
 
-    // Listen for breakpoint changes
-    mediaQueryLarge.addEventListener('change', this.#handleBreakpointChange);
+  handleClick() {
+    const index = parseInt(this.dataset.index || '0');
+    console.log('Hotspot clicked:', index);
+    ProductHotspotComponent.goToIndex(index);
+  }
+
+  handleHover() {
+    if (this.isMobile()) return;
+    
+    const index = parseInt(this.dataset.index || '0');
+    console.log('Hotspot hovered:', index);
+    
+    // Small delay for better UX
+    clearTimeout(this.hoverTimer);
+    this.hoverTimer = setTimeout(() => {
+      ProductHotspotComponent.goToIndex(index);
+    }, 100);
+  }
+
+  isMobile() {
+    return window.innerWidth < 990;
+  }
+
+  static goToIndex(index) {
+    console.log('Going to index:', index, 'Total items:', this.totalItems);
+    
+    if (this.totalItems === 0) return;
+    
+    // KHÔNG xử lý infinite loop nữa - chỉ chấp nhận index hợp lệ
+    if (index < 0 || index >= this.totalItems) {
+      console.log('Index out of bounds, ignoring');
+      return;
+    }
+    
+    // Update track
+    const track = document.getElementById('HotspotProductTrack');
+    if (track) {
+      track.style.transform = `translateX(-${index * 100}%)`;
+    }
+    
+    // Update active states
+    this.updateActiveStates(index);
+    
+    // Update active index
+    this.activeIndex = index;
+    
+    // Update arrows
+    this.updateArrows();
+  }
+
+  static updateActiveStates(index) {
+    // Update hotspots
+    this.instances.forEach((hotspot, i) => {
+      if (hotspot) {
+        hotspot.classList.toggle('is-active', i === index);
+      }
+    });
+    
+    // Update cards
+    const cards = document.querySelectorAll('.hotspot-product-card__item');
+    cards.forEach((card, i) => {
+      card.classList.toggle('is-active', i === index);
+    });
+  }
+
+  static updateArrows() {
+    if (!this.prevButton || !this.nextButton) {
+      console.warn('Arrow buttons not found');
+      return;
+    }
+    
+    if (this.totalItems <= 1) {
+      // Nếu chỉ có 1 item, disable cả 2 nút
+      this.prevButton.disabled = true;
+      this.nextButton.disabled = true;
+      return;
+    }
+    
+    // Update arrow states based on current position
+    this.prevButton.disabled = this.activeIndex === 0;
+    this.nextButton.disabled = this.activeIndex === this.totalItems - 1;
+    
+    // Update aria labels for accessibility
+    if (this.prevButton.disabled) {
+      this.prevButton.setAttribute('aria-label', 'No previous product');
+    } else {
+      this.prevButton.setAttribute('aria-label', 'Previous product');
+    }
+    
+    if (this.nextButton.disabled) {
+      this.nextButton.setAttribute('aria-label', 'No next product');
+    } else {
+      this.nextButton.setAttribute('aria-label', 'Next product');
+    }
+    
+    console.log('Arrow states updated:', {
+      prevDisabled: this.prevButton.disabled,
+      nextDisabled: this.nextButton.disabled,
+      activeIndex: this.activeIndex,
+      totalItems: this.totalItems
+    });
+  }
+
+  initializeSlider() {
+    console.log('Initializing slider...');
+    
+    // Setup arrows
+    const card = document.getElementById('HotspotProductCard');
+    if (card) {
+      // Get fresh references to buttons
+      ProductHotspotComponent.prevButton = card.querySelector('.hotspot-card-arrow.prev');
+      ProductHotspotComponent.nextButton = card.querySelector('.hotspot-card-arrow.next');
+      
+      if (ProductHotspotComponent.prevButton) {
+        // Remove existing listener to avoid duplicates
+        ProductHotspotComponent.prevButton.replaceWith(
+          ProductHotspotComponent.prevButton.cloneNode(true)
+        );
+        ProductHotspotComponent.prevButton = card.querySelector('.hotspot-card-arrow.prev');
+        
+        ProductHotspotComponent.prevButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Prev clicked, current index:', ProductHotspotComponent.activeIndex);
+          
+          // Only go to previous if not at first item
+          if (ProductHotspotComponent.activeIndex > 0) {
+            ProductHotspotComponent.goToIndex(ProductHotspotComponent.activeIndex - 1);
+          }
+        });
+      }
+      
+      if (ProductHotspotComponent.nextButton) {
+        // Remove existing listener to avoid duplicates
+        ProductHotspotComponent.nextButton.replaceWith(
+          ProductHotspotComponent.nextButton.cloneNode(true)
+        );
+        ProductHotspotComponent.nextButton = card.querySelector('.hotspot-card-arrow.next');
+        
+        ProductHotspotComponent.nextButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Next clicked, current index:', ProductHotspotComponent.activeIndex);
+          
+          // Only go to next if not at last item
+          if (ProductHotspotComponent.activeIndex < ProductHotspotComponent.totalItems - 1) {
+            ProductHotspotComponent.goToIndex(ProductHotspotComponent.activeIndex + 1);
+          }
+        });
+      }
+    }
+    
+    // Set initial active state
+    setTimeout(() => {
+      if (ProductHotspotComponent.totalItems > 0) {
+        ProductHotspotComponent.goToIndex(0);
+      }
+    }, 100);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    // Clean up listeners
-    this.#removeDesktopListeners();
-    mediaQueryLarge.removeEventListener('change', this.#handleBreakpointChange);
-  }
-
-  /**
-   * Open the quick-add modal
-   * @returns {void}
-   */
-  #openQuickAddModal() {
-    const quickAddComponent = /** @type {QuickAddComponent | null} */ (this.querySelector('quick-add-component'));
-
-    if (!quickAddComponent) return;
-    quickAddComponent.handleClick(new MouseEvent('click', { bubbles: true, cancelable: true }));
-  }
-
-  /**
-   * Set up desktop event listeners (hover)
-   * @returns {void}
-   */
-  #setupDesktopListeners() {
-    const { trigger, dialog } = this.refs;
-
-    /** @type {() => void} */
-    const pointerenterHandler = () => {
-      if (dialog.open) return;
-
-      this.timer = setTimeout(() => {
-        this.showDialog();
-      }, 120);
-      // Add pointerleave listener when entering trigger
-      trigger.addEventListener('pointerleave', this.#handlePointerLeave);
-    };
-
-    this.#pointerenterHandler = pointerenterHandler;
-    trigger.addEventListener('pointerenter', pointerenterHandler);
-  }
-
-  /**
-   * Remove desktop event listeners from trigger
-   * @returns {void}
-   */
-  #removeDesktopListeners() {
-    const { trigger } = this.refs;
-
-    if (this.#pointerenterHandler) {
-      trigger.removeEventListener('pointerenter', this.#pointerenterHandler);
-      trigger.removeEventListener('pointerleave', this.#handlePointerLeave);
-      this.#pointerenterHandler = null;
-    }
-
-    // Clear any pending timer
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
+    clearTimeout(this.hoverTimer);
+    
+    // Remove from instances
+    const index = ProductHotspotComponent.instances.indexOf(this);
+    if (index > -1) {
+      ProductHotspotComponent.instances.splice(index, 1);
+      ProductHotspotComponent.totalItems = ProductHotspotComponent.instances.length;
     }
   }
+}
 
-  /**
-   * Handle breakpoint changes
-   * @returns {void}
-   */
-  #handleBreakpointChange = () => {
-    // Remove existing listeners
-    this.#removeDesktopListeners();
-
-    // Set up desktop hover listeners only (mobile uses on:click in template)
-    if (!isMobileBreakpoint()) {
-      this.#setupDesktopListeners();
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded - looking for hotspots');
+  
+  // Auto-initialize existing hotspots
+  const hotspots = document.querySelectorAll('product-hotspot-component');
+  if (hotspots.length > 0) {
+    console.log(`Found ${hotspots.length} hotspots`);
+    
+    // Sort by data-index
+    const sortedHotspots = Array.from(hotspots).sort((a, b) => {
+      return parseInt(a.dataset.index || 0) - parseInt(b.dataset.index || 0);
+    });
+    
+    // Update instances array
+    ProductHotspotComponent.instances = sortedHotspots;
+    ProductHotspotComponent.totalItems = sortedHotspots.length;
+    
+    // Initialize slider
+    if (sortedHotspots[0]) {
+      sortedHotspots[0].initializeSlider();
     }
-  };
+  }
+});
 
-  /**
-   * Calculate the placement of the dialog.
-   * @returns {Promise<void> | undefined}
-   */
-  #calculateDialogPlacement() {
-    const { trigger, dialog } = this.refs;
-
-    const hotspotsContainer = this.parentElement;
-
-    if (!hotspotsContainer) {
-      return;
-    }
-
-    // Spacing constants
-    const BUTTON_GAP = 10; // Gap between button and dialog
-    const CONTAINER_GAP = 10; // Gap from container edges
-    const TOTAL_GAP = BUTTON_GAP + CONTAINER_GAP;
-
-    // Get container bounds
-    const containerRect = hotspotsContainer?.getBoundingClientRect();
-
-    // Get button dimensions
-    const triggerRect = trigger.getBoundingClientRect();
-
-    // To get dialog dimensions, we need to temporarily show it invisibly
-    // Show dialog invisibly to measure it
-    dialog.style.visibility = 'hidden';
-    dialog.style.display = 'block';
-    dialog.style.transform = 'none';
-    dialog.removeAttribute('data-placement');
-
-    const { width: dialogWidth, height: dialogHeight } = dialog.getBoundingClientRect();
-
-    // Reset dialog state
-    dialog.style.removeProperty('display');
-    dialog.style.removeProperty('visibility');
-    dialog.style.removeProperty('transform');
-    // Calculate button position relative to container
-    const buttonLeft = triggerRect.left - containerRect.left;
-    const buttonRight = triggerRect.right - containerRect.left;
-    const buttonTop = triggerRect.top - containerRect.top;
-    const buttonBottom = triggerRect.bottom - containerRect.top;
-
-    // Calculate available space
-    const spaceRight = containerRect.width - buttonRight - CONTAINER_GAP;
-    const spaceLeft = buttonLeft - CONTAINER_GAP;
-
-    // Determine horizontal placement
-    let x = 'right';
-
-    if (spaceRight >= dialogWidth + BUTTON_GAP) {
-      x = 'right';
-    } else if (spaceLeft >= dialogWidth + BUTTON_GAP) {
-      x = 'left';
-    } else {
-      x = 'center';
-    }
-
-    // Determine vertical placement
-    let y = 'bottom';
-    let verticalOffset = 0;
-
-    if (x !== 'center') {
-      let dialogStartY = buttonTop; // Default to top-aligned
-      let dialogEndY = buttonTop + dialogHeight;
-
-      if (dialogEndY > containerRect.height - CONTAINER_GAP) {
-        // If top-aligned overflows bottom
-        dialogStartY = buttonBottom - dialogHeight;
-        dialogEndY = buttonBottom;
-        y = 'top';
-
-        if (dialogStartY < CONTAINER_GAP) {
-          // If bottom-aligned overflows top
-          verticalOffset = CONTAINER_GAP - dialogStartY;
-        } else if (dialogEndY > containerRect.height - CONTAINER_GAP) {
-          // If bottom-aligned overflows bottom
-          verticalOffset = -(dialogEndY - (containerRect.height - CONTAINER_GAP));
-        }
-      } else {
-        if (dialogStartY < CONTAINER_GAP) {
-          // If top-aligned overflows top
-          if (dialogStartY < CONTAINER_GAP) {
-            verticalOffset = CONTAINER_GAP - dialogStartY;
-          }
-          y = 'bottom';
+// Handle dynamic sections (theme editor)
+if (typeof Shopify !== 'undefined') {
+  document.addEventListener('shopify:section:load', (event) => {
+    console.log('Section loaded:', event);
+    setTimeout(() => {
+      const hotspots = event.target.querySelectorAll('product-hotspot-component');
+      if (hotspots.length > 0) {
+        // Reinitialize
+        const sortedHotspots = Array.from(hotspots).sort((a, b) => {
+          return parseInt(a.dataset.index || 0) - parseInt(b.dataset.index || 0);
+        });
+        ProductHotspotComponent.instances = sortedHotspots;
+        ProductHotspotComponent.totalItems = sortedHotspots.length;
+        ProductHotspotComponent.activeIndex = 0;
+        
+        if (sortedHotspots[0]) {
+          sortedHotspots[0].initializeSlider();
         }
       }
-    } else {
-      // For center horizontal: position below or above button
-      if (containerRect.height - buttonBottom >= dialogHeight + TOTAL_GAP) {
-        y = 'bottom';
-      } else if (buttonTop >= dialogHeight + TOTAL_GAP) {
-        y = 'top';
-      } else {
-        // If neither fits well, choose based on button position
-        y = buttonTop < containerRect.height / 2 ? 'bottom' : 'top';
-      }
-    }
-
-    // Set placement data attribute
-    dialog.dataset.placement = `${x},${y}`;
-
-    // Apply vertical offset if needed to keep dialog in bounds
-    if (verticalOffset !== 0) {
-      dialog.style.setProperty('--dialog-vertical-offset', `${verticalOffset}px`);
-    } else {
-      dialog.style.removeProperty('--dialog-vertical-offset');
-    }
-
-    // Return a promise that resolves after a few ticks to ensure styles are applied
-    return new Promise((resolve) => setTimeout(resolve, 100));
-  }
-
-  /**
-   * Handle pointer leave.
-   * @param {PointerEvent} e - The event.
-   * @returns {void}
-   */
-  #handlePointerLeave = (e) => {
-    const { dialog, trigger } = this.refs;
-
-    // Clear open timer if leaving trigger before dialog opens
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-
-    if (!dialog.open) return;
-
-    const isLeavingTrigger = e.target === trigger;
-    const isLeavingDialog = e.target === dialog;
-    const isGoingToDialog =
-      e.relatedTarget === dialog ||
-      (e.relatedTarget instanceof Element && e.relatedTarget.closest('dialog') === dialog);
-    const isGoingToTrigger = e.relatedTarget === trigger;
-
-    if ((isLeavingTrigger && !isGoingToDialog) || (isLeavingDialog && !isGoingToTrigger)) {
-      this.closeDialog();
-    }
-  };
-
-  /**
-   * Get the product link for the hotspot product.
-   * @returns {HTMLAnchorElement | null} The product link or null.
-   */
-  getHotspotProductLink() {
-    return this.refs.productLink || null;
-  }
-
-  /**
-   * Handle hotspot click - on mobile/touch devices opens quick-add, on desktop opens dialog
-   * @param {MouseEvent} e - The click event
-   * @returns {void}
-   */
-  handleHotspotClick = (e) => {
-    // Check if it's a touch device (tablets) or mobile breakpoint
-    const isTouchDevice = matchMedia('(hover: none)').matches;
-
-    if (isMobileBreakpoint() || isTouchDevice) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.#openQuickAddModal();
-    } else {
-      this.showDialog();
-    }
-  };
-
-  showDialog = async () => {
-    const { dialog } = this.refs;
-    await this.#calculateDialogPlacement();
-    dialog.dataset.showing = 'true';
-    dialog.show();
-    document.body.addEventListener('click', this.lightDismissMouse);
-    document.body.addEventListener('keydown', this.lightDismissKeyboard);
-    document.body.addEventListener('keyup', this.lightDismissKeyboard);
-    // Add pointerleave listener to dialog when it opens
-    dialog.addEventListener('pointerleave', this.#handlePointerLeave);
-  };
-
-  /**
-   * Close the dialog.
-   * @returns {Promise<void>}
-   */
-  closeDialog = async () => {
-    const { dialog, trigger } = this.refs;
-    dialog.dataset.closing = 'true';
-    dialog.close();
-    document.body.removeEventListener('click', this.lightDismissMouse);
-    document.body.removeEventListener('keydown', this.lightDismissKeyboard);
-    document.body.removeEventListener('keyup', this.lightDismissKeyboard);
-    // Remove pointerleave listeners when closing
-    dialog.removeEventListener('pointerleave', this.#handlePointerLeave);
-    trigger.removeEventListener('pointerleave', this.#handlePointerLeave);
-    // we need to use a data-attribute to keep transition-behavior working only when open
-    const animations = dialog.getAnimations({ subtree: true });
-    await Promise.allSettled(animations.map((a) => a.finished));
-    if (!dialog.open) {
-      delete dialog.dataset.showing;
-      delete dialog.dataset.closing;
-      delete dialog.dataset.placement;
-    }
-  };
-
-  /**
-   * Light dismiss the dialog.
-   * @param {MouseEvent} event - The event.
-   * @returns {void}
-   */
-  lightDismissMouse = (event) => {
-    const { dialog } = this.refs;
-    if (isClickedOutside(event, dialog)) {
-      this.closeDialog();
-    }
-  };
-
-  /**
-   * Light dismiss the dialog.
-   * @param {KeyboardEvent} event - The event.
-   * @returns {void}
-   */
-  lightDismissKeyboard = (event) => {
-    const { dialog } = this.refs;
-    if (
-      (event.type === 'keydown' && event.key === 'Escape') ||
-      (event.type === 'keyup' && !dialog.matches(':is(:focus, :focus-visible, :focus-within)'))
-    ) {
-      this.closeDialog();
-    }
-  };
+    }, 300);
+  });
 }
 
 // Register custom element
-customElements.define('product-hotspot-component', ProductHotspotComponent);
+if (!customElements.get('product-hotspot-component')) {
+  customElements.define('product-hotspot-component', ProductHotspotComponent);
+}

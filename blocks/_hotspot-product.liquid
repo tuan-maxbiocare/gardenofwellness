@@ -7,19 +7,25 @@
   assign hotspot_product_title = hotspot_product.title | default: placeholder_product_title
 %}
 
+{% assign product = block.settings.product %}
+
 <product-hotspot-component
-  class="hotspot{% if hotspot_product == blank and request.design_mode == false %} hotspot--hidden-touch hidden--mobile{% endif %}"
+  class="hotspot{% if product == blank and request.design_mode == false %} hotspot--hidden-touch hidden--mobile{% endif %}"
   style="
     left: calc({{ block.settings.x-position }}% - var(--button-size) / 2);
     top: calc({{ block.settings.y-position }}% - var(--button-size) / 2);
     --hotspot-bg: {{ section.settings.hotspot_color }};
     --hotspot-bullseye: {{ section.settings.bullseye_color }};
   "
-  data-product-url="{{ block.settings.product.url }}"
-  data-product-title="{{ block.settings.product.title | escape }}"
+  data-product-handle="{{ product.handle }}"
+  data-product-url="{{ product.url }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-image="{{ product.featured_image | image_url: width: 600 }}"
+  data-product-price="{{ product.price | money }}"
   data-id="{{ block.id }}"
   {{ block.shopify_attributes }}
 >
+
   <button
     class="hotspot-trigger"
     aria-label="{{ 'accessibility.open_hotspot' | t }}"

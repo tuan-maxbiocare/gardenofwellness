@@ -1,5 +1,3 @@
-
-
 {% liquid
   assign section_height_class = ''
 
@@ -15,6 +13,19 @@
         assign section_height_class = 'section-product-hotspots--small'
       endif
   endcase
+  
+  assign heading_block = section.blocks | where: 'type', 'heading' | first
+  
+  # Count hotspot blocks
+  assign hotspot_blocks_count = 0
+  for block in section.blocks
+    if block.type == 'hotspot'
+      assign hotspot_blocks_count = hotspot_blocks_count | plus: 1
+    endif
+  endfor
+  
+  # Mobile breakpoint
+  assign mobile_breakpoint = 749
 %}
 
 <script
@@ -49,511 +60,1224 @@
     --minimum-width-dialog: 260px;
     --maximum-width-dialog: 330px;
     --width-product-image-dialog: 110px;
+    --image-border-radius: {{ section.settings.image_border_radius }}px;
+    --card-border-radius: {{ section.settings.card_border_radius }}px;
+    --card-padding: {{ section.settings.card_padding }}px;
+    --card-gap: {{ section.settings.card_gap }}px;
+    --card-image-size: {{ section.settings.card_image_size }}px;
   "
 >
   <div class="section-product-hotspots__wrapper">
-    <div class="section-product-hotspots__header">
-      {% content_for 'block', type: 'text', id: 'heading' %}
-    </div>
+    {% if heading_block != blank %}
+      <div class="section-product-hotspots__header">
+        <h2 class="heading-{{ heading_block.settings.type_preset | default: 'h3' }}">
+          {{ heading_block.settings.text }}
+        </h2>
+      </div>
+    {% endif %}
 
-    <div class="section-product-hotspots__content">
-      {% if section.settings.toggle_overlay %}
-        {% render 'overlay', settings: section.settings, layer: 'var(--layer-flat)' %}
-      {% endif %}
+    <div class="section-product-hotspots__grid">
+      <!-- LEFT: IMAGE + HOTSPOTS -->
+      <div class="section-product-hotspots__media">
+        {% if section.settings.toggle_overlay %}
+          {% render 'overlay', settings: section.settings, layer: 'var(--layer-flat)' %}
+        {% endif %}
 
-      {% if section.settings.image != blank %}
-        {% render 'image', image: section.settings.image, class: 'hotspots__background-image' %}
-      {% else %}
-        {{ 'hero-apparel-1' | placeholder_svg_tag: 'hotspots__background-image' }}
-      {% endif %}
+        {% if section.settings.image != blank %}
+          {% render 'image', image: section.settings.image, class: 'hotspots__background-image' %}
+        {% else %}
+          {{ 'hero-apparel-1' | placeholder_svg_tag: 'hotspots__background-image' }}
+        {% endif %}
 
-      <div class="hotspots-container">
-        {% content_for 'blocks' %}
+        <div class="hotspots-container">
+          {% for block in section.blocks %}
+            {% if block.type == 'hotspot' %}
+              <product-hotspot-component
+                class="hotspot-component{% if forloop.first %} is-active{% endif %}"
+                style="
+                  left: {{ block.settings.x_position }}%;
+                  top: {{ block.settings.y_position }}%;
+                  --hotspot-bg: {{ section.settings.hotspot_color }};
+                  --hotspot-bullseye: {{ section.settings.bullseye_color }};
+                "
+                data-index="{{ forloop.index0 }}"
+                data-block-id="{{ block.id }}"
+                data-product-handle="{{ block.settings.product.handle | default: '' }}"
+              >
+                <button
+                  class="hotspot-trigger"
+                  type="button"
+                  aria-label="{{ 'accessibility.view_product' | t }}"
+                  data-ref="trigger"
+                ></button>
+              </product-hotspot-component>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- RIGHT: PRODUCT CARD SLIDER -->
+      <div class="section-product-hotspots__product">
+        <div class="hotspot-product-card" id="HotspotProductCard">
+          <!-- PREV BUTTON -->
+          <button
+            class="hotspot-card-arrow prev"
+            type="button"
+            aria-label="Previous product"
+            data-direction="prev"
+            {% if hotspot_blocks_count <= 1 %}disabled{% endif %}
+          ></button>
+
+          <!-- VIEWPORT -->
+          <div class="hotspot-product-card__viewport">
+            <div class="hotspot-product-card__track" id="HotspotProductTrack">
+              {% for block in section.blocks %}
+                {% if block.type == 'hotspot' %}
+                  {% assign product = block.settings.product %}
+                  <div
+                    class="hotspot-product-card__item{% if forloop.first %} is-active{% endif %}"
+                    data-index="{{ forloop.index0 }}"
+                    data-block-id="{{ block.id }}"
+                  >
+                    {% if product != blank %}
+                      <!-- Product Card Structure -->
+                      <div class="product-card product-card--hotspot">
+                        <a href="{{ product.url }}" class="product-card__image">
+                          {% if product.featured_image %}
+                            <img 
+                              src="{{ product.featured_image | image_url: width: 380 }}" 
+                              alt="{{ product.title | escape }}"
+                              loading="lazy"
+                              width="380"
+                              height="380"
+                            >
+                          {% else %}
+                            {{ 'product-1' | placeholder_svg_tag: 'placeholder-image' }}
+                          {% endif %}
+                        </a>
+                        
+                        <div class="product-card__info">
+                          <h3 class="product-card__title">
+                            <a href="{{ product.url }}">{{ product.title }}</a>
+                          </h3>
+                          
+                          <div class="product-card__price">
+                            {%- # Price snippet logic -%}
+                            {%- liquid
+                              assign selected_variant = product.selected_or_first_available_variant
+                              assign price = selected_variant.price
+                              assign compare_at_price = selected_variant.compare_at_price
+
+                              assign show_compare_price = false
+                              if compare_at_price > price
+                                assign show_compare_price = true
+                              endif
+
+                              if product == blank
+                                assign price = 1999
+                              endif
+
+                              # For product cards, calculate min/max across all variants
+                              assign price_min = product.price_min
+                              assign price_max = product.price_max
+                              assign has_volume_pricing = product.quantity_price_breaks_configured? | default: false
+
+                              # Determine if currency code should be shown
+                              assign use_currency = false
+                              if settings.currency_code_enabled_product_cards
+                                assign use_currency = true
+                              endif
+
+                              # Format all prices
+                              if use_currency
+                                assign price = price | money_with_currency
+                                assign compare_at_price = compare_at_price | money_with_currency
+                                assign price_min = price_min | money_with_currency
+                                assign price_max = price_max | money_with_currency
+                              else
+                                assign price = price | money
+                                assign compare_at_price = compare_at_price | money
+                                assign price_min = price_min | money
+                                assign price_max = price_max | money
+                              endif
+                            -%}
+
+                            <div ref="priceContainer">
+                              {% if has_volume_pricing %}
+                                {% comment %} Volume pricing display {% endcomment %}
+                                {% if show_compare_price %}
+                                  <span role="group">
+                                    <span class="visually-hidden">{{ 'content.price_regular' | t }}&nbsp;</span>
+                                    <span class="compare-at-price">{{- compare_at_price -}}</span>
+                                  </span>
+                                {% endif %}
+                                <span role="group">
+                                  <span class="visually-hidden">{{ 'content.price_range' | t }}&nbsp;</span>
+                                  <span class="price price-range price--large">{{ price_min }} - {{ price_max }}</span>
+                                </span>
+                              {% else %}
+                                {% comment %} Standard pricing display {% endcomment %}
+                                {% if show_compare_price %}
+                                  <span role="group">
+                                    <span class="visually-hidden">{{ 'content.price_regular' | t }}&nbsp;</span>
+                                    <span class="compare-at-price">{{- compare_at_price -}}</span>
+                                  </span>
+                                  <span role="group">
+                                    <span class="visually-hidden">{{ 'content.price_sale' | t }}&nbsp;</span>
+                                    <span class="price">{{ price | default: '&nbsp;' }}</span>
+                                  </span>
+                                {% else %}
+                                  <span class="price">{{ price | default: '&nbsp;' }}</span>
+                                {% endif %}
+                              {% endif %}
+                            </div>
+                            {%- if has_volume_pricing -%}
+                              <small class="volume-pricing-note">{{ 'content.volume_pricing_available' | t }}</small>
+                            {%- endif -%}
+                          </div>
+                        </div>
+                      </div>
+                    {% else %}
+                      <!-- Fallback khi không có product -->
+                      <div class="product-card product-card--hotspot">
+                        <div class="product-card__image">
+                          {{ 'product-1' | placeholder_svg_tag: 'placeholder-image' }}
+                        </div>
+                        
+                        <div class="product-card__info">
+                          <h3 class="product-card__title">
+                            {{ 'onboarding.product_title' | t }}
+                          </h3>
+                          
+                          <div class="product-card__price">
+                            <span class="price">{{ 1999 | money }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- NEXT BUTTON -->
+          <button
+            class="hotspot-card-arrow next"
+            type="button"
+            aria-label="Next product"
+            data-direction="next"
+            {% if hotspot_blocks_count <= 1 %}disabled{% endif %}
+          ></button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 {% stylesheet %}
-  /* Section layout */
-  .section-product-hotspots {
-    position: relative;
+/* =========================================================
+   GRID LAYOUT – CÂN BẰNG 2 BÊN
+   ========================================================= */
+.section-product-hotspots__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 55%) minmax(0, 45%);
+  align-items: stretch;
+  gap: 28px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.section-product-hotspots__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-product-hotspots__header h2,
+.section-product-hotspots__header h3,
+.section-product-hotspots__header h4,
+.section-product-hotspots__header h5,
+.section-product-hotspots__header h6 {
+  margin: 0;
+}
+
+/* =========================================================
+   LEFT – IMAGE + HOTSPOTS
+   ========================================================= */
+.section-product-hotspots__media {
+  position: relative;
+  aspect-ratio: var(--ratio, 16 / 9);
+  overflow: hidden;
+  border-radius: var(--image-border-radius, 0px);
+}
+
+.hotspots__background-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hotspots-container {
+  position: absolute;
+  inset: 0;
+  /* REMOVED: pointer-events: none; */
+}
+
+/* =========================================================
+   RIGHT – PRODUCT CARD WRAPPER
+   ========================================================= */
+.section-product-hotspots__product {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* =========================================================
+   PRODUCT CARD SHELL
+   ========================================================= */
+.hotspot-product-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+  padding: 10px;
+}
+
+/* =========================================================
+   ARROWS
+   ========================================================= */
+.hotspot-card-arrow {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  background: white;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotspot-card-arrow:hover:not(:disabled) {
+  background: #f8f8f8;
+  transform: scale(1.08);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.hotspot-card-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none;
+}
+
+/* icon */
+.hotspot-card-arrow::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #333;
+  border-bottom: 2px solid #333;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.hotspot-card-arrow.prev::before {
+  transform: translate(-40%, -50%) rotate(135deg);
+}
+
+.hotspot-card-arrow.next::before {
+  transform: translate(-60%, -50%) rotate(-45deg);
+}
+
+/* =========================================================
+   VIEWPORT
+   ========================================================= */
+.hotspot-product-card__viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  min-height: 380px;
+  border-radius: 16px;
+}
+
+/* =========================================================
+   TRACK
+   ========================================================= */
+.hotspot-product-card__track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* =========================================================
+   ITEM
+   ========================================================= */
+.hotspot-product-card__item {
+  flex: 0 0 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotspot-product-card__item.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* =========================================================
+   PRODUCT CARD CUSTOM STYLING - DESKTOP
+   ========================================================= */
+.product-card--hotspot {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+  background: white;
+}
+
+.product-card--hotspot .product-card__image {
+  display: block;
+  border-radius: calc(var(--card-border-radius, 12px) - 4px);
+  overflow: hidden;
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+}
+
+.product-card--hotspot .product-card__image:hover {
+  transform: scale(1.02);
+}
+
+.product-card--hotspot .product-card__image img,
+.product-card--hotspot .product-card__image svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-card--hotspot .product-card__info {
+  padding: 0 12px;
+}
+
+.product-card--hotspot .product-card__title {
+  font-size: 16px;
+  margin: 0 0 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #222;
+  text-align: center;
+}
+
+.product-card--hotspot .product-card__title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.product-card--hotspot .product-card__title a:hover {
+  color: #666;
+  text-decoration: none;
+}
+
+/* =========================================================
+   PRICE STYLING - DESKTOP
+   ========================================================= */
+.product-card--hotspot .product-card__price {
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.product-card--hotspot .price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+.product-card--hotspot .price.price--large {
+  font-size: 17px;
+}
+
+.product-card--hotspot .price.price-range {
+  color: #d10000;
+}
+
+.product-card--hotspot .compare-at-price {
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+  margin-right: 6px;
+}
+
+.product-card--hotspot .visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+.product-card--hotspot .volume-pricing-note {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Remove background từ placeholder */
+.product-card--hotspot .product-card__image svg.placeholder-image {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  padding: 30px;
+}
+
+/* =========================================================
+   HOTSPOT STYLES
+   ========================================================= */
+product-hotspot-component {
+  position: absolute;
+  width: var(--hotspot-size);
+  height: var(--hotspot-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+  pointer-events: auto !important;
+}
+
+product-hotspot-component:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 11;
+}
+
+product-hotspot-component.is-active {
+  z-index: 12;
+}
+
+product-hotspot-component.is-active .hotspot-trigger {
+  background: var(--hotspot-bg);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.hotspot-trigger {
+  width: 100%;
+  height: 100%;
+  background: var(--hotspot-bg, rgb(0 0 0 / 0.45));
+  border-radius: 50%;
+  position: relative;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: auto !important;
+  outline: none;
+}
+
+/* Hiệu ứng hover rõ hơn */
+.hotspot-trigger:hover {
+  background: var(--hotspot-bg);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* bullseye */
+.hotspot-trigger::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: calc(var(--hotspot-size) * 0.4);
+  height: calc(var(--hotspot-size) * 0.4);
+  background: var(--hotspot-bullseye, #fff);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Animation pulse cho hotspot active */
+@keyframes hotspot-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+product-hotspot-component.is-active .hotspot-trigger {
+  animation: hotspot-pulse 2s infinite;
+}
+
+/* =========================================================
+   MOBILE STYLING - GIỐNG HÌNH
+   ========================================================= */
+@media (max-width: 989px) {
+  .section-product-hotspots__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
-  .section-product-hotspots__wrapper {
+  .hotspot-product-card {
+    max-width: 100%;
+    gap: 12px;
+  }
+  
+  .hotspot-card-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .hotspot-product-card__viewport {
+    min-height: 340px;
+  }
+  
+  .section-product-hotspots__header {
+    margin-bottom: 24px;
+  }
+  
+  /* Trên mobile, chỉ click không hover */
+  product-hotspot-component:hover {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .hotspot-trigger:hover {
+    transform: scale(1);
+  }
+  
+  .hotspot-product-card__item {
+    padding: 16px;
+  }
+  
+  .product-card--hotspot .product-card__title {
+    font-size: 15px;
+  }
+  
+  .product-card--hotspot .product-card__price {
+    font-size: 14px;
+  }
+  
+  .product-card--hotspot .price {
+    font-size: 15px;
+  }
+  
+  .product-card--hotspot .price.price--large {
+    font-size: 16px;
+  }
+}
+
+/* MOBILE - GIỐNG HÌNH HYDRAING YOUTH CREAM */
+@media (max-width: 749px) {
+  /* Ẩn nút prev/next trên mobile */
+  .hotspot-card-arrow {
+    display: none !important;
+  }
+  
+  /* Điều chỉnh layout product card */
+  .hotspot-product-card {
+    padding: 0;
+    gap: 0;
+    width: 100%;
+  }
+  
+  /* Viewport cho touch scroll */
+  .hotspot-product-card__viewport {
+    min-height: auto !important;
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    width: 100%;
+    cursor: grab;
+    user-select: none;
+    border-radius: 0;
+  }
+  
+  .hotspot-product-card__viewport:active {
+    cursor: grabbing;
+  }
+  
+  /* Ẩn scrollbar */
+  .hotspot-product-card__viewport::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hotspot-product-card__viewport {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Track cho mobile */
+  .hotspot-product-card__track {
+    transform: none !important;
+    width: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    height: auto;
+    padding: 10px;
+    gap: var(--card-gap, 12px);
+  }
+  
+  /* Item cho mobile - CARD NHỎ NHƯ HÌNH */
+  .hotspot-product-card__item {
+    scroll-snap-align: start;
+    min-width: calc(100% - 40px) !important;
+    width: calc(100% - 40px) !important;
+    flex-shrink: 0;
+    padding: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    height: auto;
+    display: block;
+  }
+  
+  /* PRODUCT CARD MOBILE - GIỐNG HÌNH */
+  .product-card--hotspot {
+    max-width: 100% !important;
+    padding: var(--card-padding, 12px) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: var(--card-gap, 12px) !important;
+    text-align: left !important;
+    border-radius: var(--card-border-radius, 8px) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+    background: white;
+    height: auto;
+  }
+  
+  .product-card--hotspot:hover {
+    transform: none !important;
+  }
+  
+  /* Hình ảnh nhỏ, vuông */
+  .product-card--hotspot .product-card__image {
+    width: var(--card-image-size, 80px) !important;
+    height: var(--card-image-size, 80px) !important;
+    min-width: var(--card-image-size, 80px) !important;
+    min-height: var(--card-image-size, 80px) !important;
+    margin-bottom: 0 !important;
+    border-radius: calc(var(--card-border-radius, 8px) - 2px) !important;
+    flex-shrink: 0;
+  }
+  
+  .product-card--hotspot .product-card__image:hover {
+    transform: none !important;
+  }
+  
+  /* Info bên cạnh hình ảnh */
+  .product-card--hotspot .product-card__info {
+    padding: 0 !important;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--gap);
-    width: 100%;
-    height: 100%;
+    justify-content: center;
   }
-
-  /* Image container */
-  .section-product-hotspots__content {
-    position: relative;
-    aspect-ratio: var(--ratio, 21 / 9);
+  
+  /* Title và price nằm ngang */
+  .product-card--hotspot .product-card__title {
+    font-size: 14px !important;
+    margin: 0 0 6px 0 !important;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #222;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
   }
-
-  /* Hide hotspots without products on touch devices (tablets included) */
-  @media (hover: none) {
-    product-hotspot-component.hotspot--hidden-touch {
-      display: none;
-    }
+  
+  /* PRICE NẰM NGANG BÊN DƯỚI TITLE */
+  .product-card--hotspot .product-card__price {
+    font-size: 13px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 0 !important;
+    text-align: left;
   }
-
-  /* Responsive adjustments */
-  @media screen and (max-width: 749px) {
-    /* Hide dialog on mobile - hotspot opens quick-add modal instead */
-    product-hotspot-component .hotspot-dialog {
-      display: none;
-    }
+  
+  .product-card--hotspot .price {
+    font-size: 14px !important;
+    font-weight: 700;
+    color: #222;
   }
-
-  /* Hotspot button - positioned element with clickable area */
+  
+  .product-card--hotspot .compare-at-price {
+    font-size: 12px !important;
+    color: #999;
+  }
+  
+  .product-card--hotspot .volume-pricing-note {
+    font-size: 10px !important;
+  }
+  
+  /* Hotspot to hơn cho mobile */
   product-hotspot-component {
-    position: absolute;
-    cursor: pointer;
-    width: var(--button-size);
-    height: var(--button-size);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    padding: 0;
-    font: inherit;
-    color: inherit;
-    outline: none;
-    transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
-    z-index: var(--layer-flat);
+    --hotspot-size: 44px !important;
   }
-
-  product-hotspot-component:has(.hotspot-dialog[open]) {
-    z-index: var(--layer-raised);
-  }
-
-  product-hotspot-component .hotspot-trigger {
-    padding: 0;
-    border: none;
-  }
-
-  .hotspot-dialog__product-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: var(--padding-xs);
-    padding-inline-start: 0;
-    overflow: hidden;
-  }
-
-  /* Visual target circle */
+  
   .hotspot-trigger {
-    width: var(--hotspot-size);
-    height: var(--hotspot-size);
-    background: var(--hotspot-bg, rgb(0 0 0 / 0.5));
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    transition: width 0.1s ease-out, height 0.1s ease-out;
+    touch-action: manipulation;
   }
-
-  /* On mobile, ensure trigger is tappable */
-  @media screen and (max-width: 749px) {
-    .hotspot-trigger {
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
+  
+  /* Điều chỉnh khoảng cách section */
+  .section-product-hotspots__grid {
+    gap: 16px;
   }
-
-  /* Bullseye using ::after pseudo-element */
-  .hotspot-trigger::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(var(--hotspot-size) * 0.4);
-    height: calc(var(--hotspot-size) * 0.4);
-    background: var(--hotspot-bullseye, #fff);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.1s ease-out, height 0.1s ease-out, background 0.1s ease-out;
+  
+  .section-product-hotspots__media {
+    border-radius: var(--image-border-radius, 0px);
   }
+}
 
-  /* Bullseye grows on hover or when dialog is open (desktop only) */
-  @media screen and (min-width: 750px) {
-    .hotspot:hover .hotspot-trigger::after,
-    product-hotspot-component:has(.hotspot-dialog[open]) .hotspot-trigger::after {
-      width: calc(var(--hotspot-size) * 0.55);
-      height: calc(var(--hotspot-size) * 0.55);
-      transition: width 0.2s ease-out, height 0.2s ease-out, background 0.2s ease-out;
-      transition-delay: 0.2s;
-    }
+/* Extra small screens */
+@media (max-width: 480px) {
+  .product-card--hotspot {
+    padding: 10px !important;
+    gap: 10px !important;
   }
-
-  .hotspots-container {
-    position: absolute;
-    inset: 0;
-    z-index: var(--layer-flat);
-    overflow: clip;
+  
+  .product-card--hotspot .product-card__image {
+    width: 70px !important;
+    height: 70px !important;
+    min-width: 70px !important;
+    min-height: 70px !important;
   }
-
-  .hotspots__background-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+  
+  .product-card--hotspot .product-card__title {
+    font-size: 13px !important;
   }
-
-  /* Dialog positioning */
-  product-hotspot-component .hotspot-dialog {
-    position: absolute;
-    padding: 0;
-    border-radius: var(--style-border-radius-popover);
-    border: var(--style-border-popover);
-    width: max-content;
-    min-width: var(--minimum-width-dialog);
-    max-width: var(--maximum-width-dialog);
-    box-shadow: var(--shadow-popover);
-
-    &[data-placement*='bottom'] {
-      --offset-y: 0px;
-      --origin-y: calc(var(--hotspot-size) / 2);
-      top: calc((var(--button-size) - var(--hotspot-size)) / 2 + var(--dialog-vertical-offset, 0px));
-      bottom: unset;
-    }
-    &[data-placement*='top'] {
-      --offset-y: 0px;
-      --origin-y: calc(100% - (var(--hotspot-size) * 0.5));
-      top: unset;
-      bottom: calc((var(--button-size) - var(--hotspot-size)) * 0.5 - var(--dialog-vertical-offset, 0px));
-    }
-    &[data-placement*='left'] {
-      --offset-x: calc((var(--button-size) - var(--hotspot-size)) * 0.5);
-      --origin-x: calc(100% - (var(--hotspot-size) * 0.5));
-      left: unset;
-      right: 100%;
-    }
-    &[data-placement*='right'] {
-      --offset-x: calc((var(--button-size) - var(--hotspot-size)) * -0.5);
-      --origin-x: calc(var(--hotspot-size) * 0.5);
-      left: 100%;
-      right: unset;
-    }
-    &[data-placement*='center'] {
-      left: 50%;
-      translate: -50% 0;
-      right: unset;
-    }
-    &[data-placement*='center'][data-placement*='bottom'] {
-      --origin-y: calc(var(--hotspot-size) * 0.5);
-      --origin-x: 50%;
-      --offset-y: calc((var(--button-size) - var(--hotspot-size)) * -0.5);
-      /* stylelint-disable-next-line declaration-property-value-disallowed-list */
-      --offset-x: 0;
-      top: 100%;
-      bottom: unset;
-      margin: 0;
-    }
-    &[data-placement*='center'][data-placement*='top'] {
-      --origin-y: calc(100% - (var(--hotspot-size) * 0.5));
-      --origin-x: 50%;
-      --offset-y: calc((var(--button-size) - var(--hotspot-size)) * 0.5);
-      /* stylelint-disable-next-line declaration-property-value-disallowed-list */
-      --offset-x: 0;
-      bottom: 100%;
-    }
+  
+  .product-card--hotspot .product-card__price {
+    font-size: 12px !important;
   }
-
-  product-hotspot-component .hotspot-dialog:is(:focus, :focus-visible),
-  product-hotspot-component .hotspot-dialog__link:is(:focus, :focus-visible) {
-    outline: none;
+  
+  .product-card--hotspot .price {
+    font-size: 13px !important;
   }
-
-  .hotspot-dialog__product {
-    display: grid;
-    grid-template-columns: auto 1fr;
+  
+  .section-product-hotspots__header {
+    margin-bottom: 20px;
   }
-
-  .hotspot-dialog__product-image,
-  .hotspot-dialog svg.hotspot-dialog__placeholder-product-image {
-    width: var(--width-product-image-dialog);
-    height: var(--width-product-image-dialog);
-    aspect-ratio: 1;
-    padding: var(--padding-product-image-popover, var(--padding-xs));
-    object-fit: cover;
-    border-radius: var(--style-border-radius-popover);
+  
+  .section-product-hotspots__header h2,
+  .section-product-hotspots__header h3 {
+    font-size: 18px;
   }
-
-  .hotspot-dialog__link {
-    position: absolute;
-    inset: 0;
-    z-index: var(--layer-flat);
-  }
-
-  .hotspot-dialog__product-title {
-    margin-block-end: var(--product-title-gap);
-    padding-inline-end: var(--padding-sm);
-    min-width: 0;
-  }
-
-  product-hotspot-component .hotspot-dialog .hotspot-dialog__sold-out-badge {
-    display: flex;
-    width: fit-content;
-    justify-self: flex-end;
-    align-self: flex-end;
-    justify-content: center;
-    align-items: center;
-    font-size: var(--font-body--size);
-    padding: var(--padding-2xs) var(--padding-sm);
-    background: rgb(var(--color-foreground-rgb) / var(--opacity-10));
-    border-radius: var(--border-radius-sm);
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-sm);
-    opacity: var(--opacity-80);
-  }
-
-  /* Dialog transitions */
-  product-hotspot-component .hotspot-dialog {
-    --hotspot-blur: 4px;
-    --hotspot-scale: 0.8;
-    --hotspot-entry-duration: 0.2s;
-    --hotspot-exit-duration: 0.1s;
-
-    /* Firefox doesn't have reverse transitions */
-    /* in webkit/chromium we can set a closing attribute as we transition the exit and hook there */
-    filter: blur(var(--hotspot-blur));
-    opacity: 0;
-    transform: scale(var(--hotspot-scale)) translate(0, 0);
-    transition-property: display, opacity, filter, transform;
-    transition-duration: var(--hotspot-entry-duration);
-    transition-timing-function: ease;
-
-    transform: scale(var(--hotspot-scale)) translate(var(--offset-x), var(--offset-y));
-    transform-origin: var(--origin-x) var(--origin-y);
-    transition-timing-function: cubic-bezier(0.65, -0.49, 0.35, 1.12);
-
-    &[data-closing='true'] {
-      transition-duration: var(--hotspot-exit-duration);
-      transition-timing-function: ease-out;
-      transform: scale(1) translate(0, calc(var(--hotspot-size) * 0.25));
-    }
-
-    /* We can only set transition-behavior once we've measured the dialog dimensions */
-    &[data-showing='true'] {
-      transition-behavior: allow-discrete;
-    }
-  }
-
-  product-hotspot-component .hotspot-dialog[open][data-showing='true'] {
-    opacity: 1;
-    transform: scale(1) translate(0, 0);
-    filter: blur(0px);
-  }
-
-  @starting-style {
-    product-hotspot-component .hotspot-dialog[open][data-showing='true'] {
-      opacity: 0;
-      filter: blur(var(--hotspot-blur));
-      transform: scale(var(--hotspot-scale)) translate(var(--offset-x), var(--offset-y));
-      transform-origin: var(--origin-x) var(--origin-y);
-    }
-  }
-
-  /* Safety triangles for dialogs */
-  product-hotspot-component .hotspot-dialog::after {
-    content: '';
-    position: absolute;
-    opacity: 0;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: all;
-    transition: opacity 0.22s ease-out, translate 0.22s 0.1s ease-out;
-    scale: var(--scale-x, 1) var(--scale-y, 1);
-    z-index: var(--layer-flat);
-  }
-
-  .hotspot-dialog[open]:is([data-placement*='left'], [data-placement*='right'])::after {
-    /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
-    clip-path: polygon(0 0, 100% 0, 100% 100%);
-    width: calc(var(--button-size) / 2 + var(--hotspot-size) * 0.5);
-  }
-
-  .hotspot-dialog[open][data-placement*='right']::after {
-    right: 100%;
-    left: unset;
-  }
-
-  .hotspot-dialog[open][data-placement*='left']::after {
-    left: 100%;
-    right: unset;
-    --scale-x: -1;
-  }
-
-  .hotspot-dialog[open][data-placement*='top']::after {
-    --scale-y: -1;
-  }
-
-  .hotspot-dialog[open][data-placement*='center']::after {
-    height: calc(var(--button-size) / 2 + var(--hotspot-size) * 0.5);
-    width: 100%;
-    /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
-    clip-path: polygon(0 0, 100% 0, 50% calc(100% - var(--hotspot-size) * 0.25));
-    --scale-x: 1;
-    --scale-y: 1;
-  }
-
-  .hotspot-dialog[open][data-placement*='center'][data-placement*='bottom']::after {
-    top: unset;
-    bottom: 100%;
-    --scale-y: -1;
-  }
-
-  .hotspot-dialog[open][data-placement*='center'][data-placement*='top']::after {
-    top: 100%;
-    bottom: unset;
-  }
-
-  /* Quick add button */
-  .hotspot-dialog[open] {
-    .quick-add {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      width: auto;
-      height: auto;
-      position: relative;
-      z-index: var(--layer-flat);
-    }
-
-    .quick-add__button {
-      position: relative;
-      padding-block: 0;
-      box-shadow: none;
-      align-items: center;
-      justify-self: flex-end;
-      height: fit-content;
-      translate: var(--padding-2xs) 0;
-      border: none;
-      color: var(--color-foreground);
-      background-color: var(--color-background);
-      overflow: visible;
-      pointer-events: all;
-      opacity: 1;
-      animation: elementSlideInTop var(--animation-speed) var(--animation-easing);
-      transition-property: translate;
-      transition-duration: var(--animation-speed);
-      transition-timing-function: var(--ease-out-cubic);
-
-      &::before {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: calc(50px + 2px);
-        border: 2px solid transparent;
-        pointer-events: none;
-        transition-property: border-color;
-        transition-duration: 0s;
-        transition-timing-function: var(--ease-out-cubic);
-      }
-
-      &:is(:hover, :focus, :focus-visible, :active) {
-        translate: 0 0;
-        transition-delay: var(--animation-speed-slow);
-
-        &::before {
-          border-color: rgb(var(--color-foreground-rgb) / var(--opacity-15));
-          transition-duration: var(--animation-speed);
-          transition-delay: var(--animation-speed-slow);
-        }
-      }
-    }
-  }
+}
 {% endstylesheet %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Hotspot mobile touch initialized');
+  
+  const hotspots = document.querySelectorAll('product-hotspot-component');
+  const track = document.getElementById('HotspotProductTrack');
+  const viewport = document.querySelector('.hotspot-product-card__viewport');
+  const cards = document.querySelectorAll('.hotspot-product-card__item');
+  const prevBtn = document.querySelector('.hotspot-card-arrow.prev');
+  const nextBtn = document.querySelector('.hotspot-card-arrow.next');
+  
+  let currentIndex = 0;
+  const totalItems = hotspots.length;
+  let isMobile = window.innerWidth < 750;
+  let isDragging = false;
+  let startX = 0;
+  let scrollLeft = 0;
+  let startScrollLeft = 0;
+  let hoverTimeout;
+  
+  // Kiểm tra kích thước màn hình
+  function checkMobile() {
+    isMobile = window.innerWidth < 750;
+    console.log('Is mobile:', isMobile);
+    
+    // Update arrow visibility trên mobile
+    if (isMobile) {
+      if (prevBtn) prevBtn.style.display = 'none';
+      if (nextBtn) nextBtn.style.display = 'none';
+    } else {
+      if (prevBtn) prevBtn.style.display = 'flex';
+      if (nextBtn) nextBtn.style.display = 'flex';
+      updateArrowStates();
+    }
+  }
+  
+  // Cập nhật active hotspot và card
+  function updateActiveCard(index) {
+    if (index < 0 || index >= totalItems) return;
+    
+    currentIndex = index;
+    
+    // Update hotspots
+    hotspots.forEach((h, i) => {
+      h.classList.toggle('is-active', i === index);
+    });
+    
+    // Update cards
+    cards.forEach((card, i) => {
+      card.classList.toggle('is-active', i === index);
+    });
+    
+    // Trên desktop, dùng transform để slide
+    if (!isMobile && track) {
+      track.style.transform = `translateX(-${index * 100}%)`;
+    }
+    
+    // Update arrow states cho desktop
+    if (!isMobile) {
+      updateArrowStates();
+    }
+  }
+  
+  // Xử lý click/tap vào hotspot
+  hotspots.forEach((hotspot, index) => {
+    const trigger = hotspot.querySelector('.hotspot-trigger');
+    
+    if (!trigger) return;
+    
+    // Click event cho cả desktop và mobile
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isMobile && viewport) {
+        // Trên mobile, scroll đến card tương ứng
+        const cardWidth = viewport.clientWidth;
+        const scrollPosition = cardWidth * index;
+        viewport.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
+        });
+      }
+      
+      updateActiveCard(index);
+    });
+    
+    // Hover chỉ trên desktop
+    if (!isMobile) {
+      trigger.addEventListener('mouseenter', function() {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(() => {
+          updateActiveCard(index);
+        }, 150);
+      });
+      
+      trigger.addEventListener('mouseleave', function() {
+        clearTimeout(hoverTimeout);
+      });
+    }
+  });
+  
+  // Touch/swipe events cho mobile
+  if (viewport) {
+    // Touch start
+    viewport.addEventListener('touchstart', function(e) {
+      if (!isMobile) return;
+      
+      isDragging = true;
+      startX = e.touches[0].pageX;
+      startScrollLeft = viewport.scrollLeft;
+      viewport.style.scrollBehavior = 'auto';
+    }, { passive: true });
+    
+    // Touch move
+    viewport.addEventListener('touchmove', function(e) {
+      if (!isDragging || !isMobile) return;
+      
+      e.preventDefault();
+      const x = e.touches[0].pageX;
+      const walk = (x - startX) * 1.5;
+      viewport.scrollLeft = startScrollLeft - walk;
+    }, { passive: false });
+    
+    // Touch end
+    viewport.addEventListener('touchend', function() {
+      if (!isMobile) return;
+      
+      isDragging = false;
+      viewport.style.scrollBehavior = 'smooth';
+      
+      // Tính toán card nào đang hiển thị
+      const cardWidth = viewport.clientWidth;
+      const scrollPosition = viewport.scrollLeft;
+      const newIndex = Math.round(scrollPosition / cardWidth);
+      
+      // Snap to nearest card
+      viewport.scrollTo({
+        left: cardWidth * newIndex,
+        behavior: 'smooth'
+      });
+      
+      updateActiveCard(newIndex);
+    }, { passive: true });
+    
+    // Theo dõi scroll để update active card
+    viewport.addEventListener('scroll', function() {
+      if (!isMobile || isDragging) return;
+      
+      const cardWidth = viewport.clientWidth;
+      const scrollPosition = viewport.scrollLeft;
+      const newIndex = Math.round(scrollPosition / cardWidth);
+      
+      if (newIndex !== currentIndex) {
+        updateActiveCard(newIndex);
+      }
+    }, { passive: true });
+  }
+  
+  // Arrow buttons cho desktop
+  if (prevBtn && !isMobile) {
+    prevBtn.addEventListener('click', function() {
+      if (currentIndex > 0) {
+        updateActiveCard(currentIndex - 1);
+      }
+    });
+  }
+  
+  if (nextBtn && !isMobile) {
+    nextBtn.addEventListener('click', function() {
+      if (currentIndex < totalItems - 1) {
+        updateActiveCard(currentIndex + 1);
+      }
+    });
+  }
+  
+  // Update arrow states cho desktop
+  function updateArrowStates() {
+    if (!prevBtn || !nextBtn || totalItems <= 1 || isMobile) {
+      return;
+    }
+    
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === totalItems - 1;
+    
+    if (prevBtn) {
+      prevBtn.setAttribute('aria-label', 
+        prevBtn.disabled ? 'No previous product' : 'Previous product'
+      );
+    }
+    
+    if (nextBtn) {
+      nextBtn.setAttribute('aria-label',
+        nextBtn.disabled ? 'No next product' : 'Next product'
+      );
+    }
+  }
+  
+  // Khởi tạo
+  updateActiveCard(0);
+  checkMobile();
+  
+  // Theo dõi thay đổi kích thước cửa sổ
+  window.addEventListener('resize', checkMobile);
+  
+  // Keyboard navigation cho accessibility
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft' && !isMobile) {
+      if (currentIndex > 0) {
+        updateActiveCard(currentIndex - 1);
+      }
+    } else if (e.key === 'ArrowRight' && !isMobile) {
+      if (currentIndex < totalItems - 1) {
+        updateActiveCard(currentIndex + 1);
+      }
+    }
+  });
+});
+</script>
 
 {% schema %}
 {
-  "name": "t:names.product_hotspots",
+  "name": "Product Hotspots",
   "disabled_on": {
     "groups": ["header", "footer"]
   },
+  "max_blocks": 8,
   "blocks": [
     {
-      "type": "_hotspot-product"
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Shop The Look"
+        },
+        {
+          "type": "select",
+          "id": "type_preset",
+          "label": "Typography",
+          "options": [
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "default": "h3"
+        }
+      ]
+    },
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "range",
+          "id": "x_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal position",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical position",
+          "default": 50
+        }
+      ]
     }
   ],
   "settings": [
     {
       "type": "image_picker",
       "id": "image",
-      "label": "t:settings.image"
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 0
     },
     {
       "type": "checkbox",
       "id": "toggle_overlay",
-      "label": "t:settings.media_overlay"
+      "label": "Show overlay",
+      "default": false
     },
     {
       "type": "color",
       "id": "overlay_color",
-      "label": "t:settings.overlay_color",
+      "label": "Overlay color",
       "alpha": true,
-      "default": "#00000026",
-      "visible_if": "{{ section.settings.toggle_overlay }}"
+      "default": "#00000026"
     },
     {
       "type": "select",
       "id": "overlay_style",
-      "label": "t:settings.overlay_style",
+      "label": "Overlay style",
       "options": [
         {
           "value": "solid",
-          "label": "t:options.solid"
+          "label": "Solid"
         },
         {
           "value": "gradient",
-          "label": "t:options.gradient"
+          "label": "Gradient"
         }
       ],
-      "default": "solid",
-      "visible_if": "{{ section.settings.toggle_overlay }}"
+      "default": "solid"
     },
     {
       "type": "select",
       "id": "gradient_direction",
-      "label": "t:settings.gradient_direction",
+      "label": "Gradient direction",
       "options": [
         {
           "value": "to top",
-          "label": "t:options.up"
+          "label": "Top"
         },
         {
           "value": "to bottom",
-          "label": "t:options.down"
+          "label": "Bottom"
         }
       ],
-      "default": "to top",
-      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+      "default": "to top"
     },
     {
       "type": "header",
-      "content": "t:content.section_layout"
+      "content": "Layout"
     },
     {
       "type": "select",
       "id": "section_width",
-      "label": "t:settings.width",
+      "label": "Section width",
       "options": [
         {
           "value": "page-width",
-          "label": "t:options.page"
+          "label": "Page width"
         },
         {
           "value": "full-width",
-          "label": "t:options.full"
+          "label": "Full width"
         }
       ],
       "default": "page-width"
@@ -561,59 +1285,102 @@
     {
       "type": "select",
       "id": "section_height",
-      "label": "t:settings.height",
+      "label": "Section height",
       "options": [
         {
           "value": "auto",
-          "label": "t:options.auto"
+          "label": "Auto"
         },
         {
           "value": "21 / 9",
-          "label": "t:options.small"
+          "label": "Small"
         },
         {
           "value": "16 / 9",
-          "label": "t:options.medium"
+          "label": "Medium"
         },
         {
           "value": "4 / 3",
-          "label": "t:options.large"
+          "label": "Large"
         }
       ],
       "default": "auto"
     },
     {
       "type": "header",
-      "content": "t:content.colors"
+      "content": "Card Settings"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Card content gap (mobile)",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_image_size",
+      "min": 60,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Card image size (mobile)",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "hotspot_color",
-      "label": "t:settings.hotspot_color",
+      "label": "Hotspot color",
       "default": "#FFFFFF57",
       "alpha": true
     },
     {
       "type": "color",
       "id": "bullseye_color",
-      "label": "t:settings.bullseye_color",
-      "default": "#ffffff",
-      "alpha": true
+      "label": "Bullseye color",
+      "default": "#ffffff"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "t:settings.color_scheme",
+      "label": "Color scheme",
       "default": "scheme-1"
     },
     {
       "type": "header",
-      "content": "t:content.popover"
+      "content": "Typography"
     },
     {
       "type": "range",
       "id": "product_title_gap",
-      "label": "t:settings.vertical_gap",
+      "label": "Product title gap",
       "min": 0,
       "max": 50,
       "step": 1,
@@ -621,71 +1388,13 @@
       "default": 8
     },
     {
-      "type": "select",
-      "id": "product_title_preset",
-      "label": "t:settings.product_title_typography",
-      "options": [
-        {
-          "value": "",
-          "label": "t:options.default"
-        },
-        {
-          "value": "paragraph",
-          "label": "t:options.paragraph"
-        },
-        {
-          "value": "h4",
-          "label": "t:options.h4"
-        },
-        {
-          "value": "h5",
-          "label": "t:options.h5"
-        },
-        {
-          "value": "h6",
-          "label": "t:options.h6"
-        }
-      ],
-      "default": "",
-      "info": "t:info.edit_presets_in_theme_settings"
-    },
-    {
-      "type": "select",
-      "id": "product_price_preset",
-      "label": "t:settings.product_price_typography",
-      "options": [
-        {
-          "value": "",
-          "label": "t:options.default"
-        },
-        {
-          "value": "paragraph",
-          "label": "t:options.paragraph"
-        },
-        {
-          "value": "h4",
-          "label": "t:options.h4"
-        },
-        {
-          "value": "h5",
-          "label": "t:options.h5"
-        },
-        {
-          "value": "h6",
-          "label": "t:options.h6"
-        }
-      ],
-      "default": "",
-      "info": "t:info.edit_presets_in_theme_settings"
-    },
-    {
       "type": "header",
-      "content": "t:content.padding"
+      "content": "Spacing"
     },
     {
       "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
+      "id": "padding_block_start",
+      "label": "Top padding",
       "min": 0,
       "max": 100,
       "step": 1,
@@ -694,8 +1403,8 @@
     },
     {
       "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
+      "id": "padding_block_end",
+      "label": "Bottom padding",
       "min": 0,
       "max": 100,
       "step": 1,
@@ -705,41 +1414,57 @@
   ],
   "presets": [
     {
-      "name": "t:names.product_hotspots",
-      "category": "t:categories.products",
+      "name": "Product Hotspots",
+      "category": "Products",
       "settings": {
         "section_width": "page-width",
         "color_scheme": "scheme-1",
         "product_title_gap": 8,
-        "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding_block_start": 40,
+        "padding_block_end": 40,
+        "image_border_radius": 0,
+        "card_border_radius": 8,
+        "card_padding": 12,
+        "card_gap": 12,
+        "card_image_size": 80
       },
-      "blocks": {
-        "heading": {
-          "type": "text",
-          "name": "t:names.heading",
-          "static": true,
+      "blocks": [
+        {
+          "type": "heading",
+          "name": "Heading",
           "settings": {
-            "text": "t:text_defaults.shop_the_look",
-            "type_preset": "h4"
+            "text": "Shop The Look",
+            "type_preset": "h3"
           }
         },
-        "hotspot-1": {
-          "type": "_hotspot-product",
+        {
+          "type": "hotspot",
+          "name": "Hotspot 1",
           "settings": {
-            "x-position": 40,
-            "y-position": 40
+            "product": "",
+            "x_position": 30,
+            "y_position": 30
           }
         },
-        "hotspot-2": {
-          "type": "_hotspot-product",
+        {
+          "type": "hotspot",
+          "name": "Hotspot 2",
           "settings": {
-            "x-position": 60,
-            "y-position": 60
+            "product": "",
+            "x_position": 60,
+            "y_position": 60
+          }
+        },
+        {
+          "type": "hotspot",
+          "name": "Hotspot 3",
+          "settings": {
+            "product": "",
+            "x_position": 40,
+            "y_position": 70
           }
         }
-      },
-      "block_order": ["hotspot-1", "hotspot-2"]
+      ]
     }
   ]
 }
