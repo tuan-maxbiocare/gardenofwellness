@@ -1203,6 +1203,92 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "product_star_8kJJNp": {
+      "type": "product-star",
+      "blocks": {
+        "benefit_P7rNBf": {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "icon_bg_color": "#e8f4f8",
+            "icon_color": "#0891b2",
+            "title": "Moisture-Wicking",
+            "description": "Advanced fabric technology keeps you dry and comfortable during intense workouts."
+          }
+        },
+        "benefit_KrfAqM": {
+          "type": "benefit",
+          "settings": {
+            "icon": "wind",
+            "icon_bg_color": "#f0fdf4",
+            "icon_color": "#16a34a",
+            "title": "Breathable Design",
+            "description": "Strategic ventilation zones provide maximum airflow for optimal temperature regulation."
+          }
+        },
+        "benefit_AcrKbp": {
+          "type": "benefit",
+          "settings": {
+            "icon": "arrows-out",
+            "icon_bg_color": "#fef3c7",
+            "icon_color": "#d97706",
+            "title": "4-Way Stretch",
+            "description": "Move freely in any direction with premium stretch fabric that maintains its shape."
+          }
+        },
+        "benefit_7MQgtk": {
+          "type": "benefit",
+          "settings": {
+            "icon": "recycle",
+            "icon_bg_color": "#f3e8ff",
+            "icon_color": "#9333ea",
+            "title": "Eco-Friendly",
+            "description": "Made from recycled materials without compromising on quality, performance, or style."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_P7rNBf",
+        "benefit_KrfAqM",
+        "benefit_AcrKbp",
+        "benefit_7MQgtk"
+      ],
+      "name": "Product Star Showcase",
+      "settings": {
+        "section_width": "page-width",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_left": 0,
+        "padding_right": 0,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 48,
+        "padding_left_mobile": 16,
+        "padding_right_mobile": 16,
+        "section_border_radius": 22,
+        "heading_italic": "Product star",
+        "heading_regular": "of this season",
+        "heading_alignment": "center",
+        "heading_font_size": 36,
+        "heading_color": "#333333",
+        "heading_font_weight": 700,
+        "heading_line_height": 1.1,
+        "heading_letter_spacing": 1,
+        "heading_margin_top": 0,
+        "heading_margin_bottom": 60,
+        "heading_padding_left": 20,
+        "heading_padding_right": 20,
+        "max_width": "1440px",
+        "bg_color": "#ffffff",
+        "media_type": "video",
+        "video": "shopify://files/videos/video_1766645430_54.mp4",
+        "autoplay": true,
+        "loop_video": true,
+        "product": "garden-of-wellness-nourishing-body-oil-frankincense",
+        "product_bg": "#f9f9f9",
+        "content_bg": "#5f6b54",
+        "text_color": "#ffffff"
+      }
     }
   },
   "order": [
@@ -1216,6 +1302,7 @@
     "marquee_wqwR3C",
     "product_hotspots_bmBbRR",
     "skin_comparison_table_PxB9GD",
-    "section_FdUhqH"
+    "section_FdUhqH",
+    "product_star_8kJJNp"
   ]
 }
