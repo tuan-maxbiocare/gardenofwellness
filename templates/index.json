@@ -1290,6 +1290,102 @@
         "text_color": "#ffffff"
       }
     },
+    "flow_8RRFC4": {
+      "type": "flow",
+      "blocks": {
+        "media_VYDAzF": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/9e027c0ba94136d89968949a36b151f522502831.jpg",
+            "video_url": "",
+            "video_alt_text": "he",
+            "enable_video_autoplay": false,
+            "step_label": "STEP 1",
+            "subheading": "",
+            "heading": "Cleansers",
+            "heading_image": "shopify://shop_images/a6a83f09de61dfac85740ff9815b270b46cab28f.jpg",
+            "image_style": "square",
+            "image_ratio": "wide_16:9",
+            "description": "<p>Transform your skincare routine with our effective cleansers. Scientifically formulated to cleanse and purify for a flawless complexion.</p>",
+            "button_text": "Shopcleanser",
+            "button_link": "shopify://collections/clearance-sale",
+            "open_in_new_window": false,
+            "button_style": "primary"
+          }
+        },
+        "media_UWUnbF": {
+          "type": "media",
+          "settings": {
+            "video_url": "",
+            "video_alt_text": "he",
+            "enable_video_autoplay": false,
+            "step_label": "he",
+            "subheading": "he",
+            "heading": "Media heading",
+            "image_style": "square",
+            "image_ratio": "wide_16:9",
+            "description": "<p>Tell your brand's story through images</p>",
+            "button_text": "none",
+            "button_link": "",
+            "open_in_new_window": false,
+            "button_style": "primary"
+          }
+        },
+        "media_hmMpM4": {
+          "type": "media",
+          "settings": {
+            "video_url": "",
+            "video_alt_text": "he",
+            "enable_video_autoplay": false,
+            "step_label": "he",
+            "subheading": "he",
+            "heading": "Media heading",
+            "image_style": "square",
+            "image_ratio": "wide_16:9",
+            "description": "<p>Tell your brand's story through images</p>",
+            "button_text": "none",
+            "button_link": "",
+            "open_in_new_window": false,
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "media_VYDAzF",
+        "media_UWUnbF",
+        "media_hmMpM4"
+      ],
+      "name": "Flow",
+      "settings": {
+        "heading": "How to take care for [glowing skin].",
+        "marker": "underline",
+        "heading_size": "100",
+        "heading_tag": "h2",
+        "heading_alignment": "center",
+        "content_position": "middle",
+        "content_alignment": "left",
+        "tab_selection_style": "on_hover",
+        "open_first_tab": true,
+        "pause_on_hover": true,
+        "bg_light": "transparent",
+        "heading_color_light": "#868686",
+        "text_color_light": "transparent",
+        "bg_dark": "transparent",
+        "heading_color_dark": "transparent",
+        "text_color_dark": "transparent",
+        "image_position": "first",
+        "full_width": false,
+        "show_divider": true,
+        "desktop_height": 750,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "mobile_height": 400,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 48,
+        "base_size": 110,
+        "rtl_languages": "none"
+      }
+    },
     "journey_timeline_fQmzcQ": {
       "type": "journey-timeline",
       "blocks": {
@@ -1371,6 +1467,7 @@
     "skin_comparison_table_PxB9GD",
     "section_FdUhqH",
     "product_star_8kJJNp",
+    "flow_8RRFC4",
     "journey_timeline_fQmzcQ"
   ]
 }
