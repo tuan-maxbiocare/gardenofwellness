@@ -1289,6 +1289,59 @@
         "content_bg": "#5f6b54",
         "text_color": "#ffffff"
       }
+    },
+    "journey_timeline_fQmzcQ": {
+      "type": "journey-timeline",
+      "blocks": {
+        "milestone_rDqCKj": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2025",
+            "eyebrow": "TODAY & TOMORROW",
+            "title": "New vinergy® patent",
+            "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3781937743342586992.mp4",
+            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.<br/></p>"
+          }
+        },
+        "milestone_Pfkbzq": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2020",
+            "eyebrow": "MILE STONE 3",
+            "title": "The french beauty solution",
+            "text": "<p>After five years spent abroad, speaking with countless women and truly understanding their skincare needs, the idea to create something meaningful began to grow. That inspiration took shape in a book — a heartfelt blend of beauty philosophy, expert advice, and practical tips, all wrapped in the natural elegance of effortless self-care.</p>",
+            "image": "shopify://shop_images/5e401805b6a43b5ca92f9ad5ca245bfb9a26a13f.jpg"
+          }
+        },
+        "milestone_HFeyRC": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2025",
+            "eyebrow": "TODAY & TOMORROW",
+            "title": "New vinergy® patent",
+            "text": "<p>Write your milestone description here.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "milestone_rDqCKj",
+        "milestone_Pfkbzq",
+        "milestone_HFeyRC"
+      ],
+      "name": "Journey timeline",
+      "settings": {
+        "heading": "Our successful journey.",
+        "heading_size": 42,
+        "heading_weight": "600",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
     }
   },
   "order": [
@@ -1303,6 +1356,7 @@
     "product_hotspots_bmBbRR",
     "skin_comparison_table_PxB9GD",
     "section_FdUhqH",
-    "product_star_8kJJNp"
+    "product_star_8kJJNp",
+    "journey_timeline_fQmzcQ"
   ]
 }
