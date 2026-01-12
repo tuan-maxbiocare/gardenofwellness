@@ -1,0 +1,885 @@
+{%- style -%}
+@media (max-width: 767px) {
+  .nav-container-{{ section.id }} .arrow-btn-{{ section.id }} {
+    display: none;
+  }
+}
+  .testimonial-section-{{ section.id }} {
+    width: 100%;
+    padding: 60px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  @media (min-width: 768px) {
+    .testimonial-section-{{ section.id }} {
+      padding: 80px 16px;
+    }
+  }
+  
+  .testimonial-container-{{ section.id }} {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .header-row-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 48px;
+    gap: 24px;
+  }
+  
+  @media (min-width: 768px) {
+    .header-row-{{ section.id }} {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 64px;
+    }
+  }
+  
+  .section-heading-{{ section.id }} {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  
+  @media (min-width: 768px) {
+    .section-heading-{{ section.id }} {
+      font-size: 2.5rem;
+    }
+  }
+  
+  .nav-container-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .slide-counter-{{ section.id }} {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  
+  .arrow-btn-{{ section.id }} {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .arrow-btn-{{ section.id }}:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .arrow-btn-{{ section.id }}:active {
+    transform: scale(0.95);
+  }
+  
+  .arrow-icon-{{ section.id }} {
+    font-size: 1.25rem;
+  }
+  
+  .carousel-wrapper-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .slides-wrapper-{{ section.id }} {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: grab;
+    user-select: none;
+  }
+  
+  .slides-wrapper-{{ section.id }}:active {
+    cursor: grabbing;
+  }
+  
+  .testimonial-slide-{{ section.id }} {
+    flex: 0 0 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+    touch-action: pan-y;
+  }
+  
+  @media (min-width: 768px) {
+    .testimonial-slide-{{ section.id }} {
+      flex: 0 0 50%;
+      padding: 0 16px;
+    }
+  }
+  
+  .testimonial-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    height: 100%;
+  }
+  
+  @media (min-width: 768px) {
+    .testimonial-grid-{{ section.id }} {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  }
+  
+  /* Border radius cho cả 2 bên */
+  .testimonial-grid-{{ section.id }} > * {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  .lifestyle-image-wrapper-{{ section.id }} {
+    height: 400px;
+    overflow: hidden;
+  }
+  
+  @media (min-width: 768px) {
+    .lifestyle-image-wrapper-{{ section.id }} {
+      height: 500px;
+    }
+  }
+  
+  .lifestyle-image-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Hiệu ứng hover phóng to ảnh */
+  .lifestyle-image-wrapper-{{ section.id }}:hover .lifestyle-image-{{ section.id }} {
+    transform: scale(1.08);
+  }
+  
+  .content-column-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 32px;
+    background-color: {{ section.settings.card_bg_color | default: '#ffffff' }};
+  }
+  
+  @media (min-width: 768px) {
+    .content-column-{{ section.id }} {
+      padding: 10px;
+    }
+  }
+  
+  .customer-info-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .avatar-wrapper-{{ section.id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .avatar-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .customer-name-{{ section.id }} {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    letter-spacing: 0.01em;
+  }
+  
+  .verified-badge-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #f8f8f8;
+    color: #666;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  
+  .verified-badge-{{ section.id }} i {
+    font-size: 0.875rem;
+  }
+  
+  .star-rating-{{ section.id }} {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 20px;
+  }
+  
+  .star-icon-{{ section.id }} {
+    font-size: 18px;
+  }
+  
+  .testimonial-title-{{ section.id }} {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: none; /* Ẩn tiêu đề theo hình ảnh mẫu */
+  }
+  
+  @media (min-width: 768px) {
+    .testimonial-title-{{ section.id }} {
+      font-size: 1.125rem;
+    }
+  }
+  
+  .testimonial-text-{{ section.id }} {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 24px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  
+  .product-card-{{ section.id }} {
+    padding-top: 24px;
+    cursor: pointer;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  .product-row-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .product-image-wrapper-{{ section.id }} {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f8f8f8;
+  }
+  
+  .product-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-info-{{ section.id }} {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .product-name-{{ section.id }} {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .price-row-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .price-original-{{ section.id }} {
+    font-size: 0.875rem;
+    text-decoration: line-through;
+    color: #999;
+    font-weight: 400;
+  }
+  
+  .price-current-{{ section.id }} {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #000;
+  }
+  
+  .empty-state-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    color: #999;
+    font-size: 0.875rem;
+  }
+  
+  /* Additional styles từ hình ảnh */
+  .testimonial-grid-{{ section.id }} {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  }
+  
+  .content-column-{{ section.id }} {
+    position: relative;
+  }
+  
+  .content-column-{{ section.id }}::before {
+    content: '"';
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    font-size: 3rem;
+    color: rgba(0, 0, 0, 0.05);
+    font-family: serif;
+    line-height: 1;
+  }
+  
+  @media (min-width: 768px) {
+    .content-column-{{ section.id }}::before {
+      top: 40px;
+      left: 40px;
+      font-size: 3.5rem;
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 767px) {
+    .lifestyle-image-wrapper-{{ section.id }} {
+      height: 320px;
+    }
+    
+    .content-column-{{ section.id }} {
+      padding: 24px;
+    }
+    
+    .testimonial-text-{{ section.id }} {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+    
+    .product-card-{{ section.id }} {
+      padding-top: 20px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="testimonial-section-{{ section.id }}" style="background-color: {{ section.settings.background_color }}">
+  <div class="testimonial-container-{{ section.id }}">
+
+    <!-- Header -->
+    <div class="header-row-{{ section.id }}">
+      <h2 class="section-heading-{{ section.id }}" style="color: {{ section.settings.heading_color }}">
+        {%- if section.settings.heading != blank -%}
+          {{ section.settings.heading }}
+        {%- else -%}
+          Customers <em>love</em> us.
+        {%- endif -%}
+      </h2>
+
+      <div class="nav-container-{{ section.id }}">
+        <span class="slide-counter-{{ section.id }}" style="color: {{ section.settings.text_color }}">
+          <span class="current-slide-{{ section.id }}">1</span> / <span class="total-slides-{{ section.id }}">{{ section.blocks.size }}</span>
+        </span>
+
+        <div style="display: flex; gap: 8px;">
+          <div class="arrow-btn-{{ section.id }} prev-arrow-{{ section.id }}" style="border-color: {{ section.settings.arrow_color }}; color: {{ section.settings.arrow_color }}">
+            <i class="ph ph-caret-left arrow-icon-{{ section.id }}"></i>
+          </div>
+          <div class="arrow-btn-{{ section.id }} next-arrow-{{ section.id }}" style="border-color: {{ section.settings.arrow_color }}; color: {{ section.settings.arrow_color }}">
+            <i class="ph ph-caret-right arrow-icon-{{ section.id }}"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel -->
+    {%- if section.blocks.size > 0 -%}
+      <div class="carousel-wrapper-{{ section.id }}">
+        <div class="slides-wrapper-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            <div class="testimonial-slide-{{ section.id }}" data-slide="{{ forloop.index }}" {{ block.shopify_attributes }}>
+              <div class="testimonial-grid-{{ section.id }}">
+
+                <!-- Left - Image -->
+                <div class="lifestyle-image-wrapper-{{ section.id }}">
+                  {%- if block.settings.image != blank -%}
+                    {%- assign lifestyle_class = 'lifestyle-image-' | append: section.id -%}
+                    {{ block.settings.image | image_url: width: 800 | image_tag:
+                      loading: 'lazy',
+                      class: lifestyle_class,
+                      sizes: '(max-width: 768px) 100vw, 50vw'
+                    }}
+                  {%- else -%}
+                    {%- assign lifestyle_class = 'lifestyle-image-' | append: section.id -%}
+                    {{ 'lifestyle-1' | placeholder_svg_tag: lifestyle_class }}
+                  {%- endif -%}
+                </div>
+
+                <!-- Right - Content -->
+                <div class="content-column-{{ section.id }}">
+                  <div>
+                    <div class="customer-info-{{ section.id }}">
+                      <div class="avatar-wrapper-{{ section.id }}">
+                        {%- if block.settings.customer_avatar != blank -%}
+                          {%- assign avatar_class = 'avatar-img-' | append: section.id -%}
+                          {{ block.settings.customer_avatar | image_url: width: 100 | image_tag:
+                            loading: 'lazy',
+                            class: avatar_class
+                          }}
+                        {%- else -%}
+                          {%- assign avatar_class = 'avatar-img-' | append: section.id -%}
+                          {{ 'image' | placeholder_svg_tag: avatar_class }}
+                        {%- endif -%}
+                      </div>
+                      <div>
+                        <h3 class="customer-name-{{ section.id }}" style="color: {{ section.settings.text_color }}">
+                          {{ block.settings.customer_name }}
+                        </h3>
+                        <span class="verified-badge-{{ section.id }}">
+                          <i class="ph ph-check-circle"></i>
+                          Verified Customer
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="star-rating-{{ section.id }}">
+                      {%- for i in (1..5) -%}
+                        {%- assign star_class = 'star-icon-' | append: section.id -%}
+                        <i class="ph-fill ph-star {{ star_class }}" style="color: {{ section.settings.star_color }};"></i>
+                      {%- endfor -%}
+                    </div>
+
+                    {%- if block.settings.testimonial_title != blank -%}
+                      <h4 class="testimonial-title-{{ section.id }}" style="color: {{ section.settings.text_color }}">
+                        {{ block.settings.testimonial_title }}
+                      </h4>
+                    {%- endif -%}
+
+                    {%- if block.settings.testimonial_text != blank -%}
+                      <p class="testimonial-text-{{ section.id }}" style="color: {{ section.settings.text_color }};">
+                        {{ block.settings.testimonial_text }}
+                      </p>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if block.settings.featured_product != blank -%}
+                    {%- assign product = block.settings.featured_product -%}
+                    <a href="{{ product.url }}" class="product-card-{{ section.id }}" style="color: inherit; text-decoration: none;">
+                      <div class="product-row-{{ section.id }}">
+                        <div class="product-image-wrapper-{{ section.id }}">
+                          {%- if product.featured_image != blank -%}
+                            {%- assign product_img_class = 'product-img-' | append: section.id -%}
+                            {{ product.featured_image | image_url: width: 200 | image_tag:
+                              loading: 'lazy',
+                              class: product_img_class
+                            }}
+                          {%- else -%}
+                            {%- assign product_img_class = 'product-img-' | append: section.id -%}
+                            {{ 'product-1' | placeholder_svg_tag: product_img_class }}
+                          {%- endif -%}
+                        </div>
+
+                        <div class="product-info-{{ section.id }}">
+                          <p class="product-name-{{ section.id }}">
+                            {{ product.title }}
+                          </p>
+
+                          <div class="price-row-{{ section.id }}">
+                            {%- if product.compare_at_price > product.price -%}
+                              <span class="price-original-{{ section.id }}">
+                                {{ product.compare_at_price | money }}
+                              </span>
+                            {%- endif -%}
+                            <span class="price-current-{{ section.id }}">
+                              {{ product.price | money }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="empty-state-{{ section.id }}">
+        <p>Add testimonial blocks to get started</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<!-- Phosphor Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web/src/regular/style.css">
+
+<script>
+(function () {
+  class TestimonialCarousel {
+    constructor(element) {
+      this.carousel = element;
+      this.container = this.carousel.querySelector('.slides-wrapper-{{ section.id }}');
+      this.slides = this.carousel.querySelectorAll('.testimonial-slide-{{ section.id }}');
+      this.totalSlides = {{ section.blocks.size | default: 0 }};
+
+      if (this.totalSlides === 0) return;
+
+      this.slidesPerView = window.innerWidth >= 768 ? 2 : 1;
+
+      /* ==== LOOP ==== */
+      this.setupInfiniteLoop();
+
+      this.currentIndex = 1;
+
+      /* ==== DRAG ==== */
+      this.isDragging = false;
+      this.startX = 0;
+      this.currentTranslate = 0;
+      this.prevTranslate = 0;
+
+      /* ==== AUTO ==== */
+      this.autoSlideInterval = null;
+      this.autoSlideSpeed = {{ section.settings.auto_slide_speed | times: 1000 }};
+      this.isAutoSlideEnabled = {{ section.settings.enable_auto_slide | json }};
+
+      this.init();
+      this.setupResizeListener();
+      this.setupTouchEvents();
+    }
+
+    /* ================= LOOP ================= */
+    setupInfiniteLoop() {
+      const first = this.slides[0].cloneNode(true);
+      const last = this.slides[this.slides.length - 1].cloneNode(true);
+
+      this.container.insertBefore(last, this.slides[0]);
+      this.container.appendChild(first);
+
+      this.slides = this.carousel.querySelectorAll('.testimonial-slide-{{ section.id }}');
+    }
+
+    getSlideWidth() {
+      return 100 / this.slidesPerView;
+    }
+
+    /* ================= INIT ================= */
+    init() {
+      this.updatePosition(true);
+      this.updateCounter();
+
+      const prev = document.querySelector('.prev-arrow-{{ section.id }}');
+      const next = document.querySelector('.next-arrow-{{ section.id }}');
+
+      if (prev) prev.addEventListener('click', () => this.prev());
+      if (next) next.addEventListener('click', () => this.next());
+
+      if (this.isAutoSlideEnabled && this.totalSlides > 1) {
+        this.startAutoSlide();
+        this.carousel.addEventListener('mouseenter', () => this.stopAutoSlide());
+        this.carousel.addEventListener('mouseleave', () => this.startAutoSlide());
+      }
+    }
+
+    /* ================= POSITION ================= */
+    updatePosition(instant = false) {
+      this.container.style.transition = instant
+        ? 'none'
+        : 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+
+      this.container.style.transform =
+        `translateX(${-(this.currentIndex * this.getSlideWidth())}%)`;
+
+      this.updateCounter();
+    }
+
+    /* ================= NEXT / PREV (SMOOTH LOOP) ================= */
+    next() {
+      this.currentIndex++;
+      this.updatePosition();
+
+      this.container.addEventListener(
+        'transitionend',
+        () => {
+          if (this.currentIndex === this.totalSlides + 1) {
+            this.container.style.transition = 'none';
+            this.currentIndex = 1;
+            this.updatePosition(true);
+          }
+        },
+        { once: true }
+      );
+
+      this.restartAutoSlide();
+    }
+
+    prev() {
+      this.currentIndex--;
+      this.updatePosition();
+
+      this.container.addEventListener(
+        'transitionend',
+        () => {
+          if (this.currentIndex === 0) {
+            this.container.style.transition = 'none';
+            this.currentIndex = this.totalSlides;
+            this.updatePosition(true);
+          }
+        },
+        { once: true }
+      );
+
+      this.restartAutoSlide();
+    }
+
+    /* ================= COUNTER ================= */
+    updateCounter() {
+      let real = this.currentIndex;
+      if (real > this.totalSlides) real = 1;
+      if (real < 1) real = this.totalSlides;
+
+      const cur = document.querySelector('.current-slide-{{ section.id }}');
+      const total = document.querySelector('.total-slides-{{ section.id }}');
+
+      if (cur) cur.textContent = real;
+      if (total) total.textContent = this.totalSlides;
+    }
+
+    /* ================= DRAG ================= */
+    setupTouchEvents() {
+      this.container.addEventListener('touchstart', this.touchStart.bind(this), { passive: false });
+      this.container.addEventListener('touchmove', this.touchMove.bind(this), { passive: false });
+      this.container.addEventListener('touchend', this.touchEnd.bind(this));
+
+      this.container.addEventListener('mousedown', this.touchStart.bind(this));
+      this.container.addEventListener('mousemove', this.touchMove.bind(this));
+      this.container.addEventListener('mouseup', this.touchEnd.bind(this));
+      this.container.addEventListener('mouseleave', this.touchEnd.bind(this));
+
+      this.container.addEventListener('dragstart', e => e.preventDefault());
+    }
+
+    touchStart(e) {
+      this.isDragging = true;
+      this.startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+      this.prevTranslate = -(this.currentIndex * this.getSlideWidth());
+      this.container.style.transition = 'none';
+    }
+
+    touchMove(e) {
+      if (!this.isDragging) return;
+      e.preventDefault();
+
+      const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+      const diff = currentX - this.startX;
+      const slideWidth = this.container.clientWidth / this.slidesPerView;
+
+      this.currentTranslate = this.prevTranslate + (diff / slideWidth) * 100;
+      this.container.style.transform = `translateX(${this.currentTranslate}%)`;
+    }
+
+    touchEnd() {
+      if (!this.isDragging) return;
+      this.isDragging = false;
+
+      const moved = this.currentTranslate / this.getSlideWidth();
+      if (Math.abs(moved) > 0.25) {
+        this.currentIndex -= Math.round(moved);
+      }
+
+      this.updatePosition();
+      this.restartAutoSlide();
+    }
+
+    /* ================= RESIZE ================= */
+    setupResizeListener() {
+      window.addEventListener('resize', () => {
+        const view = window.innerWidth >= 768 ? 2 : 1;
+        if (view !== this.slidesPerView) {
+          this.slidesPerView = view;
+          this.updatePosition(true);
+        }
+      });
+    }
+
+    /* ================= AUTO ================= */
+    startAutoSlide() {
+      this.stopAutoSlide();
+      this.autoSlideInterval = setInterval(() => this.next(), this.autoSlideSpeed);
+    }
+
+    stopAutoSlide() {
+      if (this.autoSlideInterval) {
+        clearInterval(this.autoSlideInterval);
+        this.autoSlideInterval = null;
+      }
+    }
+
+    restartAutoSlide() {
+      if (!this.isAutoSlideEnabled) return;
+      this.stopAutoSlide();
+      this.startAutoSlide();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.querySelector('.carousel-wrapper-{{ section.id }}');
+    if (el) new TestimonialCarousel(el);
+  });
+
+  if (window.Shopify && window.Shopify.designMode) {
+    document.addEventListener('shopify:section:load', e => {
+      const el = e.target.querySelector('.carousel-wrapper-{{ section.id }}');
+      if (el) new TestimonialCarousel(el);
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Customer Testimonials",
+  "tag": "section",
+  "class": "testimonial-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Customer Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_auto_slide",
+      "label": "Enable Auto-Slide",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "auto_slide_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-Slide Speed",
+      "default": 5
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Rating Color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Lifestyle Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "customer_avatar",
+          "label": "Customer Avatar"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer Name",
+          "default": "Rosa N."
+        },
+        {
+          "type": "text",
+          "id": "testimonial_title",
+          "label": "Testimonial Title",
+          "default": "t"
+        },
+        {
+          "type": "textarea",
+          "id": "testimonial_text",
+          "label": "Testimonial Text",
+          "default": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself."
+        },
+        {
+          "type": "product",
+          "id": "featured_product",
+          "label": "Featured Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Testimonials",
+      "settings": {
+        "heading": "Customer Reviews",
+        "enable_auto_slide": true,
+        "auto_slide_speed": 5,
+        "background_color": "#ffffff",
+        "card_bg_color": "#ffffff",
+        "heading_color": "#000000",
+        "text_color": "#000000",
+        "arrow_color": "#000000",
+        "star_color": "#000000"
+      },
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}
