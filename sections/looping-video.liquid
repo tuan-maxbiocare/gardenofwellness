@@ -1,0 +1,1583 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section
+  id="ps247-{{ section.id }}"
+  class="ps247v ps247v--{{ section.id }}"
+  style="
+    --ps-bg: {{ s.bg_color }};
+    --ps-text: {{ s.text_color }};
+    --ps-muted: {{ s.muted_color }};
+    --ps-card-bg: {{ s.card_bg }};
+    --ps-radius: {{ s.radius }}px;
+    --ps-shadow: {{ s.shadow }};
+    --ps-overlay: {{ s.overlay_opacity | divided_by: 100.0 }};
+
+    --ps-pad-top: {{ s.pad_top_desktop }}px;
+    --ps-pad-bottom: {{ s.pad_bottom_desktop }}px;
+    --ps-pad-top-m: {{ s.pad_top_mobile }}px;
+    --ps-pad-bottom-m: {{ s.pad_bottom_mobile }}px;
+
+    --ps-head-gap: {{ s.heading_bottom }}px;
+    --ps-block-gap: {{ s.block_spacing }}px;
+
+    --ps-stage-h: 560px;
+  "
+>
+  <div class="ps247v__container {% if s.full_width_desktop %}is-full{% endif %}">
+    {% if s.heading != blank or s.subheading != blank %}
+      <div class="ps247v__head align-{{ s.heading_align }}">
+        {% if s.heading != blank %}
+          {% assign heading_tag = s.heading_tag | default: 'h2' %}
+          <{{ heading_tag }} class="ps247v__heading size-{{ s.heading_size_pct }}">
+            {{ s.heading }}
+          </{{ heading_tag }}>
+        {% endif %}
+
+        {% if s.subheading != blank %}
+          <div class="ps247v__sub">{{ s.subheading }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if s.show_divider %}
+      <div class="ps247v__divider"></div>
+    {% endif %}
+
+    <div class="ps247v__stageWrap">
+      <div class="ps247v__stage" data-ps247-stage>
+        <div class="ps247v__track" data-ps247-track>
+          {% for block in section.blocks %}
+            {% if block.type != 'shoppable_video' %}
+              {% continue %}
+            {% endif %}
+
+            {% liquid
+              assign b = block.settings
+              assign p = b.product
+              assign title = b.title
+              if title == blank and p != blank
+                assign title = p.title
+              endif
+            %}
+
+            {%- assign drawer_img = blank -%}
+            {%- assign drawer_variant = blank -%}
+            {%- assign drawer_url = blank -%}
+            {%- assign drawer_price = blank -%}
+            {%- assign drawer_compare = blank -%}
+            {%- if p != blank -%}
+              {%- if p.featured_image -%}
+                {%- assign drawer_img = p.featured_image | image_url: width: 360 -%}
+              {%- endif -%}
+              {%- assign drawer_variant = p.selected_or_first_available_variant.id -%}
+              {%- assign drawer_url = p.url -%}
+              {%- assign drawer_price = p.price | money -%}
+              {%- if p.compare_at_price > p.price -%}
+                {%- assign drawer_compare = p.compare_at_price | money -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            <article
+              class="ps247v__card"
+              data-ps247-card
+              {% if p != blank %}
+                data-ps247-drawer-title="{{ title | escape }}"
+                data-ps247-drawer-price="{{ drawer_price }}"
+                data-ps247-drawer-compare="{{ drawer_compare }}"
+                data-ps247-drawer-url="{{ drawer_url }}"
+                data-ps247-drawer-variant="{{ drawer_variant }}"
+                data-ps247-drawer-img="{{ drawer_img }}"
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              <div class="ps247v__media">
+                <div class="ps247v__mediaInner">
+                  {% if b.video != blank %}
+                    <video
+                      class="ps247v__video"
+                      data-ps247-video
+                      playsinline
+                      muted
+                      preload="metadata"
+                      {% if b.poster != blank %}poster="{{ b.poster | image_url: width: 1200 }}"{% endif %}
+                    >
+                      {%- assign mp4 = blank -%}
+                      {%- for src in b.video.sources -%}
+                        {%- if src.mime_type == 'video/mp4' -%}
+                          {%- assign mp4 = src -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+
+                      {% if mp4 != blank %}
+                        <source src="{{ mp4.url }}" type="{{ mp4.mime_type }}">
+                      {% else %}
+                        <source src="{{ b.video.sources[0].url }}" type="{{ b.video.sources[0].mime_type }}">
+                      {% endif %}
+                    </video>
+                  {% elsif b.video_url != blank %}
+                    <div class="ps247v__fallback">
+                      <a href="{{ b.video_url }}" target="_blank" rel="noopener">Open video URL</a>
+                    </div>
+                  {% else %}
+                    <div class="ps247v__fallback">Select a video</div>
+                  {% endif %}
+
+                  {% if s.show_play_badge %}
+                    <button class="ps247v__playBadge" type="button" data-ps247-play aria-label="Play">▶</button>
+                  {% endif %}
+
+                  {% if s.overlay_opacity > 0 %}
+                    <span class="ps247v__overlay" aria-hidden="true"></span>
+                  {% endif %}
+
+                  {%- if s.enable_hotspots and p != blank -%}
+                    {% if b.product_1 != blank %}
+                      <button
+                        class="ps247v__hotspot"
+                        type="button"
+                        style="
+                          --hx: {{ b.hs1_x_desktop }}%;
+                          --hy: {{ b.hs1_y_desktop }}%;
+                          --hxm: {{ b.hs1_x_mobile }}%;
+                          --hym: {{ b.hs1_y_mobile }}%;
+                        "
+                        aria-label="Hotspot 1"
+                      ></button>
+                    {% endif %}
+
+                    {% if b.product_2 != blank %}
+                      <button
+                        class="ps247v__hotspot"
+                        type="button"
+                        style="
+                          --hx: {{ b.hs2_x_desktop }}%;
+                          --hy: {{ b.hs2_y_desktop }}%;
+                          --hxm: {{ b.hs2_x_mobile }}%;
+                          --hym: {{ b.hs2_y_mobile }}%;
+                        "
+                        aria-label="Hotspot 2"
+                      ></button>
+                    {% endif %}
+                  {%- endif -%}
+                </div>
+              </div>
+
+              {% if p != blank %}
+                <div class="ps247v__pill pos-{{ s.product_card_position }}">
+                  <button
+                    class="ps247v__pillInner"
+                    type="button"
+                    data-ps247-drawer-open
+                    aria-label="Open product details"
+                    style="background: var(--ps-card-bg);"
+                  >
+                    <div class="ps247v__thumb">
+                      {% if p.featured_image %}
+                        <img
+                          src="{{ p.featured_image | image_url: width: 120 }}"
+                          width="60"
+                          height="60"
+                          loading="lazy"
+                          alt="{{ p.title | escape }}"
+                        >
+                      {% endif %}
+                    </div>
+
+                    <div class="ps247v__meta">
+                      <div class="ps247v__title">{{ title }}</div>
+                      <div class="ps247v__price">
+                        {% if p.compare_at_price > p.price %}
+                          <span class="ps247v__compare">{{ p.compare_at_price | money }}</span>
+                        {% endif %}
+                        <span class="ps247v__money">{{ p.price | money }}</span>
+                      </div>
+                    </div>
+
+                    <span class="ps247v__iconBtn" aria-hidden="true">⌕</span>
+                  </button>
+                </div>
+              {% endif %}
+
+              <!-- ✅ LOCAL DRAWER: moved to cover FULL CARD (media + pill) -->
+              <div class="ps247v__drawer" data-ps247-drawer aria-hidden="true">
+                <div class="ps247v__drawerBackdrop" data-ps247-drawer-close></div>
+
+                <div class="ps247v__drawerPanel" role="dialog" aria-modal="true" aria-label="Product details">
+                  <button class="ps247v__drawerClose" type="button" data-ps247-drawer-close aria-label="Close">
+                    <svg
+                      class="ps247v__drawerChevron"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M6 9L12 15L18 9"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+
+                  <div class="ps247v__drawerTop">
+                    <img class="ps247v__drawerImg" data-ps247-drawer-img alt="">
+                    <div class="ps247v__drawerInfo">
+                      <div class="ps247v__drawerTitle" data-ps247-drawer-title></div>
+                      <div class="ps247v__drawerPrice">
+                        <span class="ps247v__drawerCompare" data-ps247-drawer-compare></span>
+                        <span class="ps247v__drawerMoney" data-ps247-drawer-price></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <form class="ps247v__drawerActions" method="post" action="/cart/add">
+                    <input type="hidden" name="id" value="" data-ps247-drawer-variant>
+                    <button class="ps247v__drawerAdd" type="submit">Add to cart</button>
+                    <a class="ps247v__drawerLink" href="#" data-ps247-drawer-url>View full details</a>
+                  </form>
+                </div>
+              </div>
+              <!-- /LOCAL DRAWER -->
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if s.show_pagination %}
+        <div class="ps247v__bottom">
+          <div class="ps247v__dots" data-ps247-dots></div>
+          <div class="ps247v__progress" aria-hidden="true">
+            <span class="ps247v__bar" data-ps247-bar></span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <style>
+    /* =========================
+       SECTION WRAP
+    ========================= */
+    .ps247v{
+      background: var(--ps-bg);
+      color: var(--ps-text);
+      padding: var(--ps-pad-top) 0 var(--ps-pad-bottom);
+      overflow: hidden;
+    }
+    @media (max-width: 768px){
+      .ps247v{
+        padding: var(--ps-pad-top-m) 0 var(--ps-pad-bottom-m);
+      }
+    }
+
+    /* =========================
+       CONTAINER
+    ========================= */
+    .ps247v__container{
+      max-width: {{ s.container_width }}px;
+      margin: 0 auto;
+      padding: 0 {{ s.container_padding }}px;
+      box-sizing: border-box;
+    }
+    .ps247v__container.is-full{
+      max-width: none;
+      padding: 0 {{ s.container_padding }}px;
+    }
+    @media (max-width: 768px){
+      .ps247v__container{
+        padding: 0 {{ s.container_padding_mobile }}px;
+      }
+    }
+
+    /* =========================
+       HEAD
+    ========================= */
+    .ps247v__head{
+      text-align: center;
+      margin-bottom: var(--ps-head-gap);
+    }
+    .ps247v__head.align-left{ text-align:left; }
+    .ps247v__head.align-right{ text-align:right; }
+
+    .ps247v__heading{
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: .2px;
+    }
+    #ps247-{{ section.id }} .ps247v__heading em{
+      color: #606B57;
+      font-style: italic;
+    }
+
+    .ps247v__heading.size-80{  font-size: clamp(22px, 2.6vw, 40px); }
+    .ps247v__heading.size-90{  font-size: clamp(24px, 2.9vw, 44px); }
+    .ps247v__heading.size-100{ font-size: clamp(26px, 3.2vw, 48px); }
+    .ps247v__heading.size-110{ font-size: clamp(28px, 3.6vw, 54px); }
+    .ps247v__heading.size-120{ font-size: clamp(30px, 4.0vw, 60px); }
+
+    .ps247v__sub{
+      margin-top: 10px;
+      color: var(--ps-muted);
+      font-size: 14px;
+    }
+
+    .ps247v__divider{
+      height: 1px;
+      background: rgba(0,0,0,.08);
+      margin: var(--ps-block-gap) 0;
+    }
+
+    /* =========================
+       STAGE
+    ========================= */
+
+    /* tách heading và stage */
+    .ps247v__stageWrap{
+      margin-top: var(--ps-block-gap);
+    }
+
+    .ps247v__stage{
+      position: relative;
+      width: 100%;
+      height: var(--ps-stage-h);
+      user-select: none;
+      touch-action: pan-y;
+      cursor: grab;
+
+      /* padding left/right để “có chỗ” cho 5 card */
+      --ps-side-pad: 12px;
+      --ps-gap-x: 16px;
+
+      padding-left: var(--ps-side-pad);
+      padding-right: var(--ps-side-pad);
+      box-sizing: border-box;
+    }
+    .ps247v__stage.is-dragging{ cursor: grabbing; }
+
+    .ps247v__track{
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* =========================
+       CARD (ABS + ANCHOR BOTTOM)
+       ✅ canh theo BOTTOM để nửa dưới nhấp nhô đúng ý bạn
+    ========================= */
+    .ps247v__card{
+      position: absolute;
+      left: 50%;
+
+      /* ✅ đổi anchor: canh theo đáy stage */
+      bottom: auto;
+      top: 50%;
+
+      /* ✅ bỏ top:50% để tránh pill “thẳng hàng” sai */
+      transform-origin: center;
+      will-change: transform, opacity, filter;
+      transition: transform .28s ease, opacity .28s ease, filter .28s ease;
+
+      opacity: 0;
+      pointer-events: none;
+
+      /* width theo “fit 5 cards” trong khung stage (trừ padding + gaps) */
+      width: clamp(
+        180px,
+        calc((100% - (2 * var(--ps-side-pad)) - (4 * var(--ps-gap-x))) / 5),
+        260px
+      );
+      max-width: clamp(
+        180px,
+        calc((100% - (2 * var(--ps-side-pad)) - (4 * var(--ps-gap-x))) / 5),
+        260px
+      );
+    }
+
+    .ps247v__card.is-visible{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 1023px){
+      .ps247v__card{
+        width: min(220px, 55vw);
+        max-width: min(220px, 55vw);
+      }
+    }
+    @media (max-width: 480px){
+      .ps247v__card{
+        width: calc(100vw - ({{ s.container_padding_mobile }}px * 2) - 32px);
+        max-width: calc(100vw - ({{ s.container_padding_mobile }}px * 2) - 32px);
+      }
+    }
+
+    /* =========================
+       MEDIA
+    ========================= */
+    .ps247v__media{
+      border-radius: calc(var(--ps-radius) + 4px);
+      overflow: hidden;
+      box-shadow: var(--ps-shadow);
+      background: #ddd;
+      aspect-ratio: {{ s.media_aspect_ratio }};
+      position: relative;
+    }
+
+    .ps247v__mediaInner{
+      width: 100%;
+      height: 100%;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .ps247v__video{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* overlay đen mặc định */
+    .ps247v__overlay{
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,var(--ps-overlay));
+      pointer-events:none;
+      opacity: 1;
+      transition: opacity .25s ease;
+    }
+
+    /* Tắt overlay cho card active */
+    #ps247-{{ section.id }} .ps247v__card.is-active .ps247v__overlay{
+      opacity: 0 !important;
+    }
+
+    .ps247v__fallback{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      font-size:14px;
+      color: rgba(0,0,0,.55);
+      background: linear-gradient(135deg, rgba(0,0,0,.08), rgba(0,0,0,.02));
+    }
+
+    /* =========================
+       PLAY BADGE
+    ========================= */
+    .ps247v__playBadge{
+      position:absolute;
+      left: 12px;
+      top: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,.9);
+      color: #111;
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+      font-size: 13px;
+      border: 0;
+      cursor: pointer;
+      opacity: 1;
+      transition: opacity .25s ease;
+    }
+
+    /* ✅ card active: ẨN nút play */
+    #ps247-{{ section.id }} .ps247v__card.is-active .ps247v__playBadge,
+    #ps247-{{ section.id }} .ps247v__card.is-active [data-ps247-play]{
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* =========================
+       HOTSPOTS
+    ========================= */
+    .ps247v__hotspot{
+      position:absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      background: rgba(0,0,0,.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
+      left: calc(var(--hx) * 1%);
+      top: calc(var(--hy) * 1%);
+      transform: translate(-50%,-50%);
+      cursor: pointer;
+    }
+    @media (max-width: 480px){
+      .ps247v__hotspot{
+        left: calc(var(--hxm) * 1%);
+        top: calc(var(--hym) * 1%);
+      }
+    }
+
+    /* =========================
+       DRAWER — BEAUTIFIED (override hard)
+       Only affects drawer elements
+    ========================= */
+
+    /* 1) Drawer container: full white card cover */
+    #ps247-{{ section.id }} .ps247v__drawer{
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 9999 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: opacity .18s ease !important;
+
+      background: #fff !important;
+      border-radius: calc(var(--ps-radius) + 8px) !important;
+      overflow: hidden !important;
+
+      /* content centering like sample */
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      padding: 22px 18px 18px !important;
+      box-sizing: border-box !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawer.is-open{
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    /* Backdrop: keep click-to-close but visually none */
+    #ps247-{{ section.id }} .ps247v__drawerBackdrop{
+      position: absolute !important;
+      inset: 0 !important;
+      background: transparent !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawerChevron{
+      display: block;
+      width: 20px;
+      height: 20px;
+      color: #111; /* ăn theo currentColor */
+    }
+
+    /* 2) Panel: gọn, không bottom-sheet */
+    #ps247-{{ section.id }} .ps247v__drawerPanel{
+      position: relative !important;
+      width: 100% !important;
+      max-width: 320px !important;
+      margin: 0 auto !important;
+
+      background: transparent !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+
+      transform: none !important;
+      opacity: 1 !important;
+    }
+
+    /* 3) Close: đúng góc phải trên, đẹp hơn */
+    #ps247-{{ section.id }} .ps247v__drawerClose{
+      position: absolute !important;
+      top: -50px !important;        /* ✅ lên cao hơn nữa */
+      right: 0px !important;
+
+      transform: none !important;   /* bỏ translate cũ */
+
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 999px !important;
+
+      /* ✅ bỏ border + nền trong */
+      border: none !important;
+      background: transparent !important;
+
+      display: grid !important;
+      place-items: center !important;
+
+      font-size: 22px !important;
+      line-height: 1 !important;
+      cursor: pointer !important;
+
+      box-shadow: none !important;  /* bỏ shadow */
+      z-index: 5 !important;
+
+      color: #111 !important;
+    }
+
+    /* 4) Header (image + info) */
+    #ps247-{{ section.id }} .ps247v__drawerTop{
+      padding: 0 !important;
+      margin: 0 0 16px 0 !important;
+
+      display: grid !important;
+      grid-template-columns: 64px 1fr !important;
+      gap: 14px !important;
+      align-items: center !important;
+
+      /* chừa khoảng cho nút close */
+      padding-right: 54px !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawerImg{
+      width: 64px !important;
+      height: 64px !important;
+      border-radius: 16px !important;
+      object-fit: cover !important;
+      background: rgba(0,0,0,.06) !important;
+    }
+
+    /* Fix để clamp/ellipsis hoạt động trong grid */
+    #ps247-{{ section.id }} .ps247v__drawerInfo{
+      min-width: 0 !important;
+    }
+
+    /* 5) Title: tối đa 2 dòng + … (giống mẫu) */
+    #ps247-{{ section.id }} .ps247v__drawerTitle{
+      font-size: 14px !important;
+      font-weight: 650 !important;
+      line-height: 1.25 !important;
+      margin: 0 0 8px 0 !important;
+
+      overflow: hidden !important;
+      display: -webkit-box !important;
+      -webkit-box-orient: vertical !important;
+      -webkit-line-clamp: 2 !important; /* ✅ 2 dòng rồi … */
+    }
+
+    /* 6) Price: giá to rõ, compare nhỏ hơn */
+    #ps247-{{ section.id }} .ps247v__drawerPrice{
+      display: flex !important;
+      gap: 10px !important;
+      align-items: baseline !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawerMoney{
+      font-size: 18px !important;        /* ✅ to rõ */
+      font-weight: 800 !important;
+      letter-spacing: .1px !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawerCompare{
+      font-size: 13px !important;
+      color: rgba(0,0,0,.45) !important;
+      text-decoration: line-through !important;
+    }
+
+    /* 7) Buttons: giống mẫu (đen + trắng viền), full width */
+    #ps247-{{ section.id }} .ps247v__drawerActions{
+      padding: 0 !important;
+      margin: 0 !important;
+
+      display: grid !important;
+      gap: 12px !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawerAdd{
+      width: 100% !important;
+      height: 46px !important;
+      border-radius: 999px !important;
+      border: 0 !important;
+      background: #111 !important;
+      color: #fff !important;
+      font-weight: 650 !important;
+      cursor: pointer !important;
+    }
+
+    #ps247-{{ section.id }} .ps247v__drawerLink{
+      width: 100% !important;
+      height: 46px !important;
+      border-radius: 999px !important;
+      border: 1px solid rgba(0,0,0,.18) !important;
+      background: #fff !important;
+
+      display: grid !important;
+      place-items: center !important;
+
+      text-decoration: none !important;
+      color: #111 !important;
+      font-weight: 550 !important;
+    }
+
+    /* =========================
+       PILL
+    ========================= */
+
+    /* Pill container: giữ trong card, canh giữa */
+    #ps247-{{ section.id }} .ps247v__pill{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+
+    /* PillInner: KHÓA độ rộng để không tràn sang card khác */
+    #ps247-{{ section.id }} .ps247v__pillInner{
+      width: min(240px, 90%);           /* ✅ gọn lại, không vượt card */
+      max-width: min(240px, 90%);
+      box-sizing: border-box;
+
+      display: grid;
+      grid-template-columns: 34px 1fr 34px; /* thumb | text | icon */
+      align-items: center;
+      gap: 10px;
+
+      padding: 10px 10px;
+      border-radius: 18px;
+
+      background: var(--ps-card-bg);
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 24px rgba(0,0,0,.06);
+    }
+
+    /* Thumb nhỏ gọn như mẫu */
+    #ps247-{{ section.id }} .ps247v__thumb{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      flex: none;
+    }
+
+    /* Text area: cho phép ellipsis hoạt động */
+    #ps247-{{ section.id }} .ps247v__meta{
+      min-width: 0; /* ✅ bắt buộc để không làm pill nở ngang */
+    }
+
+    /* Title: (base) */
+    #ps247-{{ section.id }} .ps247v__title{
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: 500;
+      margin: 0;
+
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;  /* ✅ 2 dòng rồi … */
+    }
+
+    /* Price: xuống dòng, gọn */
+    #ps247-{{ section.id }} .ps247v__price{
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    #ps247-{{ section.id }} .ps247v__money{
+      font-weight: 700;
+    }
+
+    /* Icon button: gọn như mẫu */
+    #ps247-{{ section.id }} .ps247v__iconBtn{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.08);
+      flex: none;
+    }
+
+    /* 1) Title trong pill: ép 1 dòng + ellipsis */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__title{
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+
+      display: block !important; /* đảm bảo không bị clamp 2 dòng */
+      font-size: 12px !important;
+      line-height: 1.2 !important;
+    }
+
+    /* 2) Giá: sale nổi hơn, compare nhỏ hơn */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__price{
+      margin-top: 6px !important;
+      gap: 8px !important;
+      font-size: 12px !important;
+      line-height: 1 !important;
+    }
+
+    /* giá sale / giá hiện tại */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__money{
+      font-weight: 800 !important; /* ✅ nổi hơn */
+      font-size: 13px !important;  /* ✅ to hơn chút */
+    }
+
+    /* giá chưa sale */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__compare{
+      text-decoration: line-through !important;
+      color: rgba(0,0,0,.45) !important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+    }
+
+    /* 3) Icon search: to hơn và cân trong khung */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__iconBtn{
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 12px !important;
+
+      display: grid !important;
+      place-items: center !important;
+
+      background: rgba(0,0,0,.10) !important;
+
+      font-size: 16px !important;   /* ✅ icon lớn hơn */
+      line-height: 1 !important;
+      font-weight: 700 !important;
+    }
+
+    /* =========================
+       BOTTOM
+    ========================= */
+    .ps247v__bottom{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .ps247v__dots{ display:flex; gap: 10px; align-items:center; }
+    .ps247v__dots button{
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      border: 0;
+      background: {{ s.dot_inactive }};
+      cursor:pointer;
+      transition: width .2s ease, background .2s ease;
+    }
+    .ps247v__dots button.is-active{
+      width: 18px;
+      background: {{ s.dot_active }};
+    }
+
+    .ps247v__progress{
+      width: {{ s.progress_width }}px;
+      height: {{ s.progress_height }}px;
+      border-radius: 999px;
+      background: {{ s.progress_bg }};
+      overflow:hidden;
+    }
+
+    @media (max-width: 768px){
+      .ps247v__progress{ width: {{ s.progress_width_mobile }}px; }
+    }
+
+    .ps247v__bar{
+      display:block;
+      height:100%;
+      width:0%;
+      background: {{ s.progress_fill }};
+      border-radius: 999px;
+      transition: width .15s ease;
+    }
+
+    /* =========================
+       ✅ TẮT HOVER ZOOM TOÀN BỘ
+    ========================= */
+    @media (hover:hover){
+      #ps247-{{ section.id }} .ps247v__media:hover .ps247v__mediaInner,
+      #ps247-{{ section.id }} .ps247v__mediaInner{
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 480px){
+      #ps247-{{ section.id }} .ps247v__card{
+        filter: none !important; /* card active full màu */
+      }
+
+      /* Pill bám đúng bề ngang card */
+      #ps247-{{ section.id }} .ps247v__pill{
+        width: 100% !important;
+        justify-content: center !important;
+      }
+
+      /* ✅ pillInner full width như media card */
+      #ps247-{{ section.id }} .ps247v__pillInner{
+        width: 100% !important;
+        max-width: 100% !important;
+
+        /* giữ layout gọn đẹp */
+        grid-template-columns: 34px 1fr 34px !important;
+        padding: 12px 12px !important;
+        border-radius: 18px !important;
+      }
+
+      /* Heading + stage spacing */
+      #ps247-{{ section.id }} .ps247v__head{
+        margin-bottom: 8px !important; /* 🔽 sát hơn nữa */
+      }
+      #ps247-{{ section.id }} .ps247v__stageWrap{
+        margin-top: 0 !important; /* 🔥 mấu chốt */
+      }
+      #ps247-{{ section.id }} .ps247v__heading{
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+
+        font-size: clamp(18px, 5vw, 26px) !important;
+        line-height: 1.05 !important;
+      }
+      #ps247-{{ section.id }} .ps247v__sub{
+        margin-top: 8px !important;
+      }
+    }
+
+    /* ===== Fix price overlap when zoom/resize ===== */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__price{
+      display: flex !important;
+      flex-wrap: wrap !important; /* ✅ thiếu chỗ thì xuống dòng, không đè */
+      column-gap: 6px !important;
+      row-gap: 2px !important;
+      align-items: baseline !important;
+    }
+
+    /* ✅ giá hiện tại (sale/normal) co giãn nhẹ theo màn hình */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__money{
+      font-size: clamp(12px, 0.95vw, 13px) !important;
+      font-weight: 800 !important;
+      white-space: nowrap !important;
+    }
+
+    /* ✅ giá cũ nhỏ hơn + luôn gạch ngang, cũng không bị đè */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__compare{
+      font-size: clamp(10px, 0.80vw, 12px) !important;
+      text-decoration: line-through !important;
+      white-space: nowrap !important;
+      opacity: .7 !important;
+    }
+
+    /* Nếu pill/price bị “kẹt” do grid item không co lại được */
+    #ps247-{{ section.id }} .ps247v__pillInner .ps247v__meta{
+      min-width: 0 !important;
+    }
+  </style>
+
+  <script>
+    (function(){
+      const root = document.getElementById("ps247-{{ section.id }}");
+      if(!root) return;
+
+      const stage = root.querySelector("[data-ps247-stage]");
+      const track = root.querySelector("[data-ps247-track]");
+      const bar = root.querySelector("[data-ps247-bar]");
+      const dotsWrap = root.querySelector("[data-ps247-dots]");
+      const cards = Array.from(root.querySelectorAll("[data-ps247-card]"));
+      if(!stage || !track || !cards.length) return;
+
+      const settings = {
+        autoplay: {{ s.enable_autoplay | json }},
+        swipeMobile: {{ s.enable_swipe_mobile | json }},
+        showPagination: {{ s.show_pagination | json }},
+        enableHotspots: {{ s.enable_hotspots | json }},
+      };
+
+      /* =========================================================
+         ✅ DRAWER (LOCAL per-card, không modal full-page)
+         - drawer nằm TRONG từng card (trong .ps247v__media)
+         - mở: click [data-ps247-drawer-open]
+         - đóng: click [data-ps247-drawer-close] hoặc ESC
+      ========================================================= */
+      function getDrawerInCard(card){
+        return card ? card.querySelector("[data-ps247-drawer]") : null;
+      }
+
+      function closeDrawerInCard(card){
+        const d = getDrawerInCard(card);
+        if(!d) return;
+        d.classList.remove("is-open");
+        d.setAttribute("aria-hidden","true");
+      }
+
+      function closeAllDrawers(){
+        cards.forEach(c => closeDrawerInCard(c));
+      }
+
+      function openDrawerFromCard(card){
+        if(!card) return;
+        const d = getDrawerInCard(card);
+        if(!d) return;
+
+        // đóng drawer khác trước khi mở cái mới (tránh nhiều lớp)
+        closeAllDrawers();
+
+        // refs nằm trong drawer của card này
+        const dImg     = d.querySelector("[data-ps247-drawer-img]");
+        const dTitle   = d.querySelector("[data-ps247-drawer-title]");
+        const dPrice   = d.querySelector("[data-ps247-drawer-price]");
+        const dCompare = d.querySelector("[data-ps247-drawer-compare]");
+        const dUrl     = d.querySelector("[data-ps247-drawer-url]");
+        const dVariant = d.querySelector("[data-ps247-drawer-variant]");
+
+        // fill content từ dataset của card
+        if(dTitle)   dTitle.textContent = card.dataset.ps247DrawerTitle || "";
+        if(dPrice)   dPrice.textContent = card.dataset.ps247DrawerPrice || "";
+        if(dCompare) dCompare.textContent = card.dataset.ps247DrawerCompare || "";
+        if(dUrl)     dUrl.href = card.dataset.ps247DrawerUrl || "#";
+        if(dVariant) dVariant.value = card.dataset.ps247DrawerVariant || "";
+
+        const imgSrc = card.dataset.ps247DrawerImg || "";
+        if(dImg){
+          if(imgSrc){
+            dImg.src = imgSrc;
+            dImg.style.display = "";
+          }else{
+            dImg.style.display = "none";
+          }
+        }
+
+        // mở drawer của đúng card
+        d.classList.add("is-open");
+        d.setAttribute("aria-hidden","false");
+
+        // nhớ card đang mở (ESC đóng đúng cái này)
+        root._psOpenDrawerCard = card;
+
+        // (tuỳ chọn) mở drawer thì pause video + dừng progress
+        // pauseAll(active);
+        // stopProgressLoop();
+      }
+      /* ========================================================= */
+
+      // iOS unlock
+      let unlocked = false;
+      function unlockOnce(){
+        if(unlocked) return;
+        unlocked = true;
+        root.querySelectorAll("[data-ps247-video]").forEach(v=>{
+          try{
+            v.muted = true; v.playsInline = true;
+            const p = v.play();
+            if(p && p.then) p.then(()=>v.pause()).catch(()=>{});
+            else v.pause();
+          }catch(e){}
+        });
+      }
+      window.addEventListener("touchstart", unlockOnce, {once:true, passive:true});
+      window.addEventListener("pointerdown", unlockOnce, {once:true, passive:true});
+
+      // dots
+      let dots = [];
+      if(settings.showPagination && dotsWrap){
+        dotsWrap.innerHTML = "";
+        cards.forEach((_, i)=>{
+          const b = document.createElement("button");
+          b.type = "button";
+          b.addEventListener("click", ()=> goTo(i));
+          dotsWrap.appendChild(b);
+        });
+        dots = Array.from(dotsWrap.querySelectorAll("button"));
+      }
+
+      const mod = (n,m)=>((n%m)+m)%m;
+
+      let active = 0;
+      let dragOffset = 0;
+
+      let progRAF = null;
+
+      function startProgressLoop(){
+        stopProgressLoop();
+        const tick = () => {
+          updateProgress();
+          progRAF = requestAnimationFrame(tick);
+        };
+        progRAF = requestAnimationFrame(tick);
+      }
+
+      function stopProgressLoop(){
+        if(progRAF){
+          cancelAnimationFrame(progRAF);
+          progRAF = null;
+        }
+      }
+
+      function profile(){
+        const w = stage.clientWidth;
+
+        const sample = cards[0];
+        const baseW = sample ? sample.offsetWidth : 220;
+
+        const gap = 16;
+
+        const isMobile  = matchMedia("(max-width: 480px)").matches;
+        const isDesktop = matchMedia("(min-width: 1024px)").matches;
+
+        let s0 = isDesktop ? 1.14 : (isMobile ? 1.06 : 1.08);
+        let s1 = isDesktop ? 0.98 : (isMobile ? 0.92 : 0.96);
+        let s2 = isDesktop ? 0.86 : (isMobile ? 0.84 : 0.86);
+
+        const show = isMobile ? 0 : 2;
+
+        const safeStep = (aScale, bScale) => (baseW * aScale)/2 + (baseW * bScale)/2 + gap;
+
+        const minS0 = isMobile ? 1.02 : 1.05;
+        const minS1 = isMobile ? 0.88 : 0.92;
+        const minS2 = isMobile ? 0.80 : 0.84;
+
+        const maxX2 = isMobile ? w * 0.75 : w * 0.62;
+        const maxX1 = isMobile ? w * 0.42 : w * 0.34;
+
+        for(let t=0; t<12; t++){
+          const x1Try = safeStep(s0, s1);
+          const x2Try = x1Try + safeStep(s1, s2);
+
+          if (x1Try <= maxX1 && x2Try <= maxX2) break;
+
+          s0 = Math.max(minS0, s0 - 0.01);
+          s1 = Math.max(minS1, s1 - 0.01);
+          s2 = Math.max(minS2, s2 - 0.01);
+        }
+
+        const x1 = Math.min(safeStep(s0, s1), maxX1);
+        const x2 = Math.min(x1 + safeStep(s1, s2), maxX2);
+
+        if(isMobile){
+          return {
+            show: 0,
+            x1: 0, x2: 0,
+            y1: 0, y2: 0,
+            s0: 1, s1: 1, s2: 1
+          };
+        }
+
+        return {
+          show,
+          x1, x2,
+          y1: 0,
+          y2: 0,
+          s0, s1, s2
+        };
+      }
+
+      function setStageHeight(){
+        const a = cards[active];
+        if(!a) return;
+        const rect = a.getBoundingClientRect();
+        const p = profile();
+        const extra = p.y2 + 40;
+        stage.style.setProperty("--ps-stage-h", Math.ceil(rect.height + extra) + "px");
+      }
+
+      function updateProgress(){
+        if(!bar) return;
+
+        const card = cards[active];
+        const v = card ? card.querySelector("[data-ps247-video]") : null;
+
+        if(!v || !isFinite(v.duration) || v.duration <= 0){
+          bar.style.width = "0%";
+          return;
+        }
+
+        const pct = Math.max(0, Math.min(100, (v.currentTime / v.duration) * 100));
+        bar.style.width = pct.toFixed(2) + "%";
+      }
+
+      function pauseAll(except){
+        cards.forEach((card,i)=>{
+          const v = card.querySelector("[data-ps247-video]");
+          if(!v) return;
+          if(v._psTimer){ clearTimeout(v._psTimer); v._psTimer = null; }
+          if(i !== except){
+            try{ v.pause(); }catch(e){}
+          }
+        });
+      }
+
+      function safePlay(v){
+        try{
+          v.muted = true; v.playsInline = true;
+          const p = v.play();
+          if(p && p.catch) p.catch(()=>{});
+        }catch(e){}
+      }
+
+      function playActive(){
+        const card = cards[active];
+        if(!card) return;
+        const v = card.querySelector("[data-ps247-video]");
+        if(!v) return;
+
+        try{ v.loop = false; }catch(e){}
+
+        try{
+          v.pause();
+          if(v.readyState >= 1) v.currentTime = 0;
+        }catch(e){}
+
+        if(v._psTimer){ clearTimeout(v._psTimer); v._psTimer = null; }
+
+        v._psTimer = setTimeout(()=>{
+          if(v.readyState < 2){
+            const onCanPlay = ()=>{ v.removeEventListener("canplay", onCanPlay); safePlay(v); };
+            v.addEventListener("canplay", onCanPlay, {once:true});
+            try{ v.load(); }catch(e){}
+          }else{
+            safePlay(v);
+          }
+        }, 450);
+      }
+
+      function wireEndedNext(){
+        cards.forEach((card, idx)=>{
+          const v = card.querySelector("[data-ps247-video]");
+          if(!v || v._endedBound) return;
+          v._endedBound = true;
+          v.addEventListener("ended", ()=>{
+            if(!settings.autoplay) return;
+            if(idx !== active) return;
+            goNext();
+          });
+        });
+      }
+
+      function applyLayout(){
+        const n = cards.length;
+        const p = profile();
+
+        const vis = new Set([active]);
+        for(let k=1; k<=p.show; k++){
+          vis.add(mod(active-k,n));
+          vis.add(mod(active+k,n));
+        }
+
+        cards.forEach(c => c.classList.remove("is-active"));
+
+        cards.forEach((card,i)=>{
+          card.classList.remove("is-visible");
+
+          if(!vis.has(i)){
+            card.style.opacity = "0";
+            card.style.pointerEvents = "none";
+            card.style.zIndex = "0";
+            card.style.visibility = "hidden"; // ✅ hard hide
+            card.style.transform = "translateX(-50%) translateY(0) scale(1)";
+            return;
+          }
+
+          card.classList.add("is-visible");
+          card.style.visibility = "visible";
+
+          let rel = i - active;
+          if(rel > n/2) rel -= n;
+          if(rel < -n/2) rel += n;
+
+          let x=0, y=0, s=1, z=1, dim=false;
+          if(rel === 0){
+            x=0; y=0; s=p.s0; z=5;
+            card.classList.add("is-active");
+          }else if(rel === -1 || rel === 1){
+            x = rel < 0 ? -p.x1 : p.x1;
+            y = p.y1; s=p.s1; z=4; dim=true;
+          }else if(p.show >= 2 && (rel === -2 || rel === 2)){
+            x = rel < 0 ? -p.x2 : p.x2;
+            y = p.y2; s=p.s2; z=3; dim=true;
+          }
+
+          const tx = x + dragOffset;
+          card.style.zIndex = String(z);
+          card.style.opacity = "1";
+          card.style.pointerEvents = "auto";
+          card.style.filter = dim ? "grayscale(.95)" : "none";
+          card.style.transform =
+            `translateX(calc(-50% + ${tx}px)) translateY(calc(-50% + ${y}px)) scale(${s})`;
+        });
+
+        if(dots.length){
+          dots.forEach((d,i)=> d.classList.toggle("is-active", i===active));
+        }
+        updateProgress();
+        setStageHeight();
+      }
+
+      function settle(){
+        dragOffset = 0;
+        applyLayout();
+        pauseAll(active);
+
+        if(bar) bar.style.width = "0%";
+        if(settings.autoplay) playActive();
+
+        startProgressLoop();
+      }
+
+      function goTo(i){
+        active = mod(i, cards.length);
+        unlockOnce();
+        settle();
+      }
+      function goNext(){ goTo(active + 1); }
+      function goPrev(){ goTo(active - 1); }
+
+      // drag / swipe
+      let isDown=false, startX=0, lastX=0, moved=false;
+
+      function down(e){
+        if(matchMedia("(max-width: 480px)").matches && !settings.swipeMobile) return;
+        unlockOnce();
+        stopProgressLoop();
+        isDown=true; moved=false;
+        startX = (e.touches ? e.touches[0].clientX : e.clientX);
+        lastX = startX;
+        stage.classList.add("is-dragging");
+      }
+      function move(e){
+        if(!isDown) return;
+        const x = (e.touches ? e.touches[0].clientX : e.clientX);
+        const dx = x - startX;
+        lastX = x;
+        moved = true;
+        dragOffset = Math.max(-260, Math.min(260, dx));
+        applyLayout();
+      }
+      function up(){
+        if(!isDown) return;
+        isDown=false;
+        stage.classList.remove("is-dragging");
+
+        const dx = lastX - startX;
+        const threshold = Math.max(44, stage.clientWidth * 0.08);
+
+        if(moved && Math.abs(dx) > threshold){
+          if(dx < 0) goNext();
+          else goPrev();
+        }else{
+          settle();
+        }
+      }
+
+      stage.addEventListener("pointerdown", down);
+      stage.addEventListener("pointermove", move);
+      stage.addEventListener("pointerup", up);
+      stage.addEventListener("pointercancel", up);
+      stage.addEventListener("pointerleave", up);
+
+      stage.addEventListener("touchstart", down, {passive:true});
+      stage.addEventListener("touchmove", move, {passive:true});
+      stage.addEventListener("touchend", up, {passive:true});
+
+      // play badge: play active only
+      root.querySelectorAll("[data-ps247-play]").forEach(btn=>{
+        btn.addEventListener("click", (e)=>{
+          e.preventDefault();
+          e.stopPropagation();
+          unlockOnce();
+          settings.autoplay = true;
+          settle();
+        });
+      });
+
+      window.addEventListener("resize", ()=>{
+        applyLayout();
+        setStageHeight();
+      });
+
+      /* =========================================================
+         ✅ Drawer event bindings (LOCAL)
+         - MỞ: click phần có data-ps247-drawer-open
+         - ĐÓNG: click phần có data-ps247-drawer-close (X hoặc backdrop trong drawer)
+         - ESC: đóng drawer đang mở
+      ========================================================= */
+      root.querySelectorAll("[data-ps247-drawer-open]").forEach(el=>{
+        el.addEventListener("click", (e)=>{
+          e.preventDefault();
+          e.stopPropagation();
+          const card = el.closest("[data-ps247-card]");
+          openDrawerFromCard(card);
+        });
+      });
+
+      root.addEventListener("click", (e)=>{
+        const closeBtn = e.target.closest("[data-ps247-drawer-close]");
+        if(!closeBtn) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const card = closeBtn.closest("[data-ps247-card]");
+        closeDrawerInCard(card);
+        if(root._psOpenDrawerCard === card) root._psOpenDrawerCard = null;
+      });
+
+      document.addEventListener("keydown", (e)=>{
+        if(e.key !== "Escape") return;
+        if(root._psOpenDrawerCard){
+          closeDrawerInCard(root._psOpenDrawerCard);
+          root._psOpenDrawerCard = null;
+        }else{
+          closeAllDrawers();
+        }
+      });
+      /* ========================================================= */
+
+      // init
+      wireEndedNext();
+      applyLayout();
+      settle();
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Video looping (PS247)",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Learn how to use this section." },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<p>Shop <em>premium</em> for <em>pennies.</em></p>" },
+    {
+      "type": "select",
+      "id": "heading_size_pct",
+      "label": "Heading size",
+      "default": "100",
+      "options": [
+        { "value": "80", "label": "80%" },
+        { "value": "90", "label": "90%" },
+        { "value": "100", "label": "100%" },
+        { "value": "110", "label": "110%" },
+        { "value": "120", "label": "120%" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p></p>" },
+    { "type": "range", "id": "heading_bottom", "label": "Space under heading", "min": 0, "max": 80, "step": 2, "default": 24 },
+
+    { "type": "header", "content": "Overlay opacity" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 90, "step": 5, "default": 70 },
+
+    { "type": "header", "content": "Shoppable video" },
+    {
+      "type": "select",
+      "id": "product_card_position",
+      "label": "Product card position",
+      "default": "bottom_of_video",
+      "options": [
+        { "value": "bottom_of_video", "label": "Bottom of video" }
+      ]
+    },
+    { "type": "checkbox", "id": "enable_hotspots", "label": "Enable hotspots in the look", "default": false },
+
+    { "type": "header", "content": "Carousel" },
+    { "type": "checkbox", "id": "enable_swipe_mobile", "label": "Enable swipe on mobile", "default": true },
+    { "type": "checkbox", "id": "enable_autoplay", "label": "Enable auto-play", "default": true },
+    { "type": "checkbox", "id": "show_pagination", "label": "Show pagination", "default": true },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#111111" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#777777" },
+    { "type": "color", "id": "card_bg", "label": "Product card bg", "default": "#ffffff" },
+
+    { "type": "header", "content": "Desktop layout" },
+    { "type": "range", "id": "container_width", "label": "Container width", "min": 900, "max": 1800, "step": 10, "default": 1400 },
+    { "type": "range", "id": "container_padding", "label": "Side padding (desktop)", "min": 0, "max": 40, "step": 2, "default": 12 },
+    { "type": "checkbox", "id": "full_width_desktop", "label": "Make section full width", "default": false },
+    { "type": "checkbox", "id": "show_divider", "label": "Show section divider", "default": false },
+    { "type": "range", "id": "block_spacing", "label": "Block spacing", "min": 0, "max": 60, "step": 2, "default": 28 },
+    { "type": "range", "id": "pad_top_desktop", "label": "Top padding", "min": 0, "max": 140, "step": 4, "default": 100 },
+    { "type": "range", "id": "pad_bottom_desktop", "label": "Bottom padding", "min": 0, "max": 140, "step": 4, "default": 0 },
+
+    { "type": "header", "content": "Mobile layout" },
+    { "type": "range", "id": "container_padding_mobile", "label": "Side padding (mobile)", "min": 0, "max": 24, "step": 2, "default": 14 },
+    { "type": "range", "id": "pad_top_mobile", "label": "Top padding (mobile)", "min": 0, "max": 120, "step": 4, "default": 48 },
+    { "type": "range", "id": "pad_bottom_mobile", "label": "Bottom padding (mobile)", "min": 0, "max": 120, "step": 4, "default": 28 },
+
+    { "type": "header", "content": "Card style" },
+    { "type": "range", "id": "radius", "label": "Radius", "min": 10, "max": 40, "step": 1, "default": 22 },
+    { "type": "text", "id": "media_aspect_ratio", "label": "Media aspect ratio (CSS)", "default": "3 / 4" },
+    { "type": "text", "id": "shadow", "label": "Media shadow (CSS)", "default": "0 14px 35px rgba(0,0,0,.08)" },
+
+    { "type": "header", "content": "Dots / progress" },
+    { "type": "range", "id": "progress_width", "label": "Progress width (desktop)", "min": 120, "max": 260, "step": 5, "default": 180 },
+    { "type": "range", "id": "progress_width_mobile", "label": "Progress width (mobile)", "min": 100, "max": 220, "step": 5, "default": 140 },
+    { "type": "range", "id": "progress_height", "label": "Progress height", "min": 4, "max": 10, "step": 1, "default": 6 },
+    { "type": "color", "id": "progress_bg", "label": "Progress bg", "default": "#ededed" },
+    { "type": "color", "id": "progress_fill", "label": "Progress fill", "default": "#111111" },
+    { "type": "color", "id": "dot_inactive", "label": "Dot inactive", "default": "#d7d7d7" },
+    { "type": "color", "id": "dot_active", "label": "Dot active", "default": "#111111" },
+
+    { "type": "header", "content": "UI" },
+    { "type": "checkbox", "id": "show_play_badge", "label": "Show play badge", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "shoppable_video",
+      "name": "Shoppable video",
+      "settings": [
+        { "type": "video", "id": "video", "label": "Video" },
+        { "type": "image_picker", "id": "poster", "label": "Poster" },
+        { "type": "url", "id": "video_url", "label": "Or embed video from URL" },
+        { "type": "text", "id": "video_alt", "label": "Video alt text" },
+
+        { "type": "text", "id": "title", "label": "Title (optional)" },
+        { "type": "product", "id": "product", "label": "Product" },
+
+        { "type": "header", "content": "First product hotspot" },
+        { "type": "product", "id": "product_1", "label": "Product" },
+        { "type": "range", "id": "hs1_x_desktop", "label": "Hotspot desktop horizontal position", "min": 0, "max": 100, "step": 1, "default": 30 },
+        { "type": "range", "id": "hs1_y_desktop", "label": "Hotspot desktop vertical position", "min": 0, "max": 100, "step": 1, "default": 50 },
+        { "type": "range", "id": "hs1_x_mobile", "label": "Hotspot mobile horizontal position", "min": 0, "max": 100, "step": 1, "default": 27 },
+        { "type": "range", "id": "hs1_y_mobile", "label": "Hotspot mobile vertical position", "min": 0, "max": 100, "step": 1, "default": 47 },
+
+        { "type": "header", "content": "Second product hotspot" },
+        { "type": "product", "id": "product_2", "label": "Product" },
+        { "type": "range", "id": "hs2_x_desktop", "label": "Hotspot desktop horizontal position", "min": 0, "max": 100, "step": 1, "default": 53 },
+        { "type": "range", "id": "hs2_y_desktop", "label": "Hotspot desktop vertical position", "min": 0, "max": 100, "step": 1, "default": 50 },
+        { "type": "range", "id": "hs2_x_mobile", "label": "Hotspot mobile horizontal position", "min": 0, "max": 100, "step": 1, "default": 55 },
+        { "type": "range", "id": "hs2_y_mobile", "label": "Hotspot mobile vertical position", "min": 0, "max": 100, "step": 1, "default": 50 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video looping (PS247)",
+      "blocks": [
+        { "type": "shoppable_video" },
+        { "type": "shoppable_video" },
+        { "type": "shoppable_video" },
+        { "type": "shoppable_video" },
+        { "type": "shoppable_video" }
+      ]
+    }
+  ]
+}
+{% endschema %}
