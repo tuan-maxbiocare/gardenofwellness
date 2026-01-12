@@ -1371,12 +1371,12 @@
         "tab_selection_style": "on_hover",
         "open_first_tab": true,
         "pause_on_hover": true,
-        "bg_light": "transparent",
+        "bg_light": "rgba(0,0,0,0)",
         "heading_color_light": "#868686",
-        "text_color_light": "transparent",
-        "bg_dark": "transparent",
-        "heading_color_dark": "transparent",
-        "text_color_dark": "transparent",
+        "text_color_light": "rgba(0,0,0,0)",
+        "bg_dark": "rgba(0,0,0,0)",
+        "heading_color_dark": "rgba(0,0,0,0)",
+        "text_color_dark": "rgba(0,0,0,0)",
         "image_position": "first",
         "full_width": false,
         "show_divider": true,
@@ -1456,6 +1456,179 @@
         "padding_top": 40,
         "padding_bottom": 40
       }
+    },
+    "looping_video_dD4YRe": {
+      "type": "looping-video",
+      "blocks": {
+        "shoppable_video_UJPQzG": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766644813_36.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-lemon-zest",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_AtFQbx": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645496_56.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-contour-body-oil-thirteen-petals",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_ai6nzn": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645300_50.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-geranium-breeze",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_cAD9VF": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645060_44.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-neroli-blossom",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_6PUnN4": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645398_53.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-sage-clarity",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_cbkPyg": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766644997_42.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-geranium-breeze",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        }
+      },
+      "block_order": [
+        "shoppable_video_UJPQzG",
+        "shoppable_video_AtFQbx",
+        "shoppable_video_ai6nzn",
+        "shoppable_video_cAD9VF",
+        "shoppable_video_6PUnN4",
+        "shoppable_video_cbkPyg"
+      ],
+      "name": "Video looping (PS247)",
+      "settings": {
+        "heading": "<p>Shop <em>premium</em> for <em>pennies.</em></p>",
+        "heading_size_pct": "110",
+        "heading_tag": "h2",
+        "heading_align": "center",
+        "subheading": "",
+        "heading_bottom": 24,
+        "overlay_opacity": 70,
+        "product_card_position": "bottom_of_video",
+        "enable_hotspots": false,
+        "enable_swipe_mobile": true,
+        "enable_autoplay": true,
+        "show_pagination": true,
+        "bg_color": "#ffffff",
+        "text_color": "#111111",
+        "muted_color": "#777777",
+        "card_bg": "#ffffff",
+        "container_width": 1400,
+        "container_padding": 12,
+        "full_width_desktop": false,
+        "show_divider": false,
+        "block_spacing": 28,
+        "pad_top_desktop": 100,
+        "pad_bottom_desktop": 0,
+        "container_padding_mobile": 14,
+        "pad_top_mobile": 48,
+        "pad_bottom_mobile": 28,
+        "radius": 22,
+        "media_aspect_ratio": "3 / 4",
+        "shadow": "0 14px 35px rgba(0,0,0,.08)",
+        "progress_width": 180,
+        "progress_width_mobile": 140,
+        "progress_height": 6,
+        "progress_bg": "#ededed",
+        "progress_fill": "#111111",
+        "dot_inactive": "#d7d7d7",
+        "dot_active": "#111111",
+        "show_play_badge": true
+      }
     }
   },
   "order": [
@@ -1472,6 +1645,7 @@
     "section_FdUhqH",
     "product_star_8kJJNp",
     "flow_8RRFC4",
-    "journey_timeline_fQmzcQ"
+    "journey_timeline_fQmzcQ",
+    "looping_video_dD4YRe"
   ]
 }
