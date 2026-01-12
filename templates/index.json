@@ -1307,7 +1307,7 @@
             "image_style": "square",
             "image_ratio": "wide_16:9",
             "description": "<p>Transform your skincare routine with our effective cleansers. Scientifically formulated to cleanse and purify for a flawless complexion.</p>",
-            "button_text": "Shopcleanser",
+            "button_text": "Shop cleanser",
             "button_link": "shopify://collections/clearance-sale",
             "open_in_new_window": false,
             "button_style": "primary"
@@ -1316,17 +1316,19 @@
         "media_UWUnbF": {
           "type": "media",
           "settings": {
+            "image": "shopify://shop_images/8097a812dddf42e6654c33ea52359d37703ee0c1.jpg",
             "video_url": "",
             "video_alt_text": "he",
             "enable_video_autoplay": false,
-            "step_label": "he",
-            "subheading": "he",
-            "heading": "Media heading",
+            "step_label": "",
+            "subheading": "",
+            "heading": "Serums",
+            "heading_image": "shopify://shop_images/96238c0e52c400d62e3ceac726557f5b66efcbcf.jpg",
             "image_style": "square",
             "image_ratio": "wide_16:9",
-            "description": "<p>Tell your brand's story through images</p>",
-            "button_text": "none",
-            "button_link": "",
+            "description": "<p>Enhance your daily routine with our specialized serums. Scientifically formulated for optimal skin health and vitality.</p>",
+            "button_text": "Shop serums",
+            "button_link": "shopify://collections/beauty-products",
             "open_in_new_window": false,
             "button_style": "primary"
           }
@@ -1334,17 +1336,19 @@
         "media_hmMpM4": {
           "type": "media",
           "settings": {
+            "image": "shopify://shop_images/d5140364155066e9236f097043e21eae13799232.jpg",
             "video_url": "",
             "video_alt_text": "he",
             "enable_video_autoplay": false,
-            "step_label": "he",
-            "subheading": "he",
-            "heading": "Media heading",
+            "step_label": "STEP3",
+            "subheading": "",
+            "heading": "Toners",
+            "heading_image": "shopify://shop_images/274-2H6A2689.jpg",
             "image_style": "square",
             "image_ratio": "wide_16:9",
-            "description": "<p>Tell your brand's story through images</p>",
-            "button_text": "none",
-            "button_link": "",
+            "description": "<p>Achieve glowing skin with our toners as part of your skincare routine. Scientifically formulated for optimal results.</p>",
+            "button_text": "Shop toners",
+            "button_link": "shopify://collections/body-care",
             "open_in_new_window": false,
             "button_style": "primary"
           }
