@@ -1258,7 +1258,7 @@
       "settings": {
         "section_width": "page-width",
         "padding_top": 80,
-        "padding_bottom": 0,
+        "padding_bottom": 80,
         "padding_left": 0,
         "padding_right": 0,
         "padding_top_mobile": 48,
@@ -1388,125 +1388,6 @@
         "padding_bottom_mobile": 48,
         "base_size": 110,
         "rtl_languages": "none"
-      }
-    },
-    "testimonials_with_card_fwkrby": {
-      "type": "testimonials-with-card",
-      "blocks": {
-        "testimonial_ayHLwh": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/2H6A1829_9312be68-c526-4c45-8766-0dae9815f62b.webp",
-            "customer_name": "Rosa N.",
-            "testimonial_title": "t",
-            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
-            "featured_product": "garden-of-wellness-contour-body-oil-thirteen-petals"
-          }
-        },
-        "testimonial_PTXnX4": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/274-2H6A2689.jpg",
-            "customer_name": "Rosa N.",
-            "testimonial_title": "t",
-            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
-            "featured_product": "garden-of-wellness-nourishing-body-oil-lemon-zest"
-          }
-        },
-        "testimonial_qCdJHR": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/garden-of-wellness-images-812x1244-8.webp",
-            "customer_name": "Rosa N.",
-            "testimonial_title": "t",
-            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
-            "featured_product": "garden-of-wellness-nourishing-body-oil-rosemary-touch"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_ayHLwh",
-        "testimonial_PTXnX4",
-        "testimonial_qCdJHR"
-      ],
-      "name": "Customer Testimonials",
-      "settings": {
-        "heading": "Customer Reviews",
-        "enable_auto_slide": true,
-        "auto_slide_speed": 5,
-        "background_color": "#ffffff",
-        "card_bg_color": "#ffffff",
-        "heading_color": "#000000",
-        "text_color": "#000000",
-        "arrow_color": "#000000",
-        "star_color": "#000000"
-      }
-    },
-    "journey_timeline_fQmzcQ": {
-      "type": "journey-timeline",
-      "blocks": {
-        "milestone_rDqCKj": {
-          "type": "milestone",
-          "settings": {
-            "title_size": 34,
-            "title_weight": "700",
-            "year": "2025",
-            "eyebrow": "TODAY & TOMORROW",
-            "title": "New vinergy® patent",
-            "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3781937743342586992.mp4",
-            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.<br/></p>"
-          }
-        },
-        "milestone_Pfkbzq": {
-          "type": "milestone",
-          "settings": {
-            "title_size": 34,
-            "title_weight": "700",
-            "year": "2020",
-            "eyebrow": "MILE STONE 3",
-            "title": "The french beauty solution",
-            "text": "<p>After five years spent abroad, speaking with countless women and truly understanding their skincare needs, the idea to create something meaningful began to grow. That inspiration took shape in a book — a heartfelt blend of beauty philosophy, expert advice, and practical tips, all wrapped in the natural elegance of effortless self-care.</p>",
-            "image": "shopify://shop_images/5e401805b6a43b5ca92f9ad5ca245bfb9a26a13f.jpg"
-          }
-        },
-        "milestone_HFeyRC": {
-          "type": "milestone",
-          "settings": {
-            "title_size": 34,
-            "title_weight": "700",
-            "year": "2015",
-            "eyebrow": "MILE STONE 2",
-            "title": "Our first organic & vegan center",
-            "video": "shopify://files/videos/8293512-hd_1280_720_30fps.mp4",
-            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.</p>"
-          }
-        },
-        "milestone_z4JJHH": {
-          "type": "milestone",
-          "settings": {
-            "title_size": 34,
-            "title_weight": "700",
-            "year": "2010",
-            "eyebrow": "MILE STONE 1",
-            "title": "We joins 1% for the planet",
-            "text": "<p>Giving back to the earth what it gives us every day: This was our goal when we began to dedicate 1% of our global sales to funding reforestation projects.  Since 2012, we have planted and protected over 4 million trees in all 4 corners of the world.</p>",
-            "image": "shopify://shop_images/804476762a341f52412c5e6a5f45dda89541c668.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "milestone_rDqCKj",
-        "milestone_Pfkbzq",
-        "milestone_HFeyRC",
-        "milestone_z4JJHH"
-      ],
-      "name": "Journey timeline",
-      "settings": {
-        "heading": "Our successful journey.",
-        "heading_size": 42,
-        "heading_weight": "600",
-        "padding_top": 40,
-        "padding_bottom": 40
       }
     },
     "looping_video_dD4YRe": {
@@ -1681,6 +1562,108 @@
         "dot_active": "#111111",
         "show_play_badge": true
       }
+    },
+    "video_hero_cp7FFn": {
+      "type": "video-hero",
+      "blocks": {
+        "product_MTwjRL": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_MTwjRL"
+      ],
+      "name": "Video hero",
+      "settings": {
+        "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3739352408842388741.mp4",
+        "video_mp4_url": "",
+        "overlay_opacity": 35,
+        "kicker": "EURUS STORY",
+        "heading": "Because beauty is personal.",
+        "subheading": "",
+        "cta_label": "See the story",
+        "cta_link": "shopify://collections/all",
+        "text_align": "center",
+        "text_color": "#ffffff",
+        "content_max_width": 980,
+        "min_height_desktop": 720,
+        "min_height_mobile": 520,
+        "show_products": true,
+        "products_columns_desktop": 3,
+        "products_columns_mobile": "1",
+        "show_scroll_top": true,
+        "scroll_top_offset": 200
+      }
+    },
+    "journey_timeline_fQmzcQ": {
+      "type": "journey-timeline",
+      "blocks": {
+        "milestone_rDqCKj": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2025",
+            "eyebrow": "TODAY & TOMORROW",
+            "title": "New vinergy® patent",
+            "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3781937743342586992.mp4",
+            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.<br/></p>"
+          }
+        },
+        "milestone_Pfkbzq": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2020",
+            "eyebrow": "MILE STONE 3",
+            "title": "The french beauty solution",
+            "text": "<p>After five years spent abroad, speaking with countless women and truly understanding their skincare needs, the idea to create something meaningful began to grow. That inspiration took shape in a book — a heartfelt blend of beauty philosophy, expert advice, and practical tips, all wrapped in the natural elegance of effortless self-care.</p>",
+            "image": "shopify://shop_images/5e401805b6a43b5ca92f9ad5ca245bfb9a26a13f.jpg"
+          }
+        },
+        "milestone_HFeyRC": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2015",
+            "eyebrow": "MILE STONE 2",
+            "title": "Our first organic & vegan center",
+            "video": "shopify://files/videos/8293512-hd_1280_720_30fps.mp4",
+            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.</p>"
+          }
+        },
+        "milestone_z4JJHH": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2010",
+            "eyebrow": "MILE STONE 1",
+            "title": "We joins 1% for the planet",
+            "text": "<p>Giving back to the earth what it gives us every day: This was our goal when we began to dedicate 1% of our global sales to funding reforestation projects.  Since 2012, we have planted and protected over 4 million trees in all 4 corners of the world.</p>",
+            "image": "shopify://shop_images/804476762a341f52412c5e6a5f45dda89541c668.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "milestone_rDqCKj",
+        "milestone_Pfkbzq",
+        "milestone_HFeyRC",
+        "milestone_z4JJHH"
+      ],
+      "name": "Journey timeline",
+      "settings": {
+        "heading": "Our successful journey.",
+        "heading_size": 42,
+        "heading_weight": "600",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
     }
   },
   "order": [
@@ -1697,8 +1680,8 @@
     "section_FdUhqH",
     "product_star_8kJJNp",
     "flow_8RRFC4",
-    "testimonials_with_card_fwkrby",
-    "journey_timeline_fQmzcQ",
-    "looping_video_dD4YRe"
+    "looping_video_dD4YRe",
+    "video_hero_cp7FFn",
+    "journey_timeline_fQmzcQ"
   ]
 }
