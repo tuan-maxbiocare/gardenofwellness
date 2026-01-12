@@ -1,0 +1,1221 @@
+{% comment %}
+  Section: Flow (Image left + Steps right)
+  - Responsive
+  - Hover effect on big media (left)
+  - Tabs/steps on right (hover or click switch)
+  - Blocks: Media
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'flow-' | append: section.id
+  assign rtl_list = section.settings.rtl_languages | strip
+  assign is_rtl = false
+  if rtl_list != blank
+    assign iso = request.locale.iso_code | downcase
+    assign rtl_tokens = rtl_list | downcase | split: ','
+    for t in rtl_tokens
+      assign token = t | strip
+      if token == iso
+        assign is_rtl = true
+      endif
+    endfor
+  endif
+
+  assign base_scale = section.settings.base_size | default: 100
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="flow"
+  data-flow
+  data-tab-mode="{{ section.settings.tab_selection_style }}"
+  data-open-first="{{ section.settings.open_first_tab }}"
+  data-pause-hover="{{ section.settings.pause_on_hover }}"
+  {% if is_rtl %} dir="rtl" {% endif %}
+  style="
+    --flow-scale: {{ base_scale | divided_by: 100.0 }};
+    --flow-bg-light: {{ section.settings.bg_light }};
+    --flow-head-light: {{ section.settings.heading_color_light }};
+    --flow-text-light: {{ section.settings.text_color_light }};
+    --flow-bg-dark: {{ section.settings.bg_dark }};
+    --flow-head-dark: {{ section.settings.heading_color_dark }};
+    --flow-text-dark: {{ section.settings.text_color_dark }};
+    --flow-h-desktop: {{ section.settings.desktop_height }}px;
+    --flow-h-mobile: {{ section.settings.mobile_height }}px;
+    --flow-pt-desktop: {{ section.settings.padding_top }}px;
+    --flow-pb-desktop: {{ section.settings.padding_bottom }}px;
+    --flow-pt-mobile: {{ section.settings.padding_top_mobile }}px;
+    --flow-pb-mobile: {{ section.settings.padding_bottom_mobile }}px;
+  "
+>
+  <div class="flow__wrap {% if section.settings.full_width %}flow__wrap--full{% endif %}">
+    <div class="flow__inner">
+      {% if section.settings.heading != blank %}
+        <div class="flow__header flow__header--{{ section.settings.heading_alignment }}">
+          <{{ section.settings.heading_tag }} class="flow__title flow__title--size-{{ section.settings.heading_size }}">
+            {{ section.settings.heading | escape }}
+          </{{ section.settings.heading_tag }}>
+        </div>
+      {% endif %}
+
+      <div class="flow__grid flow__grid--image-{{ section.settings.image_position }}">
+        <!-- LEFT: Active media -->
+        <div class="flow__media" data-flow-media>
+          {%- comment -%}
+            We render all medias and show/hide by JS.
+          {%- endcomment -%}
+          {%- for block in section.blocks -%}
+            <div
+              class="flow__mediaItem {% if forloop.first %}is-active{% endif %}"
+              data-flow-media-item
+              data-index="{{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.video != blank -%}
+                <div class="flow__mediaBox">
+                  {{
+                    block.settings.video
+                    | video_tag:
+                      image_size: '1200x',
+                      autoplay: block.settings.enable_video_autoplay,
+                      loop: block.settings.enable_video_autoplay,
+                      muted: block.settings.enable_video_autoplay,
+                      controls: true
+                  }}
+                </div>
+              {%- elsif block.settings.video_url != blank -%}
+                <div class="flow__mediaBox flow__mediaBox--embed">
+                  <iframe
+                    src="{{ block.settings.video_url | escape }}"
+                    title="{{ block.settings.video_alt_text | escape }}"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              {%- elsif block.settings.image != blank -%}
+                <div class="flow__mediaBox">
+                  {{
+                    block.settings.image
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'flow__mediaImg',
+                      alt: block.settings.heading | escape
+                  }}
+                </div>
+              {%- else -%}
+                <div class="flow__mediaBox flow__mediaBox--placeholder">
+                  <span>Pick an image/video in this block</span>
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+
+          <!-- simple scroll-to-top-like button (optional, like your screenshot) -->
+          <button type="button" class="flow__fab" aria-label="Scroll to section top" data-flow-fab>
+            ↑
+          </button>
+        </div>
+
+        <!-- RIGHT: Steps -->
+        <div class="flow__steps flow__steps--pos-{{ section.settings.content_position }} flow__steps--{{ section.settings.content_alignment }}">
+          <div class="flow__stepsList" role="tablist" aria-label="Flow steps">
+            {%- for block in section.blocks -%}
+              {%- assign idx = forloop.index0 -%}
+              <button
+                type="button"
+                class="flow__step {% if forloop.first %}is-active{% endif %}"
+                data-flow-step
+                data-index="{{ idx }}"
+                role="tab"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              >
+                <div class="flow__stepHead">
+                  <div class="flow__stepLeft">
+                    <div class="flow__stepTop">
+                      <span class="flow__dot" aria-hidden="true"></span>
+                      <span class="flow__stepLabel">
+                        {% if block.settings.step_label != blank %}
+                          {{ block.settings.step_label | escape }}
+                        {% else %}
+                          STEP {{ forloop.index }}
+                        {% endif %}
+                      </span>
+                    </div>
+
+                    {% if block.settings.heading != blank %}
+                      <div class="flow__stepTitle">{{ block.settings.heading | escape }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="flow__stepThumb flow__thumb--{{ block.settings.image_style }} flow__ratio--{{ block.settings.image_ratio | replace: ':', '-' }}">
+                    {% if block.settings.heading_image != blank %}
+                      {{
+                        block.settings.heading_image
+                        | image_url: width: 320
+                        | image_tag:
+                          loading: 'lazy',
+                          alt: block.settings.heading | escape
+                      }}
+                    {% elsif block.settings.image != blank %}
+                      {{
+                        block.settings.image
+                        | image_url: width: 320
+                        | image_tag:
+                          loading: 'lazy',
+                          alt: block.settings.heading | escape
+                      }}
+                    {% else %}
+                      <span class="flow__thumbPlaceholder"></span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="flow__stepBody" data-flow-step-body>
+                  {% if block.settings.subheading != blank %}
+                    <div class="flow__subheading">{{ block.settings.subheading | escape }}</div>
+                  {% endif %}
+
+                  {% if block.settings.description != blank %}
+                    <div class="flow__desc rte">{{ block.settings.description }}</div>
+                  {% endif %}
+
+                  {% if block.settings.button_text != blank %}
+                    <a
+                      class="flow__btn flow__btn--{{ block.settings.button_style }}"
+                      href="{{ block.settings.button_link | default: '#' }}"
+                      {% if block.settings.open_in_new_window %} target="_blank" rel="noopener noreferrer"{% endif %}
+                    >
+                      {{ block.settings.button_text | escape }}
+                    </a>
+                  {% endif %}
+                </div>
+              </button>
+
+              {% unless forloop.last %}
+                {% if section.settings.show_divider %}
+                  <div class="flow__divider" aria-hidden="true"></div>
+                {% endif %}
+              {% endunless %}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* ===== Base ===== */
+    #{{ section_id }}.flow{
+      background: var(--flow-bg-light);
+      color: var(--flow-text-light);
+      padding-top: var(--flow-pt-desktop);
+      padding-bottom: var(--flow-pb-desktop);
+      font-size: calc(16px * var(--flow-scale));
+    }
+    #{{ section_id }} .flow__wrap{
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+    #{{ section_id }} .flow__wrap--full{
+      width: 100%;
+      max-width: none;
+      padding-inline: 20px;
+    }
+
+    #{{ section_id }} .flow__header{
+      margin-bottom: 28px;
+    }
+    #{{ section_id }} .flow__header--left{ text-align:left; }
+    #{{ section_id }} .flow__header--center{ text-align:center; }
+    #{{ section_id }} .flow__header--right{ text-align:right; }
+
+    #{{ section_id }} .flow__title{
+      color: var(--flow-head-light);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    /* heading size */
+    #{{ section_id }} .flow__title--size-80 { font-size: clamp(28px, 3.2vw, 44px); }
+    #{{ section_id }} .flow__title--size-90 { font-size: clamp(30px, 3.5vw, 48px); }
+    #{{ section_id }} .flow__title--size-100{ font-size: clamp(32px, 3.8vw, 52px); }
+    #{{ section_id }} .flow__title--size-110{ font-size: clamp(34px, 4.2vw, 58px); }
+    #{{ section_id }} .flow__title--size-120{ font-size: clamp(36px, 4.8vw, 64px); }
+
+    /* marker highlight: wrap by [ ] */
+    #{{ section_id }} .flow__title{
+      /* replace [text] with <mark> via JS below */
+    }
+    #{{ section_id }} .flow__title mark{
+      background: transparent;
+      padding: 0 .08em;
+      border-radius: .3em;
+      font-style: italic;
+  font-weight: 500;
+  color: #606B57;
+
+  /* font giống mẫu (editorial / serif) */
+  font-family: "Playfair Display", "Times New Roman", Georgia, serif;
+
+  letter-spacing: -0.01em;
+    }
+
+    #{{ section_id }} .flow__title mark.marker-highlight{
+      background: rgba(0,0,0,0.08);
+    }
+
+    /* ===== Layout ===== */
+    #{{ section_id }} .flow__grid{
+      display: grid;
+      gap: 68px;
+      align-items: stretch;
+    }
+    @media (min-width: 990px){
+  #{{ section_id }} .flow__grid{
+    grid-template-columns: 1.55fr 0.85fr;
+    min-height: var(--flow-h-desktop);
+  }
+  #{{ section_id }} .flow__grid--image-second{
+    grid-template-columns: 0.85fr 1.55fr;
+  }
+  #{{ section_id }} .flow__grid--image-second .flow__media{ order: 2; }
+  #{{ section_id }} .flow__grid--image-second .flow__steps{ order: 1; }
+}
+
+    @media (max-width: 989px){
+      #{{ section_id }}.flow{
+        padding-top: var(--flow-pt-mobile);
+        padding-bottom: var(--flow-pb-mobile);
+      }
+      #{{ section_id }} .flow__grid{
+        grid-template-columns: 1fr;
+        min-height: var(--flow-h-mobile);
+
+      }
+    }
+
+    /* ===== Mobile: show steps first, image second ===== */
+@media (max-width: 989px){
+  #{{ section_id }} .flow__grid{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;   
+  }
+  #{{ section_id }} .flow__title{
+  font-size: clamp(20px, 5.5vw, 26px) !important;
+    line-height: 1.25 !important;
+
+    max-width: 22ch;      /* ÉP heading xuống ~2 dòng */
+    margin-left: auto;
+    margin-right: auto;font-size: clamp(20px, 5.5vw, 26px) !important;
+    line-height: 1.25 !important;
+
+    display: inline-block !important;      /* để max-width hoạt động rõ ràng */
+    max-width: 260px !important;           /* ép xuống 2 dòng (có thể tăng/giảm) */
+
+    white-space: normal !important;        /* QUAN TRỌNG: bỏ nowrap từ theme */
+    overflow-wrap: anywhere !important;    /* đảm bảo wrap được */
+    word-break: normal !important;
+  }
+
+  /* giữ căn giữa */
+  #{{ section_id }} .flow__header{
+    text-align: center !important;
+  }
+
+  #{{ section_id }} .flow__steps{
+    order: 1 !important;
+     padding-top: 20px !important;
+    padding-bottom: 16px !important;
+  }
+
+   #{{ section_id }} .flow__step:last-of-type{
+    padding-bottom: 6px !important;
+  }
+  #{{ section_id }} .flow__media{
+    order: 2 !important;
+      margin-top: 0 !important;
+       min-height: 420px !important;
+  }
+  #{{ section_id }} .flow__divider{
+    margin: 0 !important;
+  }
+}
+
+    /* ===== Left media ===== */
+    #{{ section_id }} .flow__media{
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.04);
+      min-height: 320px;
+    }
+    #{{ section_id }} .flow__mediaItem{
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+    }
+    #{{ section_id }} .flow__mediaItem.is-active{
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #{{ section_id }} .flow__mediaBox{
+      width: 100%;
+      height: 100%;
+    }
+    #{{ section_id }} .flow__mediaImg{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1);
+      transition: transform .35s ease;
+      will-change: transform;
+      display:block;
+    }
+    /* hover effect on big image */
+    #{{ section_id }} .flow__media:hover .flow__mediaImg{
+      transform: scale(1.06);
+    }
+
+    #{{ section_id }} .flow__mediaBox--embed iframe{
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display:block;
+    }
+    #{{ section_id }} .flow__mediaBox--placeholder{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height: 100%;
+      font-size: 14px;
+      opacity: .7;
+    }
+
+    
+
+    /* ===== Right steps ===== */
+    #{{ section_id }} .flow__steps{
+      display:flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    #{{ section_id }} .flow__steps--pos-top{ justify-content: flex-start; }
+    #{{ section_id }} .flow__steps--pos-middle{ justify-content: center; }
+    #{{ section_id }} .flow__steps--pos-bottom{ justify-content: flex-end; }
+
+    #{{ section_id }} .flow__steps--left{ text-align:left; align-items:flex-start; }
+    #{{ section_id }} .flow__steps--center{ text-align:center; align-items:center; }
+    #{{ section_id }} .flow__steps--right{ text-align:right; align-items:flex-end; }
+
+    #{{ section_id }} .flow__stepsList{
+  width: 100%;
+  max-width: 480px;
+}
+    #{{ section_id }} .flow__step{
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 38px 0;
+      cursor: pointer;
+      text-align: inherit;
+    }
+
+    /* =========================
+   FIX HEAD LAYOUT (match sample)
+   Because stepThumb is NOT inside stepLeft in your HTML
+   ========================= */
+
+/* 1) Step head becomes a 2-row grid:
+   Row1: label (full width)
+   Row2: title (col1) + pill (col2) */
+#{{ section_id }} .flow__stepHead{
+  display: grid;
+  grid-template-columns: auto max-content;
+  grid-template-rows: auto auto;
+  column-gap: 16px;
+  row-gap: 12px;
+  align-items: center;
+}
+
+/* 2) stepLeft should NOT be a grid anymore (it only contains label + title) */
+#{{ section_id }} .flow__stepLeft{
+  display: contents; /* let label/title participate directly in stepHead grid */
+}
+
+/* 3) Label row */
+#{{ section_id }} .flow__stepTop{
+  grid-column: 1 / -1;
+  grid-row: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  opacity: .85;
+}
+
+/* 4) Title row (center with pill height) */
+#{{ section_id }} .flow__stepTitle{
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+
+  min-height: 62px;          /* = pill height */
+  display: flex;
+  align-items: center;       /* center vertically with pill */
+}
+
+/* 5) Pill on the right, same row as title */
+#{{ section_id }} .flow__stepThumb{
+  grid-column: 2;
+  grid-row: 2;
+
+  width: 132px;
+  height: 62px;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+  background: #f2f2f2;
+}
+
+/* keep your overlay logic (active/hover) as-is */
+
+/* 6) Body aligned with title (no indent) */
+#{{ section_id }} .flow__stepBody{
+  padding-left: 0 !important;
+}
+   
+    #{{ section_id }} .flow__dot{
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 0;
+      transform: scale(.7);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    
+#{{ section_id }} .flow__step.is-active .flow__stepTop,
+#{{ section_id }} .flow__step:not(.is-active) .flow__stepTop{
+  opacity: 0.75; /* tuỳ thích, có thể bỏ */
+}
+
+
+
+/* ===== FORCE: label row, then title + pill same row ===== */
+#{{ section_id }} .flow__stepHead{
+  display: grid !important;
+  grid-template-columns: 1fr max-content !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 16px !important;
+  row-gap: 12px !important;
+  align-items: center !important;
+}
+
+/* stepLeft chỉ chứa label + title: cho nó chiếm cột 1 cả 2 hàng */
+#{{ section_id }} .flow__stepLeft{
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;   /* chiếm cả 2 hàng */
+  display: grid !important;
+  grid-template-rows: auto auto !important;
+  row-gap: 12px !important;
+}
+
+/* label = hàng 1 trong stepLeft */
+#{{ section_id }} .flow__stepTop{
+  grid-row: 1 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 12px !important;
+  letter-spacing: .10em !important;
+  text-transform: uppercase !important;
+  opacity: .85 !important;
+}
+
+/* title = hàng 2 trong stepLeft, canh giữa theo pill */
+#{{ section_id }} .flow__stepTitle{
+  grid-row: 2 !important;
+  margin: 0 !important;
+  font-size: 26px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.1 !important;
+
+  min-height: 62px !important;      /* = pill height */
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* pill nằm cột 2, hàng 2 của stepHead (CÙNG HÀNG với title) */
+#{{ section_id }} .flow__stepThumb{
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+
+  width: 132px !important;
+  height: 62px !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #f2f2f2 !important;
+
+  /* chặn theme ép full width khiến nó rớt */
+  display: block !important;
+  justify-self: start !important;
+  align-self: center !important;
+}
+
+/* body thẳng hàng như mẫu */
+#{{ section_id }} .flow__stepBody{
+  padding-left: 0 !important;
+}
+
+/* Pill gần title hơn */
+#{{ section_id }} .flow__stepHead{
+  column-gap: 10px !important;   /* từ 16px -> 10px (bạn có thể thử 8px) */
+}
+
+/* Step label cách xa title hơn */
+#{{ section_id }} .flow__stepLeft{
+  row-gap: 18px !important;      /* tăng khoảng cách label -> title */
+}
+
+/* Nếu muốn label xa hơn nữa (tuỳ chọn) */
+#{{ section_id }} .flow__stepTop{
+  margin-bottom: 2px !important; /* giữ label thoáng, không dính */
+}
+/* 1) Đừng để cột title giãn ra 1fr nữa -> pill sẽ không bị đẩy ra xa */
+#{{ section_id }} .flow__stepHead{
+  grid-template-columns: max-content max-content !important;
+  column-gap: 10px !important;   /* pill gần title */
+}
+
+/* 2) Ép pill bám sát title (không tự chạy về mép phải) */
+#{{ section_id }} .flow__stepThumb{
+  justify-self: start !important;
+  margin-left: 0 !important;
+}
+/* INACTIVE: bỏ hẳn dot khỏi layout để STEP label thẳng hàng */
+#{{ section_id }} .flow__step:not(.is-active) .flow__dot{
+  display: none !important;
+}
+
+/* ACTIVE: hiện dot lại như cũ */
+#{{ section_id }} .flow__step.is-active .flow__dot{
+  display: inline-block !important;
+}
+
+
+    /* thumbs */
+/* =========================
+   PILL THUMBNAIL (FINAL)
+   ========================= */
+
+
+/* image inside pill */
+#{{ section_id }} .flow__stepThumb img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  /* DEFAULT = NON-ACTIVE */
+  filter: grayscale(0.4) saturate(0.4);
+  transform: scale(1.02);
+  transition: filter .25s ease, transform .25s ease;
+}
+
+/* overlay for non-active */
+#{{ section_id }} .flow__stepThumb::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.65);
+  opacity: 1;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+
+/* ACTIVE STATE → full color */
+#{{ section_id }} .flow__step.is-active .flow__stepThumb::after{
+  opacity: 0;
+}
+#{{ section_id }} .flow__step.is-active .flow__stepThumb img{
+  filter: grayscale(0) saturate(1);
+  transform: scale(1.04);
+}
+
+/* HOVER PREVIEW (non-active → color) */
+#{{ section_id }} .flow__step:hover .flow__stepThumb::after{
+  opacity: 0;
+}
+#{{ section_id }} .flow__step:hover .flow__stepThumb img{
+  filter: grayscale(0) saturate(1);
+  transform: scale(1.04);
+}
+
+/* Placeholder (khi chưa có image) */
+#{{ section_id }} .flow__thumbPlaceholder{
+  width: 60%;
+  height: 60%;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.12);
+  display: block;
+}
+/* ===== Row 2: Title + Pill same line & vertically centered ===== */
+
+/* Step label stays its own row */
+#{{ section_id }} .flow__stepTop{
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+}
+
+/* Keep grid as you đang dùng, nhưng ép row2 canh giữa */
+#{{ section_id }} .flow__stepLeft{
+  display: grid !important;
+  grid-template-columns: max-content max-content !important; /* title + pill cùng hàng */
+  grid-template-rows: auto auto !important;
+  column-gap: 14px !important;
+  row-gap: 12px !important;
+  width: max-content !important;
+  max-width: 100% !important;
+}
+
+/* Title nằm cùng hàng với pill (row2) + canh giữa theo chiều dọc */
+#{{ section_id }} .flow__stepTitle{
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+
+  /* ÉP canh giữa theo pill */
+  min-height: 62px !important;      /* = height của pill hiện tại bạn đang set */
+  display: flex !important;
+  align-items: center !important;
+
+  margin: 0 !important;
+  line-height: 1.1 !important;
+}
+
+/* Pill nằm cùng hàng (row2) và center */
+#{{ section_id }} .flow__stepThumb{
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  align-self: center !important;
+}
+
+/* Text (desc + button) thẳng hàng với title/label như mẫu */
+#{{ section_id }} .flow__stepBody{
+  padding-left: 0 !important;
+}
+/* INACTIVE: bỏ hẳn dot khỏi layout để STEP label thẳng hàng */
+#{{ section_id }} .flow__step:not(.is-active) .flow__dot{
+  display: none !important;
+}
+
+/* ACTIVE: hiện dot lại như cũ */
+#{{ section_id }} .flow__step.is-active .flow__dot{
+  display: inline-block !important;
+}
+
+
+/* Mobile resize */
+@media (max-width: 989px){
+  #{{ section_id }} .flow__stepThumb{
+    width: 104px;
+    height: 48px;
+  }
+}
+    /* ratio helpers (mainly for future extension) */
+    #{{ section_id }} .flow__ratio--wide-16-9{}
+    #{{ section_id }} .flow__ratio--square-1-1{}
+
+    /* body (only show for active) */
+    #{{ section_id }} .flow__stepBody{
+      max-height: 0;
+      overflow:hidden;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: max-height .28s ease, opacity .22s ease, transform .22s ease;
+      padding-left: 0;
+      padding-top: 0;
+    }
+    #{{ section_id }} .flow__subheading{
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-top: 12px;
+    }
+    #{{ section_id }} .flow__desc{
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      opacity: .85;
+    }
+
+    #{{ section_id }} .flow__btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-decoration:none;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid rgba(0,0,0,0.14);
+      color: inherit;
+      background: rgba(0,0,0,0.06);
+    }
+    #{{ section_id }} .flow__btn--primary{
+      background: rgba(0,0,0,0.88);
+      color: #fff;
+      border-color: rgba(0,0,0,0.88);
+    }
+    #{{ section_id }} .flow__btn--secondary{
+      background: rgba(0,0,0,0.06);
+    }
+
+    /* active styles */
+    #{{ section_id }} .flow__step.is-active .flow__dot{
+      opacity: 1;
+      transform: scale(1);
+    }
+    #{{ section_id }} .flow__step.is-active .flow__stepTitle{
+      opacity: 1;
+    }
+    #{{ section_id }} .flow__step.is-active .flow__stepBody{
+      max-height: 360px;
+      opacity: 1;
+      transform: translateY(0);
+      padding-top: 6px;
+    }
+
+    #{{ section_id }} .flow__divider{
+      height: 1px;
+      width: 100%;
+      background: rgba(0,0,0,0.10);
+    }
+
+    /* ===== Dark mode (simple) ===== */
+    @media (prefers-color-scheme: dark){
+      #{{ section_id }}.flow{
+        background: var(--flow-bg-dark);
+        color: var(--flow-text-dark);
+      }
+      #{{ section_id }} .flow__title{ color: var(--flow-head-dark); }
+      #{{ section_id }} .flow__divider{ background: rgba(255,255,255,0.12); }
+      #{{ section_id }} .flow__stepThumb{ background: rgba(255,255,255,0.10); }
+      #{{ section_id }} .flow__btn{ border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); }
+      #{{ section_id }} .flow__btn--primary{ background: rgba(255,255,255,0.92); color:#111; border-color: rgba(255,255,255,0.92); }
+      #{{ section_id }} .flow__title mark.marker-underline{ box-shadow: inset 0 -0.35em 0 rgba(255,255,255,0.14); }
+      #{{ section_id }} .flow__title mark.marker-highlight{ background: rgba(255,255,255,0.12); }
+    }
+  </style>
+
+  <script>
+    (function(){
+      const root = document.getElementById({{ section_id | json }});
+      if(!root) return;
+
+      // --- Heading marker: [text] -> <mark class="marker-...">text</mark>
+      const title = root.querySelector('.flow__title');
+      const markerStyle = {{ section.settings.marker | json }};
+      if(title && title.textContent.includes('[') && title.textContent.includes(']')){
+        const raw = title.textContent;
+        const html = raw.replace(/\[([^\]]+)\]/g, (_, inner) => {
+          const cls = markerStyle === 'underline' ? 'marker-underline' : 'marker-highlight';
+          return `<mark class="${cls}">${inner}</mark>`;
+        });
+        title.innerHTML = html;
+      }
+
+      const steps = Array.from(root.querySelectorAll('[data-flow-step]'));
+      const mediaItems = Array.from(root.querySelectorAll('[data-flow-media-item]'));
+      const tabMode = root.dataset.tabMode || 'on_click';
+      const openFirst = root.dataset.openFirst === 'true';
+      const fab = root.querySelector('[data-flow-fab]');
+
+      function setActive(index){
+        steps.forEach((b,i)=>{
+          const active = i === index;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        mediaItems.forEach((m,i)=>{
+          m.classList.toggle('is-active', i === index);
+        });
+
+        // pause videos in non-active
+        mediaItems.forEach((m,i)=>{
+          if(i !== index){
+            const video = m.querySelector('video');
+            if(video) { try{ video.pause(); }catch(e){} }
+          }
+        });
+
+        // autoplay active video (if autoplay enabled)
+        const activeMedia = mediaItems[index];
+        if(activeMedia){
+          const v = activeMedia.querySelector('video');
+          if(v && v.hasAttribute('autoplay')){
+            try{ v.play(); }catch(e){}
+          }
+        }
+      }
+
+      // init
+      if(openFirst) setActive(0);
+
+      // hover/click behavior
+      steps.forEach(btn=>{
+        const idx = Number(btn.dataset.index);
+
+        if(tabMode === 'on_hover'){
+          btn.addEventListener('mouseenter', ()=> setActive(idx));
+          // keep click also usable on mobile
+          btn.addEventListener('click', ()=> setActive(idx));
+        }else{
+          btn.addEventListener('click', ()=> setActive(idx));
+        }
+      });
+
+      // pause on hover big media (videos)
+      if(root.dataset.pauseHover === 'true'){
+        const media = root.querySelector('[data-flow-media]');
+        if(media){
+          media.addEventListener('mouseenter', ()=>{
+            const active = root.querySelector('.flow__mediaItem.is-active video');
+            if(active) { try{ active.pause(); }catch(e){} }
+          });
+        }
+      }
+
+      // fab: scroll to top of section
+      if(fab){
+        fab.addEventListener('click', ()=>{
+          root.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      }
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Flow",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "How to take care for [glowing skin].",
+        "info": "Wrap your text between [ ] to add heading highlights."
+      },
+      {
+        "type": "select",
+        "id": "marker",
+        "label": "Marker",
+        "default": "underline",
+        "options": [
+          { "value": "underline", "label": "Underline" },
+          { "value": "highlight", "label": "Font highlight" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_size",
+        "label": "Heading size",
+        "default": "100",
+        "options": [
+          { "value": "80", "label": "80%" },
+          { "value": "90", "label": "90%" },
+          { "value": "100", "label": "100%" },
+          { "value": "110", "label": "110%" },
+          { "value": "120", "label": "120%" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_tag",
+        "label": "Heading tag",
+        "default": "h2",
+        "options": [
+          { "value": "h1", "label": "H1" },
+          { "value": "h2", "label": "H2" },
+          { "value": "h3", "label": "H3" },
+          { "value": "div", "label": "DIV" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "center",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+
+      {
+        "type": "select",
+        "id": "content_position",
+        "label": "Content position",
+        "default": "middle",
+        "options": [
+          { "value": "top", "label": "Top" },
+          { "value": "middle", "label": "Middle" },
+          { "value": "bottom", "label": "Bottom" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "content_alignment",
+        "label": "Content alignment",
+        "default": "left",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+
+      {
+        "type": "select",
+        "id": "tab_selection_style",
+        "label": "Tab selection style",
+        "default": "on_hover",
+        "options": [
+          { "value": "on_hover", "label": "On hover" },
+          { "value": "on_click", "label": "On click" }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "open_first_tab",
+        "label": "Open the first tab by default",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "pause_on_hover",
+        "label": "Pause on hover (video only)",
+        "default": true
+      },
+
+      {
+        "type": "header",
+        "content": "Colors"
+      },
+      { "type": "color", "id": "bg_light", "label": "Background color (light)", "default": "transparent" },
+      { "type": "color", "id": "heading_color_light", "label": "Heading color (light)", "default": "transparent" },
+      { "type": "color", "id": "text_color_light", "label": "Text color (light)", "default": "transparent" },
+
+      { "type": "color", "id": "bg_dark", "label": "Background color (dark)", "default": "transparent" },
+      { "type": "color", "id": "heading_color_dark", "label": "Heading color (dark)", "default": "transparent" },
+      { "type": "color", "id": "text_color_dark", "label": "Text color (dark)", "default": "transparent" },
+
+      {
+        "type": "header",
+        "content": "Desktop layout"
+      },
+      {
+        "type": "select",
+        "id": "image_position",
+        "label": "Image position",
+        "default": "first",
+        "options": [
+          { "value": "first", "label": "First" },
+          { "value": "second", "label": "Second" }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Make section full width",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_divider",
+        "label": "Show section divider",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "desktop_height",
+        "min": 500,
+        "max": 1000,
+        "step": 10,
+        "unit": "px",
+        "label": "Desktop height",
+        "default": 750
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Top padding",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Bottom padding",
+        "default": 100
+      },
+
+      {
+        "type": "header",
+        "content": "Mobile layout"
+      },
+      {
+        "type": "range",
+        "id": "mobile_height",
+        "min": 280,
+        "max": 800,
+        "step": 10,
+        "unit": "px",
+        "label": "Mobile height",
+        "default": 400
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "min": 0,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "label": "Top padding",
+        "default": 48
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "min": 0,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "label": "Bottom padding",
+        "default": 48
+      },
+
+      {
+        "type": "header",
+        "content": "Theme settings"
+      },
+      {
+        "type": "range",
+        "id": "base_size",
+        "min": 80,
+        "max": 140,
+        "step": 5,
+        "unit": "%",
+        "label": "Base size",
+        "default": 110
+      },
+      {
+        "type": "text",
+        "id": "rtl_languages",
+        "label": "RTL languages",
+        "default": "none",
+        "info": "All codes must follow ISO language codes and separated by commas (e.g. ar,fa,ps)."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "media",
+        "name": "Media",
+        "settings": [
+          { "type": "image_picker", "id": "image", "label": "Image" },
+          { "type": "video", "id": "video", "label": "Video" },
+          {
+            "type": "url",
+            "id": "video_url",
+            "label": "Or embed video from URL",
+            "info": "Use an embeddable URL (YouTube/Vimeo)."
+          },
+          { "type": "text", "id": "video_alt_text", "label": "Video alt text", "default": "he" },
+          { "type": "checkbox", "id": "enable_video_autoplay", "label": "Enable video autoplay", "default": false },
+
+          { "type": "text", "id": "step_label", "label": "Step label", "default": "he" },
+
+          { "type": "text", "id": "subheading", "label": "Subheading", "default": "he" },
+          { "type": "text", "id": "heading", "label": "Heading", "default": "Media heading" },
+
+          { "type": "image_picker", "id": "heading_image", "label": "Heading image" },
+
+          {
+            "type": "select",
+            "id": "image_style",
+            "label": "Image style",
+            "default": "square",
+            "options": [
+              { "value": "square", "label": "Square" },
+              { "value": "rounded", "label": "Rounded" }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "image_ratio",
+            "label": "Image ratio",
+            "default": "wide_16:9",
+            "options": [
+              { "value": "wide_16:9", "label": "Wide (16:9)" },
+              { "value": "square_1:1", "label": "Square (1:1)" }
+            ]
+          },
+
+          { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Tell your brand's story through images</p>" },
+
+          { "type": "text", "id": "button_text", "label": "Button text", "default":"none"},
+          { "type": "url", "id": "button_link", "label": "Button link" },
+          { "type": "checkbox", "id": "open_in_new_window", "label": "Open this link in a new window", "default": false },
+          {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "default": "primary",
+            "options": [
+              { "value": "primary", "label": "Primary" },
+              { "value": "secondary", "label": "Secondary" }
+            ]
+          }
+        ]
+      }
+    ],
+    "max_blocks": 8,
+    "presets": [
+      {
+        "name": "Flow",
+        "blocks": [
+          { "type": "media" },
+          { "type": "media" },
+          { "type": "media" }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
+</section>
