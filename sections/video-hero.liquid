@@ -1,0 +1,529 @@
+{% comment %}
+  Section: Video Hero (OS 2.0)
+  - Video nền (admin chọn)
+  - Text overlay + CTA
+  - Blocks: Product (để editor có nút Add product)
+{% endcomment %}
+
+{%- liquid
+  assign id = section.id
+  assign overlay_opacity = section.settings.overlay_opacity | default: 35
+  assign heading = section.settings.heading
+  assign kicker = section.settings.kicker
+  assign cta_label = section.settings.cta_label
+  assign cta_link = section.settings.cta_link
+  assign show_scroll_top = section.settings.show_scroll_top
+  assign scroll_top_offset = section.settings.scroll_top_offset | default: 200
+-%}
+
+<section
+  id="vh-{{ id }}"
+  class="vh"
+  style="
+    --vh-overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};
+    --vh-min-height: {{ section.settings.min_height_desktop }}px;
+    --vh-min-height-m: {{ section.settings.min_height_mobile }}px;
+    --vh-text-align: {{ section.settings.text_align }};
+  "
+>
+  <div class="vh__media" aria-hidden="true">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video
+        | video_tag:
+          autoplay: true,
+          loop: true,
+          muted: true,
+          playsinline: true,
+          controls: false,
+          class: 'vh__video',
+          preload: 'metadata'
+      }}
+    {%- elsif section.settings.video_mp4_url != blank -%}
+      <video
+        class="vh__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {% if section.settings.poster != blank %}poster="{{ section.settings.poster | image_url: width: 2000 }}"{% endif %}
+      >
+        <source src="{{ section.settings.video_mp4_url | escape }}" type="video/mp4">
+      </video>
+    {%- else -%}
+      {%- if section.settings.fallback_image != blank -%}
+        <img
+          class="vh__image"
+          src="{{ section.settings.fallback_image | image_url: width: 2400 }}"
+          alt=""
+          loading="lazy"
+        >
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="vh__overlay"></div>
+  </div>
+
+  <div class="vh__content page-width">
+    <div class="vh__inner">
+      {%- if kicker != blank -%}
+        <div class="vh__kicker">{{ kicker }}</div>
+      {%- endif -%}
+
+      {%- if heading != blank -%}
+        <h2 class="vh__heading">{{ heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <div class="vh__subheading">{{ section.settings.subheading }}</div>
+      {%- endif -%}
+
+      {%- if cta_label != blank and cta_link != blank -%}
+        <a class="vh__cta" href="{{ cta_link }}">
+          {{ cta_label }}
+          <span class="vh__cta-line" aria-hidden="true"></span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 and section.settings.show_products -%}
+      <div class="vh__products" role="list" aria-label="Products">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' and block.settings.product != blank -%}
+            {%- assign p = block.settings.product -%}
+            <a class="vh__product" href="{{ p.url }}" role="listitem" {{ block.shopify_attributes }}>
+              <div class="vh__product-img">
+                {%- if p.featured_image -%}
+                  <img
+                    src="{{ p.featured_image | image_url: width: 800 }}"
+                    alt="{{ p.featured_image.alt | escape }}"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+              </div>
+              <div class="vh__product-meta">
+                <div class="vh__product-title">{{ p.title }}</div>
+                <div class="vh__product-price">
+                  {{ p.price | money }}
+                  {%- if p.compare_at_price > p.price -%}
+                    <span class="vh__product-compare">{{ p.compare_at_price | money }}</span>
+                  {%- endif -%}
+                </div>
+              </div>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if show_scroll_top -%}
+    <button
+      class="vh__scrolltop"
+      type="button"
+      aria-label="Scroll to top"
+      data-vh-scrolltop
+    >
+      ↑
+    </button>
+  {%- endif -%}
+
+  <style>
+    /* ===== Video Hero base ===== */
+    #vh-{{ id }}.vh{
+      position: relative;
+      overflow: hidden;
+      color: {{ section.settings.text_color }};
+      min-height: var(--vh-min-height);
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    #vh-{{ id }} .vh__media{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      background: #000;
+    }
+
+    #vh-{{ id }} .vh__video,
+    #vh-{{ id }} .vh__image{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    #vh-{{ id }} .vh__overlay{
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,var(--vh-overlay-opacity));
+    }
+
+    #vh-{{ id }} .vh__content{
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: clamp(28px, 6vw, 84px) 0;
+    }
+
+    #vh-{{ id }} .vh__inner{
+      max-width: {{ section.settings.content_max_width }}px;
+      margin: 0 auto;
+      text-align: var(--vh-text-align);
+    }
+
+    #vh-{{ id }} .vh__kicker{
+      font-size: 14px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: .9;
+      margin-bottom: 12px;
+    }
+
+    #vh-{{ id }} .vh__heading{
+        font-size: clamp(24px, 4.0vw, 55px);
+      line-height: 1.05;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+    }
+
+    #vh-{{ id }} .vh__subheading{
+      font-size: clamp(14px, 2vw, 18px);
+      opacity: .9;
+      margin-bottom: 22px;
+    }
+
+    #vh-{{ id }} .vh__cta{
+      display: inline-flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+      text-decoration: none;
+      color: inherit;
+      align-items: {% if section.settings.text_align == 'left' %}flex-start{% elsif section.settings.text_align == 'right' %}flex-end{% else %}center{% endif %};
+      opacity: .95;
+    }
+
+    #vh-{{ id }} .vh__cta:hover{ opacity: 1; }
+
+    #vh-{{ id }} .vh__cta-line{
+      width: 88px;
+      height: 2px;
+      background: currentColor;
+      opacity: .9;
+    }
+
+    /* ===== Products row (optional) ===== */
+    #vh-{{ id }} .vh__products{
+      margin-top: clamp(18px, 3vw, 32px);
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.products_columns_desktop }}, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    #vh-{{ id }} .vh__product{
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    #vh-{{ id }} .vh__product-img{
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.12);
+    }
+
+    #vh-{{ id }} .vh__product-img img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    #vh-{{ id }} .vh__product-title{
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    #vh-{{ id }} .vh__product-price{
+      font-size: 13px;
+      opacity: .95;
+      display:flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    #vh-{{ id }} .vh__product-compare{
+      text-decoration: line-through;
+      opacity: .7;
+      font-weight: 400;
+    }
+
+    /* ===== Scroll top button ===== */
+    #vh-{{ id }} .vh__scrolltop{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.35);
+      background: rgba(0,0,0,.35);
+      color: #fff;
+      display: none;
+      place-items: center;
+      cursor: pointer;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    #vh-{{ id }} .vh__scrolltop.is-visible{ display: grid; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 749px){
+      #vh-{{ id }}.vh{ min-height: var(--vh-min-height-m); }
+      #vh-{{ id }} .vh__products{
+        grid-template-columns: repeat({{ section.settings.products_columns_mobile }}, minmax(0, 1fr));
+      }
+      #vh-{{ id }} .vh__product{
+        grid-template-columns: 64px 1fr;
+      }
+      #vh-{{ id }} .vh__product-img{
+        width: 64px;
+        height: 64px;
+      }
+    }
+    @media (max-width: 749px){
+  #vh-{{ id }} .vh__content{ padding: 22px 0; }
+  #vh-{{ id }}.vh{ padding-top: 10px; padding-bottom: 10px; }
+}
+
+  </style>
+
+  {%- if show_scroll_top -%}
+    <script>
+      (function(){
+        var root = document.getElementById("vh-{{ id }}");
+        if(!root) return;
+        var btn = root.querySelector("[data-vh-scrolltop]");
+        if(!btn) return;
+
+        var offset = {{ scroll_top_offset | json }};
+        function onScroll(){
+          if(window.scrollY > offset) btn.classList.add("is-visible");
+          else btn.classList.remove("is-visible");
+        }
+        btn.addEventListener("click", function(){
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+      })();
+    </script>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Video hero",
+  "tag": "section",
+  "class": "section-video-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Video source"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video (Shopify hosted)"
+    },
+    {
+      "type": "text",
+      "id": "video_mp4_url",
+      "label": "Video MP4 URL (fallback)",
+      "info": "Dán link .mp4 nếu bạn không dùng video hosted."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Poster (optional)"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback image (if no video)"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "EURUS STORY"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Because beauty is personal."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "oi"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "See the story"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text align",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width (px)",
+      "min": 520,
+      "max": 1200,
+      "step": 20,
+      "default": 980
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Min height desktop (px)",
+      "min": 420,
+      "max": 980,
+      "step": 20,
+      "default": 720
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Min height mobile (px)",
+      "min": 360,
+      "max": 820,
+      "step": 20,
+      "default": 520
+    },
+    {
+      "type": "header",
+      "content": "Products (optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_products",
+      "label": "Show selected products",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_columns_desktop",
+      "label": "Products columns desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+  "type": "select",
+  "id": "products_columns_mobile",
+  "label": "Products columns mobile",
+  "default": "1",
+  "options": [
+    { "value": "1", "label": "1" },
+    { "value": "2", "label": "2" }
+  ]
+},
+    {
+      "type": "header",
+      "content": "Scroll top button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_top",
+      "label": "Enable scroll to top button",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "scroll_top_offset",
+      "label": "Show button after scroll (px)",
+      "min": 0,
+      "max": 1200,
+      "step": 50,
+      "default": 200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video hero",
+      "blocks": [
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}
