@@ -1588,7 +1588,7 @@
         "cta_link": "shopify://collections/all",
         "text_align": "center",
         "text_color": "#ffffff",
-        "content_max_width": 980,
+        "content_max_width": 900,
         "min_height_desktop": 720,
         "min_height_mobile": 360,
         "show_products": true,
