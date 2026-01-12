@@ -1322,17 +1322,31 @@
           "settings": {
             "title_size": 34,
             "title_weight": "700",
-            "year": "2025",
-            "eyebrow": "TODAY & TOMORROW",
-            "title": "New vinergy® patent",
-            "text": "<p>Write your milestone description here.</p>"
+            "year": "2015",
+            "eyebrow": "MILE STONE 2",
+            "title": "Our first organic & vegan center",
+            "video": "shopify://files/videos/8293512-hd_1280_720_30fps.mp4",
+            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.</p>"
+          }
+        },
+        "milestone_z4JJHH": {
+          "type": "milestone",
+          "settings": {
+            "title_size": 34,
+            "title_weight": "700",
+            "year": "2010",
+            "eyebrow": "MILE STONE 1",
+            "title": "We joins 1% for the planet",
+            "text": "<p>Giving back to the earth what it gives us every day: This was our goal when we began to dedicate 1% of our global sales to funding reforestation projects.  Since 2012, we have planted and protected over 4 million trees in all 4 corners of the world.</p>",
+            "image": "shopify://shop_images/804476762a341f52412c5e6a5f45dda89541c668.jpg"
           }
         }
       },
       "block_order": [
         "milestone_rDqCKj",
         "milestone_Pfkbzq",
-        "milestone_HFeyRC"
+        "milestone_HFeyRC",
+        "milestone_z4JJHH"
       ],
       "name": "Journey timeline",
       "settings": {
