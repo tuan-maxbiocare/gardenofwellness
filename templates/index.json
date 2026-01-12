@@ -1390,6 +1390,55 @@
         "rtl_languages": "none"
       }
     },
+    "testimonials_with_card_fwkrby": {
+      "type": "testimonials-with-card",
+      "blocks": {
+        "testimonial_ayHLwh": {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": ""
+          }
+        },
+        "testimonial_PTXnX4": {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": ""
+          }
+        },
+        "testimonial_qCdJHR": {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": ""
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_ayHLwh",
+        "testimonial_PTXnX4",
+        "testimonial_qCdJHR"
+      ],
+      "name": "Customer Testimonials",
+      "settings": {
+        "heading": "Customer Reviews",
+        "enable_auto_slide": true,
+        "auto_slide_speed": 5,
+        "background_color": "#ffffff",
+        "card_bg_color": "#ffffff",
+        "heading_color": "#000000",
+        "text_color": "#000000",
+        "arrow_color": "#000000",
+        "star_color": "#000000"
+      }
+    },
     "journey_timeline_fQmzcQ": {
       "type": "journey-timeline",
       "blocks": {
@@ -1645,6 +1694,7 @@
     "section_FdUhqH",
     "product_star_8kJJNp",
     "flow_8RRFC4",
+    "testimonials_with_card_fwkrby",
     "journey_timeline_fQmzcQ",
     "looping_video_dD4YRe"
   ]
