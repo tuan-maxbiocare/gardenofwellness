@@ -564,6 +564,12 @@
       this.init();
       this.setupResizeListener();
       this.setupTouchEvents();
+
+      /* ==== TAB VISIBILITY FIX ==== */
+      document.addEventListener(
+        'visibilitychange',
+        this.handleVisibilityChange.bind(this)
+      );
     }
 
     /* ================= LOOP ================= */
@@ -705,6 +711,9 @@
         this.currentIndex -= Math.round(moved);
       }
 
+      this.currentTranslate = 0;
+      this.prevTranslate = 0;
+
       this.updatePosition();
       this.restartAutoSlide();
     }
@@ -718,6 +727,21 @@
           this.updatePosition(true);
         }
       });
+    }
+
+    /* ================= TAB VISIBILITY ================= */
+    handleVisibilityChange() {
+      if (document.hidden) {
+        this.stopAutoSlide();
+        this.isDragging = false;
+      } else {
+        this.container.style.transition = 'none';
+        this.updatePosition(true);
+
+        if (this.isAutoSlideEnabled) {
+          this.startAutoSlide();
+        }
+      }
     }
 
     /* ================= AUTO ================= */
