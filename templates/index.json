@@ -1258,7 +1258,7 @@
       "settings": {
         "section_width": "page-width",
         "padding_top": 80,
-        "padding_bottom": 80,
+        "padding_bottom": 0,
         "padding_left": 0,
         "padding_right": 0,
         "padding_top_mobile": 48,
