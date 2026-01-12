@@ -1,0 +1,890 @@
+{% comment %}
+  Section: Journey Timeline (Text + Image + Timeline Slider)
+{% endcomment %}
+
+<section class="journey" id="journey-{{ section.id }}">
+  <div class="journey__container page-width">
+    {% if section.settings.heading != blank %}
+      {% assign heading_text = section.settings.heading | strip %}
+      {% assign words = heading_text | split: ' ' %}
+      {% assign last_word = words | last %}
+      {% assign first_part = heading_text | remove: last_word %}
+
+      <h2 class="journey__heading">
+        <span class="journey__heading-normal">{{ first_part }}</span>
+        <span class="journey__heading-em">{{ last_word }}</span>
+      </h2>
+    {% endif %}
+
+    <div class="journey__slider">
+      <div class="journey__slides">
+        {% for block in section.blocks %}
+          <article class="journey__slide" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <div class="journey__content">
+              <div class="journey__eyebrow">
+                {{ block.settings.eyebrow | escape }}
+              </div>
+
+              <h3
+                class="journey__title"
+                style="
+                  font-size: {{ block.settings.title_size }}px;
+                  font-weight: {{ block.settings.title_weight }};
+                "
+              >
+                {{ block.settings.title | escape }}
+              </h3>
+
+              <div class="journey__text">
+                {{ block.settings.text }}
+              </div>
+            </div>
+
+            <div class="journey__media">
+              {% if block.settings.video != blank %}
+                <div class="journey__video">
+                  {{
+                    block.settings.video
+                    | video_tag:
+                      controls: true,
+                      muted: true,
+                      loop: true,
+                      autoplay: false,
+                      playsinline: true,
+                      preload: "metadata"
+                  }}
+                </div>
+              {% elsif block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'journey__image' }}
+              {% else %}
+                <div class="journey__image-placeholder"></div>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="journey__timeline" role="tablist" aria-label="Journey timeline">
+      <div class="journey__timeline-track">
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="journey__tick{% if forloop.first %} is-active{% endif %}"
+            data-go="{{ forloop.index0 }}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          >
+            <span class="journey__dot" aria-hidden="true"></span>
+            <span class="journey__year">{{ block.settings.year | escape }}</span>
+          </button>
+        {% endfor %}
+      </div>
+
+      <div class="journey__nav">
+        <button type="button" class="journey__arrow" data-prev aria-label="Previous">
+          ‹
+        </button>
+        <button type="button" class="journey__arrow" data-next aria-label="Next">
+          ›
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =========================
+     SECTION WRAPPER
+  ========================= */
+  #journey-{{ section.id }}{
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+
+  #journey-{{ section.id }} .journey__container{
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+    box-sizing: border-box;
+  }
+
+  /* =========================
+     HEADING
+  ========================= */
+  #journey-{{ section.id }} .journey__heading{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0;
+    text-align: center;
+    margin-bottom: 30px !important;
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: 1.15;
+  }
+
+  #journey-{{ section.id }} .journey__heading p{
+    margin: 0;
+  }
+
+  #journey-{{ section.id }} .journey__heading-em{
+    font-family: "Playfair Display", Georgia, serif !important;
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(15, 66, 23, 0.71);
+    opacity: .95;
+    margin-left: 0.25em;
+  }
+
+  /* =========================
+     SLIDER / SLIDE LAYOUT
+  ========================= */
+  #journey-{{ section.id }} .journey__slider{
+    overflow: hidden;
+  }
+
+  #journey-{{ section.id }} .journey__slides{
+    display: flex;
+    transition: transform 400ms ease;
+    will-change: transform;
+  }
+
+  #journey-{{ section.id }} .journey__slide{
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 28px;
+    padding: 0px 16px 48px 76px;
+    border-radius: 16px;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: #fff;
+    align-items: stretch;
+    box-sizing: border-box;
+  }
+
+  /* =========================
+     TEXT
+  ========================= */
+  #journey-{{ section.id }} .journey__content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    min-width: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+    transition-delay: 100ms;
+  }
+
+  #journey-{{ section.id }} .journey__slide.is-active .journey__content{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #journey-{{ section.id }} .journey__eyebrow{
+    font-weight: 700 !important;
+    letter-spacing: .10em;
+    opacity: .75;
+    position: relative;
+    padding-left: 16px;
+    margin-bottom: 18px;
+  }
+
+  #journey-{{ section.id }} .journey__eyebrow::before{
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: 1;
+    font-size: 18px;
+    transform: translateY(-1px);
+    opacity: 1;
+  }
+
+  #journey-{{ section.id }} .journey__title{
+    margin: 0 0 16px;
+    font-size: clamp(28px, 2.8vw, 44px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  #journey-{{ section.id }} .journey__text{
+    margin: 0;
+    max-width: 52ch;
+    font-size: 14px;
+    line-height: 1.7;
+    opacity: .78;
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* =========================
+     MEDIA
+  ========================= */
+  #journey-{{ section.id }} .journey__media{
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f3f3f3;
+    height: 460px;
+    position: relative;
+  }
+
+  #journey-{{ section.id }} .journey__media > *,
+  #journey-{{ section.id }} .journey__media .journey__video,
+  #journey-{{ section.id }} .journey__media .journey__video > *{
+    width: 100%;
+    height: 100%;
+  }
+
+  #journey-{{ section.id }} .journey__image,
+  #journey-{{ section.id }} .journey__media video,
+  #journey-{{ section.id }} .journey__media iframe{
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* =========================
+     MEDIA HOVER (chỉ cho ảnh/video, không ảnh hưởng text)
+  ========================= */
+  #journey-{{ section.id }} .journey__media{
+    position: relative;
+    transform: translateZ(0);
+    transition: transform 260ms ease, box-shadow 260ms ease;
+    box-shadow: 0 10px 24px rgba(0,0,0,.06);
+  }
+
+  #journey-{{ section.id }} .journey__media:hover{
+    transform: scale(1.01);
+    box-shadow: 0 18px 42px rgba(0,0,0,.12);
+  }
+
+  #journey-{{ section.id }} .journey__media .journey__image,
+  #journey-{{ section.id }} .journey__media video,
+  #journey-{{ section.id }} .journey__media iframe{
+    transition: transform 360ms ease;
+    will-change: transform;
+  }
+
+  #journey-{{ section.id }} .journey__media:hover .journey__image,
+  #journey-{{ section.id }} .journey__media:hover video,
+  #journey-{{ section.id }} .journey__media:hover iframe{
+    transform: scale(1.04);
+  }
+
+  /* =========================
+     TIMELINE + RAIL
+  ========================= */
+  #journey-{{ section.id }} .journey__timeline{
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 16px;
+    align-items: start;
+  }
+
+  #journey-{{ section.id }} .journey__timeline-track{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 14px;
+    padding-bottom: 26px;
+  }
+
+  #journey-{{ section.id }} .journey__timeline-track::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    top: 22px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  #journey-{{ section.id }} .journey__tick{
+    position: relative;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    text-align: center;
+    min-width: 64px;
+    opacity: .55;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  #journey-{{ section.id }} .journey__tick.is-active{
+    opacity: 1;
+  }
+
+  #journey-{{ section.id }} .journey__dot{
+    width: 16px !important;
+    height: 16px !important;
+    display: inline-block;
+    border-radius: 999px;
+    background: #636161;
+    position: absolute;
+    opacity: 1 !important;
+    background: #111 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    top: calc(var(--line-y) - 15px) !important;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+    will-change: transform;
+  }
+
+  #journey-{{ section.id }} .journey__dot::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 18px;
+    background: rgba(0,0,0,.25);
+  }
+
+  #journey-{{ section.id }} .journey__tick.is-active .journey__dot{
+    width: 18px !important;
+    height: 18px !important;
+    top: calc(var(--line-y) - 17px) !important;
+    background: #111 !important;
+  }
+
+  #journey-{{ section.id }} .journey__year{
+    display: inline-block;
+    font-size: 13px;
+    margin-top: 40px;
+    opacity: .7;
+  }
+
+  #journey-{{ section.id }} .journey__tick.is-active .journey__year{
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  /* =========================
+     RAIL (NAV ARROWS)
+  ========================= */
+  #journey-{{ section.id }} .journey__nav{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 3px;
+  }
+
+  #journey-{{ section.id }} .journey__arrow{
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.25);
+    background: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* =========================
+     DOT ANIMATION
+  ========================= */
+  #journey-{{ section.id }} .journey__tick:hover .journey__dot{
+    transform: translateX(-50%) scale(1.18);
+    box-shadow: 0 0 0 6px rgba(47,107,79,.12);
+  }
+
+  #journey-{{ section.id }} .journey__tick.is-active .journey__dot{
+    animation: journeyDotPulse 1.6s ease-in-out infinite;
+    box-shadow: 0 0 0 8px rgba(47,107,79,.14);
+  }
+
+  @keyframes journeyDotPulse{
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50%      { transform: translateX(-50%) scale(1.12); }
+  }
+
+  /* =========================
+     RESPONSIVE (MOBILE)
+  ========================= */
+  @media (max-width: 900px){
+    #journey-{{ section.id }} .journey__heading{
+      font-size: calc({{ section.settings.heading_size }}px * 0.82);
+      display: block !important;
+      text-align: center !important;
+      margin-bottom: 10px !important;
+      line-height: 1.1;
+    }
+
+    #journey-{{ section.id }} .journey__heading-normal{
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    #journey-{{ section.id }} .journey__heading-em{
+      display: block;
+      width: 100%;
+      margin-left: 0 !important;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    #journey-{{ section.id }} .journey__slide{
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 24px;
+    }
+
+    #journey-{{ section.id }} .journey__media{
+      height: 280px;
+      grid-row: 1;
+    }
+
+    #journey-{{ section.id }} .journey__content{
+      grid-row: 2;
+    }
+
+    #journey-{{ section.id }} .journey__title{
+      font-size: 25px !important;
+      line-height: 1.15 !important;
+      font-weight: 500 !important;
+    }
+
+    #journey-{{ section.id }} .journey__text{
+      max-width: 100%;
+    }
+
+    #journey-{{ section.id }} .journey__timeline{
+      grid-template-columns: 1fr;
+      row-gap: 12px;
+    }
+
+    #journey-{{ section.id }} .journey__nav{
+      margin-top: 0;
+      padding-top: 0;
+      justify-content: center;
+    }
+
+    /* Mobile timeline styles remain the same */
+    /* ... các style mobile timeline giữ nguyên ... */
+  }
+
+  /* =====================================================
+     FIX MOBILE TIMELINE: CHỈ HIỂN THỊ 3 DOT TRÊN MÀN HÌNH
+  ===================================================== */
+  @media (max-width: 900px) {
+    #journey-{{ section.id }} .journey__timeline-track {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 40px 0 !important;
+      position: relative;
+      width: 100%;
+    }
+
+    #journey-{{ section.id }} .journey__timeline-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    #journey-{{ section.id }} .journey__tick {
+      flex: 0 0 33.333% !important;
+      min-width: 33.333% !important;
+      scroll-snap-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    #journey-{{ section.id }} .journey__timeline-track::before {
+      content: "";
+      position: absolute;
+      top: 50px;
+      left: 0;
+      width: 1000%;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+
+    #journey-{{ section.id }} .journey__dot {
+      width: 20px !important;
+      height: 20px !important;
+      border: 3px solid #fff;
+      background: #ccc !important;
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      transform: none !important;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #journey-{{ section.id }} .journey__tick.is-active .journey__dot {
+      background: #111 !important;
+      width: 26px !important;
+      height: 26px !important;
+      box-shadow: 0 0 0 8px rgba(47, 107, 79, 0.15);
+    }
+
+    #journey-{{ section.id }} .journey__year {
+      margin-top: 5px !important;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const root = document.getElementById("journey-{{ section.id }}");
+    if (!root) return;
+
+    const slides = root.querySelector(".journey__slides");
+    const ticks = Array.from(root.querySelectorAll(".journey__tick"));
+    const prevBtn = root.querySelector("[data-prev]");
+    const nextBtn = root.querySelector("[data-next]");
+    const total = ticks.length;
+    const track = root.querySelector(".journey__timeline-track");
+
+    if (!slides || total === 0) return;
+
+    // ===== SETUP: clone first & last slide để tạo infinite loop =====
+    const realSlides = Array.from(slides.children);
+    const firstClone = realSlides[0].cloneNode(true);
+    const lastClone  = realSlides[realSlides.length - 1].cloneNode(true);
+
+    firstClone.setAttribute("data-clone", "first");
+    lastClone.setAttribute("data-clone", "last");
+
+    slides.insertBefore(lastClone, realSlides[0]);
+    slides.appendChild(firstClone);
+
+    // ===== STATE MANAGEMENT =====
+    let index = 0;          // real index
+    let visualIndex = 1;    // visual index with clones
+    let isAnimating = false;
+    let animationTimeout = null;
+
+    // ===== CORE FUNCTIONS =====
+    function setTransform(useTransition = true) {
+      slides.style.transition = useTransition ? "transform 400ms ease" : "none";
+      slides.style.transform = `translateX(${-visualIndex * 100}%)`;
+    }
+
+    function setActiveTick(i) {
+      ticks.forEach((t, n) => {
+        const active = n === i;
+        t.classList.toggle("is-active", active);
+        t.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      centerActiveTick();
+    }
+
+    function centerActiveTick() {
+      if (!track) return;
+      if (!window.matchMedia("(max-width: 900px)").matches) return;
+
+      const activeTick = root.querySelector(".journey__tick.is-active");
+      if (!activeTick) return;
+
+      const trackRect = track.getBoundingClientRect();
+      const tickRect  = activeTick.getBoundingClientRect();
+      const tickCenter = (tickRect.left - trackRect.left) + (tickRect.width / 2);
+      const trackCenter = trackRect.width / 2;
+      const targetScrollLeft = track.scrollLeft + (tickCenter - trackCenter);
+
+      track.scrollTo({ left: targetScrollLeft, behavior: "smooth" });
+    }
+
+    // ===== TEXT ANIMATION - OPTIMIZED =====
+    function triggerTextAnimation() {
+      // Clear any existing timeout
+      if (animationTimeout) {
+        clearTimeout(animationTimeout);
+      }
+
+      // Remove active class from all slides
+      Array.from(slides.children).forEach(s => {
+        s.classList.remove("is-active");
+        s.querySelector('.journey__content').style.transition = 'none';
+      });
+
+      // Get active slide
+      const activeSlide = slides.children[visualIndex];
+      if (!activeSlide) return;
+
+      // Force reflow and add active class with delay
+      void activeSlide.offsetWidth;
+      
+      // Reset content position
+      const content = activeSlide.querySelector('.journey__content');
+      content.style.transition = 'none';
+      content.style.opacity = '0';
+      content.style.transform = 'translateY(20px)';
+      
+      // Force reflow again
+      void content.offsetWidth;
+      
+      // Enable transition and trigger animation
+      content.style.transition = 'opacity 600ms ease-out, transform 600ms ease-out';
+      content.style.transitionDelay = '100ms';
+      
+      // Add active class to slide
+      activeSlide.classList.add("is-active");
+      
+      // Set timeout to ensure animation completes
+      animationTimeout = setTimeout(() => {
+        content.style.opacity = '1';
+        content.style.transform = 'translateY(0)';
+      }, 50);
+    }
+
+    // ===== NAVIGATION FUNCTIONS =====
+    function goToReal(i) {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      index = i;
+      visualIndex = i + 1; // +1 for the clone
+      
+      setTransform(true);
+      setActiveTick(index);
+      triggerTextAnimation();
+
+      setTimeout(() => { isAnimating = false; }, 450);
+    }
+
+    function goNext() {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      visualIndex += 1;
+      setTransform(true);
+
+      if (index === total - 1) {
+        index = 0;
+      } else {
+        index += 1;
+      }
+      
+      setActiveTick(index);
+      triggerTextAnimation();
+    }
+
+    function goPrev() {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      visualIndex -= 1;
+      setTransform(true);
+
+      if (index === 0) {
+        index = total - 1;
+      } else {
+        index -= 1;
+      }
+      
+      setActiveTick(index);
+      triggerTextAnimation();
+    }
+
+    // ===== EVENT LISTENERS =====
+    slides.addEventListener("transitionend", () => {
+      // Handle clone transitions
+      if (slides.children[visualIndex]?.dataset.clone === "first") {
+        visualIndex = 1;
+        setTransform(false);
+      }
+
+      if (slides.children[visualIndex]?.dataset.clone === "last") {
+        visualIndex = total;
+        setTransform(false);
+      }
+
+      isAnimating = false;
+    });
+
+    ticks.forEach(t => {
+      t.addEventListener("click", () => {
+        const target = parseInt(t.dataset.go, 10);
+        if (Number.isNaN(target)) return;
+        goToReal(target);
+      });
+    });
+
+    prevBtn?.addEventListener("click", goPrev);
+    nextBtn?.addEventListener("click", goNext);
+
+    // ===== SWIPE SUPPORT =====
+    let startX = null;
+    slides.addEventListener("touchstart", (e) => startX = e.touches[0].clientX, {passive:true});
+    slides.addEventListener("touchend", (e) => {
+      if (startX === null || isAnimating) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+      if (Math.abs(diff) > 40){
+        diff < 0 ? goNext() : goPrev();
+      }
+      startX = null;
+    }, {passive:true});
+
+    // ===== INITIAL SETUP =====
+    setActiveTick(0);
+    setTransform(false);
+    
+    // Set initial slide as active
+    const initialSlide = slides.children[visualIndex];
+    if (initialSlide) {
+      initialSlide.classList.add("is-active");
+      const content = initialSlide.querySelector('.journey__content');
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    }
+    
+    requestAnimationFrame(centerActiveTick);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Journey timeline",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Our successful <em>journey</em>.</p>"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading font size (px)",
+      "min": 18,
+      "max": 72,
+      "step": 1,
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading font weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra-bold (800)" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "milestone",
+      "name": "Milestone",
+      "settings": [
+        {
+          "type": "range",
+          "id": "title_size",
+          "label": "Milestone title size (px)",
+          "min": 16,
+          "max": 60,
+          "step": 1,
+          "default": 34
+        },
+        {
+          "type": "select",
+          "id": "title_weight",
+          "label": "Milestone title weight",
+          "options": [
+            { "value": "400", "label": "Regular (400)" },
+            { "value": "500", "label": "Medium (500)" },
+            { "value": "600", "label": "Semi-bold (600)" },
+            { "value": "700", "label": "Bold (700)" },
+            { "value": "800", "label": "Extra-bold (800)" }
+          ],
+          "default": "700"
+        },
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year",
+          "default": "2025"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Small label",
+          "default": "TODAY & TOMORROW"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "New vinergy® patent"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Upload video (MP4)"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Write your milestone description here.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Journey timeline",
+      "blocks": [
+        { "type": "milestone" },
+        { "type": "milestone" },
+        { "type": "milestone" }
+      ]
+    }
+  ]
+}
+{% endschema %}
