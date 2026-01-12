@@ -19,6 +19,8 @@
     echo '--section-padding-bottom-mobile:' | append: section.settings.padding_bottom_mobile | append: 'px;'
     echo '--section-padding-left-mobile:' | append: section.settings.padding_left_mobile | append: 'px;'
     echo '--section-padding-right-mobile:' | append: section.settings.padding_right_mobile | append: 'px;'
+    
+    echo '--product-bg-color:' | append: section.settings.product_bg | default: '#f9f9f9' | append: ';'
   endcapture
 -%}
 
@@ -101,7 +103,6 @@
         {%- assign current_product = product.product -%}
         <script type="application/ld+json">{{ current_product | structured_data }}</script>
         
-        <!-- Thêm wrapper và track cho mobile giống product hotspots -->
         <div class="product-star__card-wrapper">
           <div class="product-star__card-track">
             <a href="{{ current_product.url }}" class="product-star__card">
@@ -131,7 +132,6 @@
           </div>
         </div>
       {%- else -%}
-        <!-- Placeholder cũng có wrapper và track -->
         <div class="product-star__card-wrapper">
           <div class="product-star__card-track">
             <a href="#" class="product-star__card">
@@ -403,7 +403,7 @@
     top: 50px;
     right: 20px;
     bottom: 50px;
-    width: 4px;
+    width: 2px;
     background: transparent;
     z-index: 10;
   }
@@ -435,7 +435,6 @@
     gap: 20px;
     align-items: flex-start;
     flex-shrink: 0;
-    padding: 16px 0;
     position: relative;
   }
   .product-star__icon {
@@ -540,381 +539,363 @@
     .product-star__card-price { font-size: 22px; }
   }
 
-  /* MOBILE RESPONSIVE - CARD GIỐNG HỆT SECTION PRODUCT HOTSPOTS */
-  @media (max-width: 990px) {
-    .product-star__wrapper {
-      display: block;
-      border-radius: 0 !important;
-    }
-
-    /* Xóa border radius trên mobile */
-    .product-star__media,
-    .product-star__product,
-    .product-star__content {
-      border-radius: 0 !important;
-    }
-
-    /* Media section - full content */
-    .product-star__media {
-      height: auto;
-      min-height: 0;
-      position: relative;
-    }
-
-    .product-star__video-wrapper,
-    .product-star__image-wrapper {
-      height: 300px;
-      position: relative;
-    }
-
-    .product-star__video,
-    .product-star__image {
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Product section - CARD MOBILE GIỐNG SECTION PRODUCT HOTSPOTS */
-    .product-star__product {
-      order: 2;
-      min-height: 0;
-      height: auto;
-      padding: 20px 16px 32px;
-      background: {{ product.product_bg | default: '#f9f9f9' }} !important;
-      position: relative;
-    }
-
-    /* Thêm wrapper giống product hotspots */
-    .product-star__card-wrapper {
-      width: 100%;
-      max-width: 100vw;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
-      padding: 10px 16px 14px;
-      margin: 0 -16px;
-      display: block;
-    }
-
-    /* Ẩn scrollbar */
-    .product-star__card-wrapper::-webkit-scrollbar {
-      display: none;
-    }
-    
-    .product-star__card-wrapper {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    /* Track cho card mobile */
-    .product-star__card-track {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 12px;
-      width: max-content;
-      padding-right: 16px;
-    }
-
-    /* Card item mobile - GIỐNG HỆT PRODUCT HOTSPOTS */
-    .product-star__card {
-      scroll-snap-align: start;
-      min-width: calc(100vw - 32px);
-      width: calc(100vw - 32px);
-      flex-shrink: 0;
-      padding: 12px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 12px;
-      text-align: left;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-      background: white;
-      height: auto;
-      box-sizing: border-box;
-      max-width: none;
-    }
-
-    .product-star__card:hover {
-      transform: none !important;
-    }
-
-    /* Hình ảnh nhỏ, vuông giống product hotspots */
-    .product-star__card-image {
-      width: 80px !important;
-      height: 80px !important;
-      min-width: 80px !important;
-      min-height: 80px !important;
-      margin-bottom: 0 !important;
-      border-radius: 6px;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .product-star__card-image img,
-    .product-star__card-image svg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .product-star__card-image:hover .product-star__card-img {
-      transform: none !important;
-    }
-
-    /* Info bên cạnh hình ảnh giống product hotspots */
-    .product-star__card-info {
-      padding: 0 !important;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-width: 0;
-      text-align: left;
-    }
-
-    /* Title giống product hotspots */
-    .product-star__card-title {
-      font-size: 14px !important;
-      margin: 0 0 6px 0 !important;
-      font-weight: 600;
-      line-height: 1.3;
-      color: #222;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      word-break: break-word;
-    }
-
-    /* PRICE NẰM NGANG GIỐNG PRODUCT HOTSPOTS */
-    .product-star__card-price {
-      font-size: 13px !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 6px !important;
-      margin-top: 0 !important;
-      text-align: left;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
-
-    .product-star__card-price .price-current {
-      font-size: 14px !important;
-      font-weight: 700;
-      color: #222;
-    }
-
-    .product-star__card-price .price-compare {
-      font-size: 12px !important;
-      color: #999;
-      text-decoration: line-through;
-    }
-
-    /* Content section - full content */
-    .product-star__content {
-      order: 3;
-      min-height: 0;
-      height: auto;
-      position: relative;
-    }
-
-    .product-star__content-wrapper {
-      position: relative;
-      padding: 40px 25px;
-      display: block;
-    }
-
-    .product-star__features {
-      overflow-y: visible;
-      padding-right: 0;
-    }
-
-    .custom-scrollbar {
-      display: none;
-    }
-
-    .product-star__feature {
-      gap: 16px;
-      padding: 16px 0;
-    }
-
-    .benefit-icon {
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .product-star__feature-title {
-      font-size: 16px !important;
-      margin-bottom: 6px !important;
-    }
-
-    .product-star__feature-text {
-      font-size: 14px !important;
-      line-height: 1.5 !important;
-    }
-
-    .product-star__divider {
-      margin: 16px 0 !important;
-    }
+  /* MOBILE RESPONSIVE - FIX KHÔNG TRƯỢT NGANG */
+/* MOBILE RESPONSIVE - FIX KHÔNG TRƯỢT NGANG */
+@media (max-width: 990px) {
+  .product-star__wrapper {
+    display: block;
+    border-radius: 0 !important;
+    overflow: hidden;
   }
 
-  @media (max-width: 768px) {
-    .product-star__video-wrapper,
-    .product-star__image-wrapper {
-      height: 250px;
-    }
-
-    .product-star__product {
-      padding: 16px 12px 28px;
-    }
-
-    .product-star__card-wrapper {
-      padding: 8px 12px 12px;
-      margin: 0 -12px;
-    }
-
-    .product-star__card {
-      min-width: calc(100vw - 24px);
-      width: calc(100vw - 24px);
-      padding: 10px;
-      gap: 10px;
-    }
-
-    .product-star__card-image {
-      width: 70px !important;
-      height: 70px !important;
-      min-width: 70px !important;
-      min-height: 70px !important;
-      border-radius: 5px;
-    }
-
-    .product-star__card-title {
-      font-size: 13px !important;
-    }
-
-    .product-star__card-price {
-      font-size: 12px !important;
-    }
-
-    .product-star__card-price .price-current {
-      font-size: 13px !important;
-    }
-
-    .product-star__card-price .price-compare {
-      font-size: 11px !important;
-    }
-
-    .product-star__content-wrapper {
-      padding: 35px 20px;
-    }
-
-    .product-star__feature {
-      gap: 14px;
-      padding: 14px 0;
-    }
-
-    .benefit-icon {
-      width: 36px;
-      height: 36px;
-      font-size: 18px;
-    }
-
-    .product-star__feature-title {
-      font-size: 15px !important;
-    }
-
-    .product-star__feature-text {
-      font-size: 13px !important;
-    }
+  /* Xóa border radius trên mobile */
+  .product-star__media,
+  .product-star__product,
+  .product-star__content {
+    border-radius: 0 !important;
   }
 
-  @media (max-width: 480px) {
-    .product-star__video-wrapper,
-    .product-star__image-wrapper {
-      height: 220px;
-    }
-
-    .product-star__product {
-      padding: 12px 8px 24px;
-    }
-
-    .product-star__card-wrapper {
-      padding: 6px 8px 0px;
-      margin: 0 -8px;
-    }
-
-    .product-star__card {
-      min-width: calc(100vw - 16px);
-      width: calc(100vw - 16px);
-      padding: 8px;
-      gap: 8px;
-      border-radius: 6px;
-    }
-
-    .product-star__card-image {
-      width: 60px !important;
-      height: 60px !important;
-      min-width: 60px !important;
-      min-height: 60px !important;
-      border-radius: 4px;
-    }
-
-    .product-star__card-title {
-      font-size: 12px !important;
-      margin: 0 0 4px 0 !important;
-    }
-
-    .product-star__card-price {
-      font-size: 11px !important;
-      gap: 4px !important;
-    }
-
-    .product-star__card-price .price-current {
-      font-size: 12px !important;
-    }
-
-    .product-star__card-price .price-compare {
-      font-size: 10px !important;
-    }
-
-    .product-star__content-wrapper {
-      padding: 30px 16px;
-    }
-
-    .product-star__feature {
-      gap: 12px;
-      padding: 12px 0;
-    }
-
-    .benefit-icon {
-      width: 32px;
-      height: 32px;
-      font-size: 16px;
-    }
-
-    .product-star__feature-title {
-      font-size: 14px !important;
-    }
-
-    .product-star__feature-text {
-      font-size: 12px !important;
-    }
-
-    .product-star__divider {
-      margin: 12px 0 !important;
-    }
-
-    .product-star__video::-webkit-media-controls-panel,
-    .product-star__video::-moz-media-controls-panel {
-      opacity: 1;
-    }
+  /* Media section - full content - GIỮ NGUYÊN HEIGHT CHO VIDEO */
+  .product-star__media {
+    height: auto;
+    min-height: 600px; /* GIỮ NGUYÊN height như desktop */
+    position: relative;
   }
+
+  /* VIDEO WRAPPER - GIỮ NGUYÊN HEIGHT 100% */
+  .product-star__video-wrapper,
+  .product-star__image-wrapper {
+    height: 100% !important; /* QUAN TRỌNG: height 100% thay vì fixed height */
+    position: relative;
+  }
+
+  .product-star__video,
+  .product-star__image {
+    height: 100% !important; /* QUAN TRỌNG: video full height */
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Product section - FIX: Xóa wrapper scroll ngang */
+  .product-star__product {
+    order: 2;
+    min-height: 0;
+    height: auto;
+    padding: 20px 16px;
+    position: relative;
+  }
+
+  /* XÓA HOÀN TOÀN wrapper và track cho scroll ngang */
+  .product-star__card-wrapper,
+  .product-star__card-track {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    scroll-snap-type: none;
+  }
+
+  /* Card item mobile - HIỂN THỊ BÌNH THƯỜNG, KHÔNG SCROLL NGANG */
+  .product-star__card {
+    min-width: 100%;
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: white;
+    height: auto;
+    box-sizing: border-box;
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .product-star__card:hover {
+    transform: none !important;
+  }
+
+  /* Hình ảnh nhỏ, vuông */
+  .product-star__card-image {
+    width: 80px !important;
+    height: 80px !important;
+    min-width: 80px !important;
+    min-height: 80px !important;
+    margin-bottom: 0 !important;
+    border-radius: 6px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .product-star__card-image img,
+  .product-star__card-image svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Info bên cạnh hình ảnh */
+  .product-star__card-info {
+    padding: 0 !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    text-align: left;
+  }
+
+  /* Title */
+  .product-star__card-title {
+    font-size: 16px !important;
+    margin: 0 0 8px 0 !important;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #222;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* PRICE NẰM NGANG */
+  .product-star__card-price {
+    font-size: 14px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 0 !important;
+    text-align: left;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .product-star__card-price .price-current {
+    font-size: 16px !important;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .product-star__card-price .price-compare {
+    font-size: 14px !important;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  /* Content section - full content */
+  .product-star__content {
+    order: 3;
+    min-height: 0;
+    height: auto;
+    position: relative;
+  }
+
+  .product-star__content-wrapper {
+    position: relative;
+    padding: 40px 25px;
+    display: block;
+  }
+
+  .product-star__features {
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
+  .custom-scrollbar {
+    display: none;
+  }
+
+  .product-star__feature {
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .benefit-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .product-star__feature-title {
+    font-size: 16px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .product-star__feature-text {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .product-star__divider {
+    margin: 16px 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* VIDEO - GIỮ NGUYÊN HEIGHT */
+  .product-star__video-wrapper,
+  .product-star__image-wrapper {
+    height: 100% !important; /* Vẫn giữ 100% */
+  }
+
+  .product-star__video,
+  .product-star__image {
+    height: 100% !important; /* Vẫn giữ 100% */
+  }
+
+  .product-star__product {
+    padding: 16px 12px;
+  }
+
+  .product-star__card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .product-star__card-image {
+    width: 70px !important;
+    height: 70px !important;
+    min-width: 70px !important;
+    min-height: 70px !important;
+    border-radius: 5px;
+  }
+
+  .product-star__card-title {
+    font-size: 15px !important;
+  }
+
+  .product-star__card-price {
+    font-size: 13px !important;
+  }
+
+  .product-star__card-price .price-current {
+    font-size: 15px !important;
+  }
+
+  .product-star__card-price .price-compare {
+    font-size: 13px !important;
+  }
+
+  .product-star__content-wrapper {
+    padding: 35px 20px;
+  }
+
+  .product-star__feature {
+    gap: 14px;
+    padding: 14px 0;
+  }
+
+  .benefit-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .product-star__feature-title {
+    font-size: 15px !important;
+  }
+
+  .product-star__feature-text {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* VIDEO - VẪN GIỮ NGUYÊN HEIGHT */
+  .product-star__video-wrapper,
+  .product-star__image-wrapper {
+    height: 100% !important; /* Vẫn giữ 100% */
+  }
+
+  .product-star__video,
+  .product-star__image {
+    height: 100% !important; /* Vẫn giữ 100% */
+  }
+
+  .product-star__product {
+    padding: 12px 8px;
+  }
+
+  .product-star__card {
+    padding: 10px;
+    gap: 10px;
+    border-radius: 6px;
+  }
+
+  .product-star__card-image {
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+    border-radius: 4px;
+  }
+
+  .product-star__card-title {
+    font-size: 14px !important;
+    margin: 0 0 6px 0 !important;
+  }
+
+  .product-star__card-price {
+    font-size: 12px !important;
+    gap: 6px !important;
+  }
+
+  .product-star__card-price .price-current {
+    font-size: 14px !important;
+  }
+
+  .product-star__card-price .price-compare {
+    font-size: 12px !important;
+  }
+
+  .product-star__content-wrapper {
+    padding: 30px 16px;
+  }
+
+  .product-star__feature {
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .benefit-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .product-star__feature-title {
+    font-size: 14px !important;
+  }
+
+  .product-star__feature-text {
+    font-size: 12px !important;
+  }
+
+  .product-star__divider {
+    margin: 12px 0 !important;
+  }
+
+  .product-star__video::-webkit-media-controls-panel,
+  .product-star__video::-moz-media-controls-panel {
+    opacity: 1;
+  }
+}
+/* FIX: Divider không hiện trên desktop do scroll container */
+.product-star__divider {
+  min-height: 1px;
+  height: 1px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 </style>
 
 <script>

@@ -693,22 +693,76 @@ product-hotspot-component.is-active .hotspot-trigger {
   }
 }
 /* MOBILE - GIỐNG HÌNH HYDRAING YOUTH CREAM */
+/* MOBILE - GIỐNG HÌNH HYDRAING YOUTH CREAM */
 @media (max-width: 749px) {
   /* Ẩn nút prev/next trên mobile */
   .hotspot-card-arrow {
     display: none !important;
   }
   
-  /* Điều chỉnh layout product card - FIX TRÀN */
+  /* QUAN TRỌNG: Reset toàn bộ container cha để không ảnh hưởng đến ảnh */
+  .section-product-hotspots {
+    width: 100%;
+    overflow: visible !important; /* Cho phép ảnh hiển thị đầy đủ */
+  }
+  
+  .section-product-hotspots__wrapper {
+    width: 100%;
+    overflow: visible;
+    padding: 0;
+  }
+  
+  /* Grid layout cho mobile */
+  .section-product-hotspots__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  /* PHẦN ẢNH - QUAN TRỌNG: Giữ nguyên ảnh đầy đủ */
+  .section-product-hotspots__media {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important; /* Cho phép ảnh hiển thị đầy đủ */
+    border-radius: var(--image-border-radius, 0px);
+    position: relative;
+  }
+  
+  .section-product-hotspots__media img {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    max-width: none !important; /* Cho phép ảnh full width */
+    border-radius: var(--image-border-radius, 0px);
+  }
+  
+  .hotspots-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+  }
+  
+  /* PHẦN PRODUCT CARD - FIX TRÀN NGANG */
+  .section-product-hotspots__product {
+    width: 100%;
+    overflow: hidden; /* Chỉ product card bị hidden */
+    padding: 0 8px; /* Padding an toàn */
+    box-sizing: border-box;
+  }
+  
+  /* Hotspot card container - CHỈ phần này có scroll */
   .hotspot-product-card {
     padding: 0;
     gap: 0;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100vw; /* GIỮ NGUYÊN 100vw cho scroll card */
     overflow: hidden;
+    position: relative;
+    margin: 0 auto;
   }
   
-  /* Viewport cho touch scroll */
+  /* Viewport cho touch scroll - CHỈ phần này scroll */
   .hotspot-product-card__viewport {
     min-height: auto !important;
     height: auto;
@@ -718,10 +772,15 @@ product-hotspot-component.is-active .hotspot-trigger {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100vw; /* GIỮ NGUYÊN cho card scroll */
     cursor: grab;
     user-select: none;
     border-radius: 0;
+    margin: 0;
+    /* Tạo padding ảo để card không chạm cạnh */
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: content-box; /* Quan trọng: không tính padding vào width */
   }
   
   .hotspot-product-card__viewport:active {
@@ -738,22 +797,22 @@ product-hotspot-component.is-active .hotspot-trigger {
     scrollbar-width: none;
   }
   
-  /* Track cho mobile - KHÔNG dùng transform để không ảnh hưởng sticky */
+  /* Track cho mobile */
   .hotspot-product-card__track {
     transform: none !important;
     width: auto;
     display: flex;
     flex-wrap: nowrap;
     height: auto;
-    padding: 10px 16px; /* Thêm padding hai bên */
+    padding: 10px 0; /* Padding vertical only */
     gap: var(--card-gap, 12px);
     box-sizing: border-box;
   }
   
-  /* Item cho mobile - CARD NHỎ NHƯ HÌNH - FIX TRÀN */
+  /* Item cho mobile - Card tính toán đúng với padding viewport */
   .hotspot-product-card__item {
     scroll-snap-align: start;
-    min-width: calc(100vw - 32px) !important; /* Trừ padding left + right */
+    min-width: calc(100vw - 32px) !important; /* 100vw - (8px left + 8px right + 8px padding) */
     width: calc(100vw - 32px) !important;
     flex-shrink: 0;
     padding: 0 !important;
@@ -765,7 +824,7 @@ product-hotspot-component.is-active .hotspot-trigger {
     box-sizing: border-box;
   }
   
-  /* PRODUCT CARD MOBILE - GIỐNG HÌNH */
+  /* PRODUCT CARD MOBILE */
   .product-card--hotspot {
     max-width: 100% !important;
     width: 100% !important;
@@ -795,7 +854,15 @@ product-hotspot-component.is-active .hotspot-trigger {
     margin-bottom: 0 !important;
     border-radius: calc(var(--card-border-radius, 8px) - 2px) !important;
     flex-shrink: 0;
+    overflow: hidden;
+  }
+  
+  .product-card--hotspot .product-card__image img,
+  .product-card--hotspot .product-card__image svg {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    display: block;
   }
   
   .product-card--hotspot .product-card__image:hover {
@@ -809,7 +876,7 @@ product-hotspot-component.is-active .hotspot-trigger {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-width: 0; /* Ngăn text tràn */
+    min-width: 0;
   }
   
   /* Title và price nằm ngang */
@@ -862,35 +929,20 @@ product-hotspot-component.is-active .hotspot-trigger {
   .hotspot-trigger {
     touch-action: manipulation;
   }
-  
-  /* Điều chỉnh khoảng cách section - CHỈ fix phần ảnh */
-  .section-product-hotspots__grid {
-    gap: 16px;
-  }
-  
-  /* CHỈ fix ảnh không bị tràn - KHÔNG can thiệp container cha */
-  .section-product-hotspots__media {
-    border-radius: var(--image-border-radius, 0px);
-    overflow: hidden;
-  }
-  
-  .section-product-hotspots__media img {
-    max-width: 100% !important;
-    height: auto !important;
-    width: 100% !important;
-    display: block;
-  }
-  
-  /* Thêm class wrapper để chứa card scroll mà không ảnh hưởng layout cha */
-  .hotspot-product-card-wrapper {
-    width: 100%;
-    max-width: 100vw;
-    overflow: hidden;
-    position: relative;
-  }
 }
 /* Extra small screens */
 @media (max-width: 480px) {
+  /* Điều chỉnh cho màn hình rất nhỏ */
+  .hotspot-product-card__viewport {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  .hotspot-product-card__item {
+    min-width: calc(100vw - 24px) !important; /* Giảm padding */
+    width: calc(100vw - 24px) !important;
+  }
+  
   .product-card--hotspot {
     padding: 10px !important;
     gap: 10px !important;
