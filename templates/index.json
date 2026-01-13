@@ -9,6 +9,232 @@
  */
 {
   "sections": {
+    "slideshow_d9P9bw": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_cLf33d": {
+          "type": "_slide",
+          "settings": {
+            "media_type_1": "image",
+            "image_1": "shopify://shop_images/1_Jan.webp",
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-end",
+            "gap": 12,
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-6",
+            "toggle_overlay": true,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48
+          },
+          "blocks": {
+            "text_FTV7JQ": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<h2>New arrivals</h2>",
+                "width": "fit-content",
+                "text_style": "solid",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_UjYRer": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Introducing our latest products, made especially for the season. Shop your favorites before they're gone!</p>",
+                "width": "fit-content",
+                "text_style": "solid",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 20,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_eV6jVk": {
+              "type": "button",
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_FTV7JQ",
+            "text_UjYRer",
+            "button_eV6jVk"
+          ]
+        },
+        "slide_GtFhdJ": {
+          "type": "_slide",
+          "settings": {
+            "media_type_1": "image",
+            "image_1": "shopify://shop_images/364-2H6A2051.jpg",
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-end",
+            "gap": 12,
+            "inherit_color_scheme": false,
+            "color_scheme": "scheme-6",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 48,
+            "padding-inline-end": 48
+          },
+          "blocks": {
+            "text_zPeFT6": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<h2>Bestsellers</h2>",
+                "width": "fit-content",
+                "text_style": "solid",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_n8pY3j": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Discover the bestsellers that have captured the hearts of our customers with their perfect blend of functionality and style.</p>",
+                "width": "fit-content",
+                "text_style": "solid",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 20,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_iLK6pf": {
+              "type": "button",
+              "disabled": true,
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_zPeFT6",
+            "text_n8pY3j",
+            "button_iLK6pf"
+          ]
+        }
+      },
+      "block_order": [
+        "slide_cLf33d",
+        "slide_GtFhdJ"
+      ],
+      "name": "t:names.slideshow_full_frame",
+      "settings": {
+        "display_mode": "full_frame",
+        "section_width": "full-width",
+        "full_frame_on_mobile": false,
+        "slideshow_gap": 12,
+        "corner_radius": 0,
+        "slide_height": "medium",
+        "content_position": "on-media",
+        "color_scheme": "",
+        "icons_style": "arrows_large",
+        "icons_shape": "none",
+        "slideshow_controls_style": "dots",
+        "autoplay": false,
+        "autoplay_speed": 4,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "product_recommendations_JhEgQx": {
       "type": "product-recommendations",
       "blocks": {
@@ -1121,6 +1347,179 @@
         "padding-block-end": 0
       }
     },
+    "looping_video_dD4YRe": {
+      "type": "looping-video",
+      "blocks": {
+        "shoppable_video_UJPQzG": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766644813_36.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-lemon-zest",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_AtFQbx": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645496_56.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-contour-body-oil-thirteen-petals",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_ai6nzn": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645300_50.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-geranium-breeze",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_cAD9VF": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645060_44.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-neroli-blossom",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_6PUnN4": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766645398_53.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-sage-clarity",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        },
+        "shoppable_video_cbkPyg": {
+          "type": "shoppable_video",
+          "settings": {
+            "video": "shopify://files/videos/video_1766644997_42.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "title": "",
+            "product": "garden-of-wellness-nourishing-body-oil-geranium-breeze",
+            "product_1": "",
+            "hs1_x_desktop": 30,
+            "hs1_y_desktop": 50,
+            "hs1_x_mobile": 27,
+            "hs1_y_mobile": 47,
+            "product_2": "",
+            "hs2_x_desktop": 53,
+            "hs2_y_desktop": 50,
+            "hs2_x_mobile": 55,
+            "hs2_y_mobile": 50
+          }
+        }
+      },
+      "block_order": [
+        "shoppable_video_UJPQzG",
+        "shoppable_video_AtFQbx",
+        "shoppable_video_ai6nzn",
+        "shoppable_video_cAD9VF",
+        "shoppable_video_6PUnN4",
+        "shoppable_video_cbkPyg"
+      ],
+      "name": "Video looping (PS247)",
+      "settings": {
+        "heading": "<p>Shop <em>premium</em> for <em>pennies.</em></p>",
+        "heading_size_pct": "110",
+        "heading_tag": "h2",
+        "heading_align": "center",
+        "subheading": "",
+        "heading_bottom": 24,
+        "overlay_opacity": 70,
+        "product_card_position": "bottom_of_video",
+        "enable_hotspots": false,
+        "enable_swipe_mobile": true,
+        "enable_autoplay": true,
+        "show_pagination": true,
+        "bg_color": "#ffffff",
+        "text_color": "#111111",
+        "muted_color": "#777777",
+        "card_bg": "#ffffff",
+        "container_width": 1400,
+        "container_padding": 12,
+        "full_width_desktop": false,
+        "show_divider": false,
+        "block_spacing": 28,
+        "pad_top_desktop": 100,
+        "pad_bottom_desktop": 0,
+        "container_padding_mobile": 14,
+        "pad_top_mobile": 48,
+        "pad_bottom_mobile": 28,
+        "radius": 22,
+        "media_aspect_ratio": "3 / 4",
+        "shadow": "0 14px 35px rgba(0,0,0,.08)",
+        "progress_width": 180,
+        "progress_width_mobile": 140,
+        "progress_height": 6,
+        "progress_bg": "#ededed",
+        "progress_fill": "#111111",
+        "dot_inactive": "#d7d7d7",
+        "dot_active": "#111111",
+        "show_play_badge": true
+      }
+    },
     "product_star_8kJJNp": {
       "type": "product-star",
       "blocks": {
@@ -1358,179 +1757,6 @@
         "text_color": "#000000",
         "arrow_color": "#000000",
         "star_color": "#000000"
-      }
-    },
-    "looping_video_dD4YRe": {
-      "type": "looping-video",
-      "blocks": {
-        "shoppable_video_UJPQzG": {
-          "type": "shoppable_video",
-          "settings": {
-            "video": "shopify://files/videos/video_1766644813_36.mp4",
-            "video_url": "",
-            "video_alt": "",
-            "title": "",
-            "product": "garden-of-wellness-nourishing-body-oil-lemon-zest",
-            "product_1": "",
-            "hs1_x_desktop": 30,
-            "hs1_y_desktop": 50,
-            "hs1_x_mobile": 27,
-            "hs1_y_mobile": 47,
-            "product_2": "",
-            "hs2_x_desktop": 53,
-            "hs2_y_desktop": 50,
-            "hs2_x_mobile": 55,
-            "hs2_y_mobile": 50
-          }
-        },
-        "shoppable_video_AtFQbx": {
-          "type": "shoppable_video",
-          "settings": {
-            "video": "shopify://files/videos/video_1766645496_56.mp4",
-            "video_url": "",
-            "video_alt": "",
-            "title": "",
-            "product": "garden-of-wellness-contour-body-oil-thirteen-petals",
-            "product_1": "",
-            "hs1_x_desktop": 30,
-            "hs1_y_desktop": 50,
-            "hs1_x_mobile": 27,
-            "hs1_y_mobile": 47,
-            "product_2": "",
-            "hs2_x_desktop": 53,
-            "hs2_y_desktop": 50,
-            "hs2_x_mobile": 55,
-            "hs2_y_mobile": 50
-          }
-        },
-        "shoppable_video_ai6nzn": {
-          "type": "shoppable_video",
-          "settings": {
-            "video": "shopify://files/videos/video_1766645300_50.mp4",
-            "video_url": "",
-            "video_alt": "",
-            "title": "",
-            "product": "garden-of-wellness-nourishing-body-oil-geranium-breeze",
-            "product_1": "",
-            "hs1_x_desktop": 30,
-            "hs1_y_desktop": 50,
-            "hs1_x_mobile": 27,
-            "hs1_y_mobile": 47,
-            "product_2": "",
-            "hs2_x_desktop": 53,
-            "hs2_y_desktop": 50,
-            "hs2_x_mobile": 55,
-            "hs2_y_mobile": 50
-          }
-        },
-        "shoppable_video_cAD9VF": {
-          "type": "shoppable_video",
-          "settings": {
-            "video": "shopify://files/videos/video_1766645060_44.mp4",
-            "video_url": "",
-            "video_alt": "",
-            "title": "",
-            "product": "garden-of-wellness-nourishing-body-oil-neroli-blossom",
-            "product_1": "",
-            "hs1_x_desktop": 30,
-            "hs1_y_desktop": 50,
-            "hs1_x_mobile": 27,
-            "hs1_y_mobile": 47,
-            "product_2": "",
-            "hs2_x_desktop": 53,
-            "hs2_y_desktop": 50,
-            "hs2_x_mobile": 55,
-            "hs2_y_mobile": 50
-          }
-        },
-        "shoppable_video_6PUnN4": {
-          "type": "shoppable_video",
-          "settings": {
-            "video": "shopify://files/videos/video_1766645398_53.mp4",
-            "video_url": "",
-            "video_alt": "",
-            "title": "",
-            "product": "garden-of-wellness-nourishing-body-oil-sage-clarity",
-            "product_1": "",
-            "hs1_x_desktop": 30,
-            "hs1_y_desktop": 50,
-            "hs1_x_mobile": 27,
-            "hs1_y_mobile": 47,
-            "product_2": "",
-            "hs2_x_desktop": 53,
-            "hs2_y_desktop": 50,
-            "hs2_x_mobile": 55,
-            "hs2_y_mobile": 50
-          }
-        },
-        "shoppable_video_cbkPyg": {
-          "type": "shoppable_video",
-          "settings": {
-            "video": "shopify://files/videos/video_1766644997_42.mp4",
-            "video_url": "",
-            "video_alt": "",
-            "title": "",
-            "product": "garden-of-wellness-nourishing-body-oil-geranium-breeze",
-            "product_1": "",
-            "hs1_x_desktop": 30,
-            "hs1_y_desktop": 50,
-            "hs1_x_mobile": 27,
-            "hs1_y_mobile": 47,
-            "product_2": "",
-            "hs2_x_desktop": 53,
-            "hs2_y_desktop": 50,
-            "hs2_x_mobile": 55,
-            "hs2_y_mobile": 50
-          }
-        }
-      },
-      "block_order": [
-        "shoppable_video_UJPQzG",
-        "shoppable_video_AtFQbx",
-        "shoppable_video_ai6nzn",
-        "shoppable_video_cAD9VF",
-        "shoppable_video_6PUnN4",
-        "shoppable_video_cbkPyg"
-      ],
-      "name": "Video looping (PS247)",
-      "settings": {
-        "heading": "<p>Shop <em>premium</em> for <em>pennies.</em></p>",
-        "heading_size_pct": "110",
-        "heading_tag": "h2",
-        "heading_align": "center",
-        "subheading": "",
-        "heading_bottom": 24,
-        "overlay_opacity": 70,
-        "product_card_position": "bottom_of_video",
-        "enable_hotspots": false,
-        "enable_swipe_mobile": true,
-        "enable_autoplay": true,
-        "show_pagination": true,
-        "bg_color": "#ffffff",
-        "text_color": "#111111",
-        "muted_color": "#777777",
-        "card_bg": "#ffffff",
-        "container_width": 1400,
-        "container_padding": 12,
-        "full_width_desktop": false,
-        "show_divider": false,
-        "block_spacing": 28,
-        "pad_top_desktop": 100,
-        "pad_bottom_desktop": 0,
-        "container_padding_mobile": 14,
-        "pad_top_mobile": 48,
-        "pad_bottom_mobile": 28,
-        "radius": 22,
-        "media_aspect_ratio": "3 / 4",
-        "shadow": "0 14px 35px rgba(0,0,0,.08)",
-        "progress_width": 180,
-        "progress_width_mobile": 140,
-        "progress_height": 6,
-        "progress_bg": "#ededed",
-        "progress_fill": "#111111",
-        "dot_inactive": "#d7d7d7",
-        "dot_active": "#111111",
-        "show_play_badge": true
       }
     },
     "journey_timeline_fQmzcQ": {
@@ -2417,232 +2643,6 @@
         "padding-block-start": 0,
         "padding-block-end": 48
       }
-    },
-    "slideshow_d9P9bw": {
-      "type": "slideshow",
-      "blocks": {
-        "slide_cLf33d": {
-          "type": "_slide",
-          "settings": {
-            "media_type_1": "image",
-            "image_1": "shopify://shop_images/1_Jan.webp",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "flex-end",
-            "gap": 12,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "toggle_overlay": true,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 48,
-            "padding-block-end": 48,
-            "padding-inline-start": 48,
-            "padding-inline-end": 48
-          },
-          "blocks": {
-            "text_FTV7JQ": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>New arrivals</h2>",
-                "width": "fit-content",
-                "text_style": "solid",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_UjYRer": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Introducing our latest products, made especially for the season. Shop your favorites before they're gone!</p>",
-                "width": "fit-content",
-                "text_style": "solid",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 20,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_eV6jVk": {
-              "type": "button",
-              "settings": {
-                "label": "Shop now",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_FTV7JQ",
-            "text_UjYRer",
-            "button_eV6jVk"
-          ]
-        },
-        "slide_GtFhdJ": {
-          "type": "_slide",
-          "settings": {
-            "media_type_1": "image",
-            "image_1": "shopify://shop_images/364-2H6A2051.jpg",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "flex-end",
-            "gap": 12,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 48,
-            "padding-block-end": 48,
-            "padding-inline-start": 48,
-            "padding-inline-end": 48
-          },
-          "blocks": {
-            "text_zPeFT6": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>Bestsellers</h2>",
-                "width": "fit-content",
-                "text_style": "solid",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_n8pY3j": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Discover the bestsellers that have captured the hearts of our customers with their perfect blend of functionality and style.</p>",
-                "width": "fit-content",
-                "text_style": "solid",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 20,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_iLK6pf": {
-              "type": "button",
-              "disabled": true,
-              "settings": {
-                "label": "Shop now",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_zPeFT6",
-            "text_n8pY3j",
-            "button_iLK6pf"
-          ]
-        }
-      },
-      "block_order": [
-        "slide_cLf33d",
-        "slide_GtFhdJ"
-      ],
-      "name": "t:names.slideshow_full_frame",
-      "settings": {
-        "display_mode": "full_frame",
-        "section_width": "full-width",
-        "full_frame_on_mobile": false,
-        "slideshow_gap": 12,
-        "corner_radius": 0,
-        "slide_height": "medium",
-        "content_position": "on-media",
-        "color_scheme": "",
-        "icons_style": "arrows_large",
-        "icons_shape": "none",
-        "slideshow_controls_style": "dots",
-        "autoplay": false,
-        "autoplay_speed": 4,
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
     }
   },
   "order": [
@@ -2657,10 +2657,10 @@
     "product_hotspots_bmBbRR",
     "skin_comparison_table_PxB9GD",
     "section_FdUhqH",
+    "looping_video_dD4YRe",
     "product_star_8kJJNp",
     "flow_8RRFC4",
     "testimonials_with_card_8NxiYJ",
-    "looping_video_dD4YRe",
     "journey_timeline_fQmzcQ",
     "video_hero_cp7FFn",
     "social_feeds_KWVQHM",
