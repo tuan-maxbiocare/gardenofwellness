@@ -1,0 +1,1271 @@
+
+{%- style -%}
+  /* Reset và base styles */
+  .social-feeds-section-{{ section.id }} {
+    width: 100%;
+    padding: 60px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  @media (min-width: 768px) {
+    .social-feeds-section-{{ section.id }} {
+      padding: 80px 16px;
+    }
+  }
+  
+  .social-feeds-container-{{ section.id }} {
+    {% if section.settings.section_width == 'full-width' %}
+      max-width: 100%;
+      padding-left: 16px;
+      padding-right: 16px;
+    {% else %}
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+  
+  @media (min-width: 768px) {
+    .social-feeds-container-{{ section.id }} {
+      {% if section.settings.section_width == 'full-width' %}
+        padding-left: 32px;
+        padding-right: 32px;
+      {% endif %}
+    }
+  }
+  
+  /* Header styles */
+  .header-row-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 48px;
+    gap: 24px;
+  }
+  
+  @media (min-width: 768px) {
+    .header-row-{{ section.id }} {
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 64px;
+    }
+  }
+  
+  .section-heading-{{ section.id }} {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+  
+  @media (min-width: 768px) {
+    .section-heading-{{ section.id }} {
+      font-size: 2.5rem;
+    }
+  }
+  
+  .nav-container-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .slide-counter-{{ section.id }} {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #666;
+    display: none;
+  }
+  
+  /* Navigation arrows */
+  .arrow-btn-{{ section.id }} {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: none;
+  }
+  
+  .arrow-btn-{{ section.id }}:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .arrow-btn-{{ section.id }}:active {
+    transform: scale(0.95);
+  }
+  
+  .arrow-icon-{{ section.id }} {
+    font-size: 1.25rem;
+  }
+  
+  /* Grid container - desktop */
+  .social-feeds-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .social-feeds-grid-{{ section.id }} {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .social-feeds-grid-{{ section.id }} {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+  }
+  
+  /* Responsive mobile với carousel */
+  @media (max-width: 767px) {
+    .social-feeds-grid-{{ section.id }} {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      gap: 16px;
+      padding: 8px 0 24px 0;
+      margin: 0 -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    
+    .social-feeds-grid-{{ section.id }}::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+    
+    .slide-counter-{{ section.id }} {
+      display: block;
+    }
+    
+    .arrow-btn-{{ section.id }} {
+      display: flex;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .follow-btn-{{ section.id }} {
+      padding: 12px 24px;
+      font-size: 1rem;
+      margin-top: 0;
+    }
+  }
+  
+  /* Social post item - tương tự testimonial slide */
+  .social-post-item-{{ section.id }} {
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: #f5f5f5;
+    aspect-ratio: 1 / 1;
+  }
+  
+  @media (max-width: 767px) {
+    .social-post-item-{{ section.id }} {
+      flex: 0 0 calc(50vw - 24px);
+      min-width: calc(50vw - 24px);
+      scroll-snap-align: start;
+      border-radius: 12px;
+    }
+  }
+  
+  /* Image wrapper giống testimonial */
+  .post-image-wrapper-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .post-image-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Hiệu ứng hover phóng to ảnh giống testimonial */
+  .social-post-item-{{ section.id }}:hover .post-image-{{ section.id }} {
+    transform: scale(1.08);
+  }
+  
+  /* Overlay và overlay content */
+  .post-overlay-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .social-post-item-{{ section.id }}:hover .post-overlay-{{ section.id }} {
+    opacity: 1;
+  }
+  
+  /* Products mini display */
+  .products-on-image-{{ section.id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    display: flex;
+    gap: 8px;
+    transform: translateY(100%);
+    transition: all 0.4s ease;
+  }
+  
+  .social-post-item-{{ section.id }}:hover .products-on-image-{{ section.id }} {
+    transform: translateY(0);
+  }
+  
+  .product-mini-{{ section.id }} {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    background: white;
+  }
+  
+  .product-mini-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .more-count-{{ section.id }} {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #333;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  @media (max-width: 767px) {
+    .product-mini-{{ section.id }} {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .more-count-{{ section.id }} {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  
+  /* Play icon cho video */
+  .play-icon-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s ease;
+    z-index: 2;
+  }
+  
+  .social-post-item-{{ section.id }}:hover .play-icon-{{ section.id }} {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Follow button */
+  .follow-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    border: 1px solid {{ section.settings.accent_color | default: '#91b474' }};
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: {{ section.settings.accent_color | default: '#91b474' }};
+    background: transparent;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .follow-btn-{{ section.id }}:hover {
+    background: {{ section.settings.accent_color | default: '#91b474' }};
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(145, 180, 116, 0.2);
+  }
+  
+  /* Instagram icon */
+  .instagram-icon-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  
+  /* Popup Styles */
+  .social-popup-{{ section.id }} {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .social-popup-{{ section.id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .popup-content-{{ section.id }} {
+    background: white;
+    border-radius: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+    animation: popupFadeIn 0.3s ease;
+  }
+  
+  @keyframes popupFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .popup-close-{{ section.id }} {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .popup-close-{{ section.id }}:hover {
+    background: #f5f5f5;
+    transform: rotate(90deg);
+  }
+  
+  .popup-grid-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @media (min-width: 1024px) {
+    .popup-grid-{{ section.id }} {
+      flex-direction: row;
+    }
+  }
+  
+  .popup-media-{{ section.id }} {
+    flex: 1;
+    min-height: 400px;
+    position: relative;
+  }
+  
+  @media (min-width: 1024px) {
+    .popup-media-{{ section.id }} {
+      flex: 0 0 60%;
+      min-height: 600px;
+    }
+  }
+  
+  .popup-info-{{ section.id }} {
+    padding: 32px;
+    flex: 1;
+  }
+  
+  @media (min-width: 1024px) {
+    .popup-info-{{ section.id }} {
+      border-left: 1px solid #e5e5e5;
+    }
+  }
+  
+  /* Popup specific styles - GIỐNG TESTIMONIAL */
+  .popup-header-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .popup-avatar-{{ section.id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .popup-avatar-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .popup-username-{{ section.id }} {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    letter-spacing: 0.01em;
+    color: #333;
+  }
+  
+  .popup-caption-{{ section.id }} {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 24px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  
+  .products-title-{{ section.id }} {
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* PRODUCT CARD STYLES - GIỐNG HỆT TESTIMONIAL */
+  .popup-product-card-{{ section.id }} {
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  .popup-product-row-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .popup-product-image-wrapper-{{ section.id }} {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f8f8f8;
+  }
+  
+  .popup-product-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .popup-product-info-{{ section.id }} {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .popup-product-name-{{ section.id }} {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .popup-price-row-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .popup-price-original-{{ section.id }} {
+    font-size: 0.875rem;
+    text-decoration: line-through;
+    color: #999;
+    font-weight: 400;
+  }
+  
+  .popup-price-current-{{ section.id }} {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #000;
+  }
+  
+  .popup-price-sale-{{ section.id }} {
+    color: #d32f2f;
+  }
+  
+  .popup-product-link-{{ section.id }} {
+    padding: 8px 16px;
+    background: {{ section.settings.accent_color | default: '#91b474' }};
+    color: white;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  
+  .popup-product-link-{{ section.id }}:hover {
+    background: #7a9d60;
+    transform: translateY(-1px);
+  }
+  
+  /* Product list in popup */
+  .popup-product-list-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 767px) {
+  .social-feeds-grid-{{ section.id }} {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 15px;
+    padding: 8px 10px 32px 16px;
+    margin: 0 -16px;
+    scroll-padding-left: 16px;
+  }
+
+  .social-feeds-grid-{{ section.id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .social-post-item-{{ section.id }} {
+    flex: 0 0 100%;                /* ← quan trọng: chiếm full width */
+    min-width: 100%;
+    max-width: 100%;
+    scroll-snap-align: center;     /* hoặc start tùy cảm giác */
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  /* Ẩn hoàn toàn nút mũi tên + counter trên mobile */
+  .arrow-btn-{{ section.id }},
+  .slide-counter-{{ section.id }} {
+    display: none !important;
+  }
+
+  /* Giảm kích thước product mini cho gọn hơn */
+  .product-mini-{{ section.id }},
+  .more-count-{{ section.id }} {
+    width: 42px;
+    height: 42px;
+    font-size: 0.75rem;
+  }
+
+  .products-on-image-{{ section.id }} {
+    padding: 12px;
+    gap: 6px;
+  }
+}
+  
+  /* Empty state */
+  .empty-state-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    color: #999;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 767px) {
+  /* Luôn hiển thị overlay trên mobile */
+  .post-overlay-{{ section.id }} {
+    opacity: 1 !important;
+  }
+
+  /* Luôn hiển thị card sản phẩm trên mobile */
+  .products-on-image-{{ section.id }} {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
+
+  /* Tắt hiệu ứng hover zoom ảnh trên mobile (tránh cảm giác giật) */
+  .social-post-item-{{ section.id }}:hover .post-image-{{ section.id }} {
+    transform: none;
+  }
+
+  /* Play icon (nếu là video) luôn hiện trên mobile */
+  .play-icon-{{ section.id }} {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+{%- endstyle -%}
+
+<div class="social-feeds-section-{{ section.id }}" style="background-color: {{ section.settings.background_color }}">
+  <div class="social-feeds-container-{{ section.id }}">
+
+    <!-- Header -->
+    <div class="header-row-{{ section.id }}">
+      <h2 class="section-heading-{{ section.id }}" style="color: {{ section.settings.heading_color }}">
+        {%- if section.settings.heading != blank -%}
+          {{ section.settings.heading }}
+        {%- else -%}
+          As seen on <em>the GRAM.</em>
+        {%- endif -%}
+      </h2>
+
+      <div class="nav-container-{{ section.id }}">
+        {%- if section.blocks.size > 0 -%}
+          <div class="slide-counter-{{ section.id }}">1/{{ section.blocks.size }}</div>
+          <button class="arrow-btn-{{ section.id }} prev-arrow" aria-label="Previous">
+            <svg class="arrow-icon-{{ section.id }}" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="arrow-btn-{{ section.id }} next-arrow" aria-label="Next">
+            <svg class="arrow-icon-{{ section.id }}" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {%- endif -%}
+        <a href="{{ section.settings.instagram_url | default: '#' }}" class="follow-btn-{{ section.id }}">
+          <span>Follow us</span>
+          <span class="instagram-icon-{{ section.id }}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Grid of social posts -->
+    {%- if section.blocks.size > 0 -%}
+      <div class="social-feeds-grid-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          {%- assign post_avatar_url = '' -%}
+          {%- if block.settings.post_avatar != blank -%}
+            {%- assign post_avatar_url = block.settings.post_avatar | image_url: width: 100 -%}
+          {%- elsif section.settings.brand_avatar != blank -%}
+            {%- assign post_avatar_url = section.settings.brand_avatar | image_url: width: 100 -%}
+          {%- endif -%}
+          
+          {%- assign post_username = '' -%}
+          {%- if block.settings.username != blank -%}
+            {%- assign post_username = '@' | append: block.settings.username -%}
+          {%- elsif section.settings.instagram_handle != blank -%}
+            {%- assign post_username = '@' | append: section.settings.instagram_handle -%}
+          {%- else -%}
+            {%- assign post_username = '@yourbrand' -%}
+          {%- endif -%}
+          
+          {%- assign post_caption = block.settings.caption | default: section.settings.default_caption -%}
+          
+          <div class="social-post-item-{{ section.id }}" 
+               data-index="{{ forloop.index0 }}" 
+               data-avatar="{{ post_avatar_url }}"
+               data-username="{{ post_username }}"
+               data-caption="{{ post_caption | escape }}"
+               data-has-products="{% if block.settings.products != blank or block.settings.show_placeholder_products %}true{% else %}false{% endif %}"
+               {{ block.shopify_attributes }}>
+            <div class="post-image-wrapper-{{ section.id }}">
+              {%- if block.settings.image != blank -%}
+                {%- assign image_class = 'post-image-' | append: section.id -%}
+                {{ block.settings.image | image_url: width: 800, height: 800, crop: 'center' | image_tag:
+                  loading: 'lazy',
+                  class: image_class,
+                  sizes: '(max-width: 767px) 50vw, (max-width: 1023px) 33.33vw, 20vw',
+                  width: 800,
+                  height: 800
+                }}
+              {%- else -%}
+                {%- assign image_class = 'post-image-' | append: section.id -%}
+                {{ 'collection-1' | placeholder_svg_tag: image_class }}
+              {%- endif -%}
+              
+              <!-- Play icon for video posts -->
+              {%- if block.settings.is_video -%}
+                <div class="play-icon-{{ section.id }}">
+                  <svg width="20" height="24" viewBox="0 0 24 24" fill="#333">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              {%- endif -%}
+              
+              <div class="post-overlay-{{ section.id }}"></div>
+              
+              <!-- Products on image -->
+              <div class="products-on-image-{{ section.id }}">
+                {%- assign product_list = block.settings.products -%}
+                {%- if product_list != blank -%}
+                  {%- for product in product_list limit: 3 -%}
+                    <div class="product-mini-{{ section.id }}"
+                         data-product-handle="{{ product.handle }}"
+                         data-product-title="{{ product.title | escape }}"
+                         data-product-price="{{ product.price | money_without_currency | remove: ',' }}"
+                         data-product-compare-price="{% if product.compare_at_price %}{{ product.compare_at_price | money_without_currency | remove: ',' }}{% endif %}"
+                         data-product-url="{{ product.url }}"
+                         data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 100, height: 100, crop: 'center' }}{% endif %}">
+                      {%- if product.featured_image != blank -%}
+                        {%- assign product_img_class = 'product-mini-img-' | append: section.id -%}
+                        {{ product.featured_image | image_url: width: 100, height: 100, crop: 'center' | image_tag:
+                          loading: 'lazy',
+                          class: product_img_class,
+                          width: 100,
+                          height: 100,
+                          alt: product.title
+                        }}
+                      {%- else -%}
+                        {%- assign product_img_class = 'product-mini-img-' | append: section.id -%}
+                        {{ 'product-1' | placeholder_svg_tag: product_img_class }}
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+                  
+                  {%- if product_list.size > 3 -%}
+                    <div class="more-count-{{ section.id }}">+{{ product_list.size | minus: 3 }}</div>
+                  {%- endif -%}
+                {%- else -%}
+                  <!-- Placeholder products - chỉ hiển thị nếu có products setting -->
+                  {%- if block.settings.show_placeholder_products -%}
+                    {%- for i in (1..3) -%}
+                      <div class="product-mini-{{ section.id }}"
+                           data-is-placeholder="true"
+                           data-product-title="Product {{ i }}"
+                           data-product-price="{{ 99.00 | plus: i | times: 29 | money_without_currency }}"
+                           data-product-compare-price="{{ 199.00 | plus: i | times: 39 | money_without_currency }}">
+                        {%- assign product_img_class = 'product-mini-img-' | append: section.id -%}
+                        {{ 'product-1' | placeholder_svg_tag: product_img_class }}
+                      </div>
+                    {%- endfor -%}
+                    <div class="more-count-{{ section.id }}">+2</div>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="empty-state-{{ section.id }}">
+        <p>Add Instagram post blocks to get started</p>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <!-- Popup Template -->
+  <div class="social-popup-{{ section.id }}" id="social-popup-{{ section.id }}">
+    <div class="popup-content-{{ section.id }}">
+      <button class="popup-close-{{ section.id }}" onclick="closeSocialPopup()">
+        <svg width="20" height="20" viewBox="0 0 10 10" fill="none">
+          <path d="M1 9L5 5M5 5L9 1M5 5L1 1M5 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="popup-grid-{{ section.id }}">
+        <div class="popup-media-{{ section.id }}">
+          <!-- Media content will be injected here -->
+        </div>
+        <div class="popup-info-{{ section.id }}">
+          <div class="popup-header-{{ section.id }}">
+            <div class="popup-avatar-{{ section.id }}">
+              <!-- Avatar sẽ được inject bằng JS -->
+              {%- assign avatar_class = 'popup-avatar-img-' | append: section.id -%}
+              {{ 'image' | placeholder_svg_tag: avatar_class }}
+            </div>
+            <div>
+              <h3 class="popup-username-{{ section.id }}">@yourbrand</h3>
+            </div>
+          </div>
+          
+          <div class="popup-caption-{{ section.id }}">
+            <!-- Caption sẽ được inject bằng JS -->
+          </div>
+          
+          <h3 class="products-title-{{ section.id }}">Featured Products</h3>
+          <div class="popup-product-list-{{ section.id }}">
+            <!-- Products sẽ được inject bằng JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript đã sửa lỗi -->
+<!-- JavaScript hoàn thiện cho section Social Feeds -->
+<script>
+// Hàm đóng popup - giữ nguyên
+window.closeSocialPopup = function() {
+  const popup = document.getElementById('social-popup-{{ section.id }}');
+  if (popup) {
+    popup.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Social Feeds section initialized');
+
+  const popup = document.getElementById('social-popup-{{ section.id }}');
+  const socialPosts = document.querySelectorAll('.social-post-item-{{ section.id }}');
+  const grid = document.querySelector('.social-feeds-grid-{{ section.id }}');
+
+  if (!popup) {
+    console.error('Popup element not found');
+    return;
+  }
+
+  if (socialPosts.length === 0) {
+    console.warn('No social posts found');
+  }
+
+  let isMobile = window.innerWidth <= 767;
+
+  // ───────────────────────────────────────────────
+  // Mobile-only: chỉ swipe tự nhiên + scroll-snap
+  // Không dùng arrow, counter, không can thiệp scrollTo
+  // ────────────────────────────────────────────────
+  function initMobileExperience() {
+    if (!grid || !isMobile) return;
+
+    // Đảm bảo các thuộc tính scroll-snap đã được CSS xử lý
+    // Chúng ta chỉ thêm chút mượt mà nếu cần (optional)
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    grid.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    grid.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const diff = touchStartX - touchEndX;
+      // Ngưỡng swipe ~ 60px để tránh nhầm với tap
+      if (Math.abs(diff) < 60) return;
+
+      if (diff > 0) {
+        // Swipe left → next
+        grid.scrollBy({ left: grid.clientWidth, behavior: 'smooth' });
+      } else {
+        // Swipe right → prev
+        grid.scrollBy({ left: -grid.clientWidth, behavior: 'smooth' });
+      }
+    }
+
+    // Optional: thêm class để CSS biết đang ở chế độ mobile carousel
+    grid.classList.add('is-mobile-carousel');
+  }
+
+  // Khởi động mobile nếu đang ở mobile
+  if (isMobile) {
+    initMobileExperience();
+  }
+
+  // Xử lý resize (chuyển đổi giữa mobile ↔ desktop)
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const nowMobile = window.innerWidth <= 767;
+
+      if (nowMobile !== isMobile) {
+        isMobile = nowMobile;
+
+        if (isMobile) {
+          initMobileExperience();
+          // Đảm bảo scroll về đầu nếu cần
+          if (grid) grid.scrollLeft = 0;
+        } else {
+          // Desktop: reset scroll về 0
+          if (grid) grid.scrollLeft = 0;
+          grid?.classList.remove('is-mobile-carousel');
+        }
+      }
+    }, 150);
+  });
+
+  // ───────────────────────────────────────────────
+  // Popup logic - giữ nguyên nhưng tối ưu nhẹ
+  // ────────────────────────────────────────────────
+  function openSocialPopup(post) {
+    const img = post.querySelector('.post-image-{{ section.id }}');
+    const imgSrc = img?.currentSrc || img?.src || '';
+
+    const avatarSrc = post.dataset.avatar || '';
+    const username = post.dataset.username || '@yourbrand';
+    let caption = post.dataset.caption || '';
+
+    // Decode caption
+    if (caption) {
+      const textarea = document.createElement('textarea');
+      textarea.innerHTML = caption;
+      caption = textarea.value;
+    } else {
+      caption = 'Loving these products from our latest collection! 😍';
+    }
+
+    const hasProducts = post.dataset.hasProducts === 'true';
+
+    // Media
+    const popupMedia = popup.querySelector('.popup-media-{{ section.id }}');
+    popupMedia.innerHTML = imgSrc
+      ? `<img src="${imgSrc}" alt="Post" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:16px 16px 0 0;">`
+      : `<div style="width:100%;height:100%;background:#f5f5f5;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:center;color:#999;">No Image</div>`;
+
+    // Avatar
+    const popupAvatar = popup.querySelector('.popup-avatar-{{ section.id }}');
+    popupAvatar.innerHTML = avatarSrc
+      ? `<img src="${avatarSrc}" alt="${username}" class="popup-avatar-img-{{ section.id }}" style="width:100%;height:100%;object-fit:cover;">`
+      : `<div style="width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;">@</div>`;
+
+    // Username & Caption
+    popup.querySelector('.popup-username-{{ section.id }}').textContent = username;
+    popup.querySelector('.popup-caption-{{ section.id }}').textContent = caption;
+
+    // Products
+    const productList = popup.querySelector('.popup-product-list-{{ section.id }}');
+    productList.innerHTML = '';
+
+    const productsTitle = popup.querySelector('.products-title-{{ section.id }}');
+
+    if (!hasProducts) {
+      productsTitle.style.display = 'none';
+    } else {
+      productsTitle.style.display = 'block';
+
+      const minis = post.querySelectorAll('.product-mini-{{ section.id }}');
+
+      minis.forEach((mini, i) => {
+        const title   = mini.dataset.productTitle || `Product ${i+1}`;
+        const price   = parseFloat(mini.dataset.productPrice) || 99;
+        const compare = parseFloat(mini.dataset.productComparePrice);
+        const url     = mini.dataset.productUrl || '#';
+        const imgSrc  = mini.dataset.productImage || mini.querySelector('img')?.src || '';
+
+        let priceHtml = compare && compare > price
+          ? `<span class="popup-price-original-{{ section.id }}">$${compare.toFixed(2)}</span>
+             <span class="popup-price-current-{{ section.id }} popup-price-sale-{{ section.id }}">$${price.toFixed(2)}</span>`
+          : `<span class="popup-price-current-{{ section.id }}">$${price.toFixed(2)}</span>`;
+
+        const card = document.createElement('a');
+        card.href = url;
+        card.className = 'popup-product-card-{{ section.id }}';
+        card.innerHTML = `
+          <div class="popup-product-row-{{ section.id }}">
+            <div class="popup-product-image-wrapper-{{ section.id }}">
+              ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="popup-product-img-{{ section.id }}">`
+                      : `<div class="popup-product-img-{{ section.id }}" style="background:#f8f8f8;display:flex;align-items:center;justify-content:center;color:#ccc;">P${i+1}</div>`}
+            </div>
+            <div class="popup-product-info-{{ section.id }}">
+              <p class="popup-product-name-{{ section.id }}">${title}</p>
+              <div class="popup-price-row-{{ section.id }}">${priceHtml}</div>
+            </div>
+            <div class="popup-product-link-{{ section.id }}">View</div>
+          </div>
+        `;
+        productList.appendChild(card);
+      });
+
+      // Xử lý +more nếu có
+      const more = post.querySelector('.more-count-{{ section.id }}');
+      if (more && more.textContent.includes('+')) {
+        const extra = parseInt(more.textContent.replace('+','')) || 0;
+        for (let i = 0; i < extra; i++) {
+          const card = document.createElement('a');
+          card.href = '#';
+          card.className = 'popup-product-card-{{ section.id }}';
+          card.innerHTML = `
+            <div class="popup-product-row-{{ section.id }}">
+              <div class="popup-product-image-wrapper-{{ section.id }}">
+                <div class="popup-product-img-{{ section.id }}" style="background:#f8f8f8;display:flex;align-items:center;justify-content:center;color:#ccc;">+${i+1}</div>
+              </div>
+              <div class="popup-product-info-{{ section.id }}">
+                <p class="popup-product-name-{{ section.id }}">More Product ${i+1}</p>
+                <div class="popup-price-row-{{ section.id }}">
+                  <span class="popup-price-current-{{ section.id }}">$89.00</span>
+                </div>
+              </div>
+              <div class="popup-product-link-{{ section.id }}">View</div>
+            </div>
+          `;
+          productList.appendChild(card);
+        }
+      }
+    }
+
+    // Mở popup
+    popup.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Gắn sự kiện click cho từng post
+  socialPosts.forEach(post => {
+    post.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      openSocialPopup(post);
+    });
+  });
+
+  // Đóng popup khi click bên ngoài
+  popup.addEventListener('click', e => {
+    if (e.target === popup) closeSocialPopup();
+  });
+
+  // Đóng bằng phím Esc
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && popup.classList.contains('active')) {
+      closeSocialPopup();
+    }
+  });
+
+  // Đóng bằng nút close
+  popup.querySelector('.popup-close-{{ section.id }}')?.addEventListener('click', e => {
+    e.preventDefault();
+    closeSocialPopup();
+  });
+});
+</script>
+{% schema %}
+{
+  "name": "Social Feeds",
+  "tag": "section",
+  "class": "social-feeds-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "As seen on the GRAM."
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram Handle",
+      "default": "yourbrand",
+      "info": "Default username if not set in individual posts"
+    },
+    {
+      "type": "textarea",
+      "id": "default_caption",
+      "label": "Default Caption",
+      "default": "Loving these products from our latest collection! 😍 The quality is amazing and they fit perfectly. #fashion #style #ootd",
+      "info": "Default caption if not set in individual posts"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_avatar",
+      "label": "Brand Avatar",
+      "info": "Default avatar if not set in individual posts"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#91b474"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "instagram_post",
+      "name": "Instagram Post",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Post Image",
+          "info": "Main image for the Instagram post"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_video",
+          "label": "Is Video Post?",
+          "default": false,
+          "info": "Show play icon for video posts"
+        },
+        {
+          "type": "image_picker",
+          "id": "post_avatar",
+          "label": "Post Avatar",
+          "info": "Custom avatar for this post (optional)"
+        },
+        {
+          "type": "text",
+          "id": "username",
+          "label": "Username",
+          "info": "Custom username for this post (without @)"
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Post Caption",
+          "info": "Caption for this specific post"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Featured Products",
+          "limit": 5,
+          "info": "Products to feature in this post"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_placeholder_products",
+          "label": "Show Placeholder Products",
+          "default": true,
+          "info": "Show placeholder products if no products are selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social Feeds",
+      "category": "Social Media",
+      "settings": {
+        "section_width": "page-width",
+        "heading": "As seen on the GRAM.",
+        "instagram_handle": "yourbrand",
+        "background_color": "#ffffff",
+        "heading_color": "#000000",
+        "accent_color": "#91b474"
+      },
+      "blocks": [
+        { 
+          "type": "instagram_post",
+          "settings": {
+            "username": "fashionista",
+            "caption": "Just got these amazing pieces from the new collection! The fit is perfect and the quality is outstanding. Can't wait to style them all week! 👗✨ #ootd #fashionlove"
+          }
+        },
+        { 
+          "type": "instagram_post",
+          "settings": {
+            "username": "styleblogger",
+            "caption": "Obsessed with the neutral tones in this outfit! Perfect for transitioning from day to night. The fabric feels so luxurious! 🎀 #neutralaesthetic #minimalstyle"
+          }
+        },
+        { 
+          "type": "instagram_post",
+          "settings": {
+            "username": "trendsetter",
+            "caption": "Casual Friday vibes with these comfy yet chic pieces. Who says you can't be comfortable and stylish at the same time? 😊 #casualfashion #weekendvibes"
+          }
+        },
+        { 
+          "type": "instagram_post",
+          "settings": {
+            "username": "luxelover",
+            "caption": "Treating myself to some luxury basics that will last for seasons to come. Investment pieces are always worth it! 💫 #investmentpieces #capsulewardrobe"
+          }
+        },
+        { 
+          "type": "instagram_post",
+          "settings": {
+            "username": "streetstyle",
+            "caption": "Urban elegance meets comfort. These pieces are perfect for city life - stylish, practical, and oh-so-comfortable! 🏙️ #streetstyle #urbanfashion"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
