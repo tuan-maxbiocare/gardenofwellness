@@ -1563,41 +1563,6 @@
         "show_play_badge": true
       }
     },
-    "video_hero_cp7FFn": {
-      "type": "video-hero",
-      "blocks": {
-        "product_MTwjRL": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_MTwjRL"
-      ],
-      "name": "Video hero",
-      "settings": {
-        "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3739352408842388741.mp4",
-        "video_mp4_url": "",
-        "overlay_opacity": 35,
-        "kicker": "EURUS STORY",
-        "heading": "Because beauty is personal.",
-        "subheading": "",
-        "cta_label": "See the story",
-        "cta_link": "shopify://collections/all",
-        "text_align": "center",
-        "text_color": "#ffffff",
-        "content_max_width": 900,
-        "min_height_desktop": 720,
-        "min_height_mobile": 360,
-        "show_products": true,
-        "products_columns_desktop": 3,
-        "products_columns_mobile": "1",
-        "show_scroll_top": true,
-        "scroll_top_offset": 200
-      }
-    },
     "journey_timeline_fQmzcQ": {
       "type": "journey-timeline",
       "blocks": {
@@ -1664,6 +1629,91 @@
         "padding_top": 40,
         "padding_bottom": 40
       }
+    },
+    "video_hero_cp7FFn": {
+      "type": "video-hero",
+      "blocks": {
+        "product_MTwjRL": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_MTwjRL"
+      ],
+      "name": "Video hero",
+      "settings": {
+        "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3739352408842388741.mp4",
+        "video_mp4_url": "",
+        "overlay_opacity": 35,
+        "kicker": "EURUS STORY",
+        "heading": "Because beauty is personal.",
+        "subheading": "",
+        "cta_label": "See the story",
+        "cta_link": "shopify://collections/all",
+        "text_align": "center",
+        "text_color": "#ffffff",
+        "content_max_width": 900,
+        "min_height_desktop": 720,
+        "min_height_mobile": 360,
+        "show_products": true,
+        "products_columns_desktop": 3,
+        "products_columns_mobile": "1",
+        "show_scroll_top": true,
+        "scroll_top_offset": 200
+      }
+    },
+    "testimonials_with_card_8NxiYJ": {
+      "type": "testimonials-with-card",
+      "blocks": {
+        "testimonial_baHeG6": {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": ""
+          }
+        },
+        "testimonial_kTpUfU": {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": ""
+          }
+        },
+        "testimonial_YYEq8L": {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": ""
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_baHeG6",
+        "testimonial_kTpUfU",
+        "testimonial_YYEq8L"
+      ],
+      "name": "Customer Testimonials",
+      "settings": {
+        "section_width": "page-width",
+        "heading": "Customer Reviews",
+        "enable_auto_slide": true,
+        "auto_slide_speed": 5,
+        "background_color": "#ffffff",
+        "card_bg_color": "#ffffff",
+        "heading_color": "#000000",
+        "text_color": "#000000",
+        "arrow_color": "#000000",
+        "star_color": "#000000"
+      }
     }
   },
   "order": [
@@ -1682,6 +1732,7 @@
     "flow_8RRFC4",
     "looping_video_dD4YRe",
     "journey_timeline_fQmzcQ",
-    "video_hero_cp7FFn"
+    "video_hero_cp7FFn",
+    "testimonials_with_card_8NxiYJ"
   ]
 }
