@@ -1717,6 +1717,137 @@
         "show_scroll_top": true,
         "scroll_top_offset": 200
       }
+    },
+    "social_feeds_KWVQHM": {
+      "type": "social-feeds",
+      "blocks": {
+        "instagram_post_K63fpB": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lemon-Zest-800x800-8_18026015-4039-4e89-b2be-84f1a0d3b862.webp",
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-honey-citrus"
+            ],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_zCzChQ": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_bHw4jA": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_HHwWaE": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_LikjGk": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_UpbN3N": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "fashionista",
+            "caption": "Just got these amazing pieces from the new collection! The fit is perfect and the quality is outstanding. Can't wait to style them all week! 👗✨ #ootd #fashionlove",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_MJjbeQ": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "styleblogger",
+            "caption": "Obsessed with the neutral tones in this outfit! Perfect for transitioning from day to night. The fabric feels so luxurious! 🎀 #neutralaesthetic #minimalstyle",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_GjahjY": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "trendsetter",
+            "caption": "Casual Friday vibes with these comfy yet chic pieces. Who says you can't be comfortable and stylish at the same time? 😊 #casualfashion #weekendvibes",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_HPk4dR": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "luxelover",
+            "caption": "Treating myself to some luxury basics that will last for seasons to come. Investment pieces are always worth it! 💫 #investmentpieces #capsulewardrobe",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_thmQMC": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "streetstyle",
+            "caption": "Urban elegance meets comfort. These pieces are perfect for city life - stylish, practical, and oh-so-comfortable! 🏙️ #streetstyle #urbanfashion",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        }
+      },
+      "block_order": [
+        "instagram_post_K63fpB",
+        "instagram_post_zCzChQ",
+        "instagram_post_bHw4jA",
+        "instagram_post_HHwWaE",
+        "instagram_post_LikjGk",
+        "instagram_post_UpbN3N",
+        "instagram_post_MJjbeQ",
+        "instagram_post_GjahjY",
+        "instagram_post_HPk4dR",
+        "instagram_post_thmQMC"
+      ],
+      "name": "Social Feeds",
+      "settings": {
+        "section_width": "page-width",
+        "heading": "As seen on the GRAM.",
+        "instagram_url": "",
+        "instagram_handle": "yourbrand",
+        "default_caption": "Loving these products from our latest collection! 😍 The quality is amazing and they fit perfectly. #fashion #style #ootd",
+        "background_color": "#ffffff",
+        "heading_color": "#000000",
+        "accent_color": "#91b474"
+      }
     }
   },
   "order": [
@@ -1736,6 +1867,7 @@
     "testimonials_with_card_8NxiYJ",
     "looping_video_dD4YRe",
     "journey_timeline_fQmzcQ",
-    "video_hero_cp7FFn"
+    "video_hero_cp7FFn",
+    "social_feeds_KWVQHM"
   ]
 }
