@@ -683,7 +683,8 @@
     indexWords();
     update();
   });
-
+  let t; 
+  
   window.addEventListener('scroll', update, { passive: true });
 
   const ro = new ResizeObserver(() => {
@@ -692,7 +693,6 @@
   });
   ro.observe(heading);
 
-  let t;
   window.addEventListener('resize', () => {
     clearTimeout(t);
     t = setTimeout(rebuild, 120);
