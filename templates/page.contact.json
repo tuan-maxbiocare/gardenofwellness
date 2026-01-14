@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "main-page",
@@ -17,6 +18,7 @@
           "settings": {
             "text": "<h1>{{ closest.page.title }}</h1>",
             "width": "100%",
+            "text_style": "solid",
             "max_width": "normal",
             "alignment": "center",
             "type_preset": "h2",
@@ -43,6 +45,7 @@
           "settings": {
             "text": "{{ closest.page.content }}",
             "width": "100%",
+            "text_style": "solid",
             "max_width": "narrow",
             "alignment": "center",
             "type_preset": "rte",
@@ -76,76 +79,92 @@
         "padding-block-end": 0
       }
     },
-    "form": {
-      "type": "section",
+    "hero_form_PPHVXT": {
+      "type": "hero-form",
+      "name": "Contact - Hero + Form",
+      "settings": {
+        "py": 38,
+        "kicker": "Questions? Send us an email",
+        "heading": "Send us an email",
+        "label_name": "Name",
+        "label_email": "Email",
+        "label_phone": "Phone number",
+        "label_message": "Message",
+        "ph_name": "Your name",
+        "ph_email": "you@email.com",
+        "ph_phone": "(+84) ...",
+        "ph_message": "How can we help?",
+        "button_text": "Send",
+        "success_text": "Thanks! We’ll get back to you soon."
+      }
+    },
+    "feature_card_NNyHew": {
+      "type": "feature-card",
       "blocks": {
-        "contact_form_UwiCkQ": {
-          "type": "contact-form",
+        "feature_BKNLHW": {
+          "type": "feature",
           "settings": {
-            "width": "custom",
-            "custom_width": 50,
-            "width_mobile": "custom",
-            "custom_width_mobile": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "submit-button": {
-              "type": "contact-form-submit-button",
-              "static": true,
-              "settings": {
-                "label": "Submit",
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
+            "icon": "leaf",
+            "title": "Natural and certified organic",
+            "text": "Customers can trust that our products are made with natural and certified organic materials."
+          }
+        },
+        "feature_keRCxh": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "Safe to use",
+            "text": "EWG VERIFIED™, made with 99.9%+ natural origin ingredients* including phytoglycogen."
+          }
+        },
+        "feature_pHAXxg": {
+          "type": "feature",
+          "settings": {
+            "icon": "dna",
+            "title": "Non-allergen",
+            "text": "The SHA accreditation is an instant way to recognise a product meets the highest standards of skin safety."
+          }
+        },
+        "feature_dL74rL": {
+          "type": "feature",
+          "settings": {
+            "icon": "spark",
+            "title": "Swipe, Blend, Go",
+            "text": "Buildable makeup sticks that blend naturally for all skin tones. Swipe, blend, go!"
+          }
         }
       },
       "block_order": [
-        "contact_form_UwiCkQ"
+        "feature_BKNLHW",
+        "feature_keRCxh",
+        "feature_pHAXxg",
+        "feature_dL74rL"
       ],
-      "name": "t:names.contact_form",
+      "name": "Contact - Feature cards",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 32,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "scheme-1",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 32,
-        "padding-block-end": 84
+        "py": 38,
+        "heading": "he"
+      }
+    },
+    "map_store_kzRpqy": {
+      "type": "map-store",
+      "name": "Contact - Map + Store card",
+      "settings": {
+        "py": 38,
+        "map_height": 420,
+        "map_embed": "2ggd",
+        "card_heading": "Find Our Store",
+        "store_name": "Viwaseen Tower",
+        "store_hours": "<p>Mon – Fri: 8:30am – 10:00pm<br>Saturday: 8:30am – 10:30pm<br>Sunday: 8:30am – 11:30pm</p>",
+        "directions_url": "",
+        "button_text": "Get directions"
       }
     }
   },
   "order": [
     "main",
-    "form"
+    "hero_form_PPHVXT",
+    "feature_card_NNyHew",
+    "map_store_kzRpqy"
   ]
 }
