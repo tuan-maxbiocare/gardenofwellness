@@ -1,0 +1,132 @@
+<section class="sp-contact-map sp-fullbleed">
+  <div class="spm-container">
+    <div class="spm-wrap">
+      <div class="spm-embed">
+        {% if section.settings.map_embed != blank %}
+          {{ section.settings.map_embed }}
+        {% else %}
+          <div class="spm-placeholder">Paste Google Maps iframe embed code</div>
+        {% endif %}
+      </div>
+
+      <aside class="spm-card">
+        <h2 class="spm-title">{{ section.settings.card_heading }}</h2>
+
+        {% if section.settings.store_name != blank %}
+          <p class="spm-store">{{ section.settings.store_name }}</p>
+        {% endif %}
+
+        <div class="spm-hours">
+          {{ section.settings.store_hours }}
+        </div>
+
+        {% if section.settings.directions_url != blank %}
+          <a class="spm-btn" href="{{ section.settings.directions_url }}" target="_blank" rel="noopener">
+            {{ section.settings.button_text }}
+          </a>
+        {% else %}
+          <button class="spm-btn" type="button" disabled style="opacity:.6; cursor:not-allowed;">
+            {{ section.settings.button_text }}
+          </button>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+
+  <style>
+    .sp-contact-map{padding:{{ section.settings.py }}px 0;}
+    .spm-container{ width:100%;
+  margin:0;
+  padding:0;}
+
+    .spm-wrap{
+      position:relative;
+      overflow:hidden;
+      border:1px solid #e5e7eb;
+      box-shadow:0 10px 22px rgba(17,24,39,.08);
+      background:#e5e7eb;
+      min-height:{{ section.settings.map_height }}px;
+    }
+
+    .spm-embed iframe{
+      width:100%;
+      height:{{ section.settings.map_height }}px;
+      border:0;
+      display:block;
+    }
+    .spm-placeholder{
+      height:{{ section.settings.map_height }}px;
+      display:grid; place-items:center;
+      color:#6b7280; font-size:14px;
+      background:#f3f4f6;
+    }
+
+    .spm-card{
+      position:absolute;
+      top:26px;
+      right:26px;
+      width:min(340px, calc(100% - 52px));
+      background:#fff;
+      border-radius:22px;
+      border:1px solid #e5e7eb;
+      box-shadow:0 12px 30px rgba(17,24,39,.10);
+      padding:18px 18px 16px;
+    }
+    .spm-title{margin:0 0 10px; font-size:18px;}
+    .spm-store{margin:0 0 8px; font-weight:700;}
+    .spm-hours{margin:0 0 16px; color:#6b7280; font-size:14px; line-height:1.55;}
+
+    .spm-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:46px; padding:0 22px;
+      border:none; border-radius:999px;
+      background:#111; color:#fff;
+      font-weight:600; cursor:pointer;
+      width:100%;
+      text-decoration:none;
+      transition:transform .06s ease, background .15s ease;
+    }
+    .spm-btn:hover{background:#000;}
+    .spm-btn:active{transform:translateY(1px);}
+
+   @media (max-width: 560px){
+  /* container full width thật */
+  .spm-container{
+    width:100%;
+    margin:0;
+    padding:0;
+  }
+
+  /* card nằm dưới map, full width */
+  .spm-card{
+    position:static;
+    width:100%;
+    margin:0;          /* ❌ bỏ 14px */
+    border-radius:0;   /* nếu bạn muốn phẳng */
+  }
+}
+
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Map + Store card",
+  "settings": [
+    { "type": "range", "id": "py", "label": "Padding vertical", "min": 0, "max": 80, "step": 2, "default": 38 },
+    { "type": "range", "id": "map_height", "label": "Map height (px)", "min": 320, "max": 720, "step": 10, "default": 420 },
+
+    { "type": "textarea", "id": "map_embed", "label": "Google Maps iframe embed (paste full iframe)", "default": "2ggd" },
+
+    { "type": "text", "id": "card_heading", "label": "Card heading", "default": "Find Our Store" },
+    { "type": "text", "id": "store_name", "label": "Store name", "default": "Viwaseen Tower" },
+    { "type": "richtext", "id": "store_hours", "label": "Store hours", "default": "<p>Mon – Fri: 8:30am – 10:00pm<br>Saturday: 8:30am – 10:30pm<br>Sunday: 8:30am – 11:30pm</p>" },
+
+    { "type": "url", "id": "directions_url", "label": "Directions URL (Google Maps directions link)" },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Get directions" }
+  ],
+  "presets": [
+    { "name": "Contact - Map + Store card" }
+  ]
+}
+{% endschema %}
