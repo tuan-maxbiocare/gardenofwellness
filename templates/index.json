@@ -1869,6 +1869,66 @@
         "scroll_top_offset": 200
       }
     },
+    "make_with_text_ME3JJY": {
+      "type": "make-with-text",
+      "blocks": {
+        "heading_qiQd9U": {
+          "type": "heading",
+          "settings": {
+            "subheading": "OUR PHILOSOPHY",
+            "heading": "<p>This <em>new environmental</em> project has been founded with Eurus founder. Its aim is to clean plastic waste from the oceans and transform it into resources.</p>"
+          }
+        },
+        "text_xPyPKz": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We believe in a more conscious approach to clean beauty.</p>"
+          }
+        },
+        "button_A9FTJ9": {
+          "type": "button",
+          "settings": {
+            "label": "Read full",
+            "link": "shopify://pages/contact"
+          }
+        }
+      },
+      "block_order": [
+        "heading_qiQd9U",
+        "text_xPyPKz",
+        "button_A9FTJ9"
+      ],
+      "name": "Media with text (custom)",
+      "settings": {
+        "used_as_hero": false,
+        "first_image": "shopify://shop_images/garden-of-wellness-images-740x740-10.webp",
+        "second_image": "shopify://shop_images/1c14b463b7e6adb17e59c3a02caebc2ffdf83cfb.jpg",
+        "desktop_image_height": "fullscreen",
+        "mobile_image_height": 400,
+        "desktop_image_width": "medium",
+        "image_style": "normal",
+        "adapt_to_edges": false,
+        "corner_radius": 8,
+        "show_sound_control": false,
+        "video_url": "",
+        "video_alt_text": "h",
+        "enable_video_autoplay": false,
+        "content_layout": "no_overlap",
+        "add_spacing_between_images": false,
+        "text_position": "center",
+        "text_alignment": "left",
+        "image_alignment": "left",
+        "make_section_full_width": false,
+        "enable_side_padding": true,
+        "desktop_top_padding": 100,
+        "desktop_bottom_padding": 32,
+        "mobile_top_padding": 48,
+        "mobile_bottom_padding": 48,
+        "object_position": "50% 50%",
+        "scale_idle": 1.2,
+        "transition_slideshow_ms": 800
+      }
+    },
     "journey_timeline_fQmzcQ": {
       "type": "journey-timeline",
       "blocks": {
@@ -2718,65 +2778,6 @@
         "padding-block-start": 0,
         "padding-block-end": 48
       }
-    },
-    "make_with_text_ME3JJY": {
-      "type": "make-with-text",
-      "blocks": {
-        "heading_qiQd9U": {
-          "type": "heading",
-          "settings": {
-            "subheading": "OUR PHILOSOPHY",
-            "heading": "<p>This <em>new environmental</em> project has been founded with Eurus founder. Its aim is to clean plastic waste from the oceans and transform it into resources.</p>"
-          }
-        },
-        "text_xPyPKz": {
-          "type": "text",
-          "settings": {
-            "text": "<p>We believe in a more conscious approach to clean beauty.</p>"
-          }
-        },
-        "button_A9FTJ9": {
-          "type": "button",
-          "settings": {
-            "label": "Read full",
-            "link": "shopify://pages/contact"
-          }
-        }
-      },
-      "block_order": [
-        "heading_qiQd9U",
-        "text_xPyPKz",
-        "button_A9FTJ9"
-      ],
-      "name": "Media with text (custom)",
-      "settings": {
-        "used_as_hero": false,
-        "first_image": "shopify://shop_images/garden-of-wellness-images-740x740-10.webp",
-        "desktop_image_height": "fullscreen",
-        "mobile_image_height": 400,
-        "desktop_image_width": "medium",
-        "image_style": "normal",
-        "adapt_to_edges": false,
-        "corner_radius": 8,
-        "show_sound_control": false,
-        "video_url": "",
-        "video_alt_text": "h",
-        "enable_video_autoplay": false,
-        "content_layout": "no_overlap",
-        "add_spacing_between_images": false,
-        "text_position": "center",
-        "text_alignment": "left",
-        "image_alignment": "left",
-        "make_section_full_width": false,
-        "enable_side_padding": true,
-        "desktop_top_padding": 100,
-        "desktop_bottom_padding": 100,
-        "mobile_top_padding": 48,
-        "mobile_bottom_padding": 48,
-        "object_position": "50% 50%",
-        "scale_idle": 1.2,
-        "transition_slideshow_ms": 800
-      }
     }
   },
   "order": [
@@ -2797,9 +2798,9 @@
     "highlight_text_with_image_9mxFcD",
     "testimonials_with_card_8NxiYJ",
     "video_hero_cp7FFn",
+    "make_with_text_ME3JJY",
     "journey_timeline_fQmzcQ",
     "social_feeds_KWVQHM",
-    "section_BbPeJD",
-    "make_with_text_ME3JJY"
+    "section_BbPeJD"
   ]
 }
