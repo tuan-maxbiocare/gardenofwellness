@@ -400,23 +400,7 @@
     color: var(--full-highlight) !important;
   }
 
-  /* Ngăn các từ quan trọng bị ngắt dòng */
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you"],
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="are"],
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="in"],
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you're"],
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you'll"],
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you'd"] {
-  white-space: nowrap !important;
-}
-
-/* Đảm bảo khoảng cách giữa các từ này nhỏ hơn */
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="are"] {
-  margin-right: 0.05em !important;
-}
-.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="in"] {
-  margin-left: 0.05em !important;
-}
+  
   {% if is_fullscreen %}
     .htwi__content{
       opacity: 0;
@@ -613,76 +597,117 @@
     heading.dataset.tokenized = "true";
   };
 
-  const groupLines = () => {
-    // Xóa các line cũ
-    heading.querySelectorAll('.htwi__line').forEach(line => {
-      while (line.firstChild) heading.insertBefore(line.firstChild, line);
-      line.remove();
-    });
+ const groupLines = () => {
+  // Xóa các line cũ
+  heading.querySelectorAll('.htwi__line').forEach(line => {
+    while (line.firstChild) heading.insertBefore(line.firstChild, line);
+    line.remove();
+  });
 
-    // Lấy tất cả node con hiện tại
-    const allNodes = Array.from(heading.childNodes);
-    if (!allNodes.length) return;
+  // Lấy tất cả node con hiện tại
+  const allNodes = Array.from(heading.childNodes);
+  if (!allNodes.length) return;
 
-    const lines = [];
-    let currentLine = [];
-    let currentLineWidth = 0;
-    const maxWidth = heading.offsetWidth;
-    const tempContainer = document.createElement('span');
-    tempContainer.style.cssText = 'display: inline; visibility: hidden; position: absolute; white-space: nowrap; font: inherit;';
+  const lines = [];
+  let currentLine = [];
+  let currentLineWidth = 0;
+  const maxWidth = heading.offsetWidth;
+  const tempContainer = document.createElement('span');
+  tempContainer.style.cssText = 'display: inline; visibility: hidden; position: absolute; white-space: nowrap; font: inherit;';
+  document.body.appendChild(tempContainer);
+
+  // 👇 THÊM: Danh sách các từ nên ưu tiên giữ cùng dòng
+  const keepTogetherPhrases = ['you', 'are', 'in']; // Thêm các từ cần giữ cùng dòng ở đây
+  let inPhrase = false;
+  let phraseAccumulatedWidth = 0;
+
+  for (let i = 0; i < allNodes.length; i++) {
+    const node = allNodes[i];
+    
+    // Clone node để đo
+    const clone = node.cloneNode(true);
+    tempContainer.innerHTML = '';
+    tempContainer.appendChild(clone);
     document.body.appendChild(tempContainer);
+    const width = tempContainer.offsetWidth;
+    document.body.removeChild(tempContainer);
 
-    allNodes.forEach(node => {
-      // Clone node để đo
-      const clone = node.cloneNode(true);
-      tempContainer.innerHTML = '';
-      tempContainer.appendChild(clone);
-      document.body.appendChild(tempContainer);
-      const width = tempContainer.offsetWidth;
-      document.body.removeChild(tempContainer);
+    // Kiểm tra nếu node này là text node và chứa từ cần ưu tiên
+    let isImportantWord = false;
+    if (node.nodeType === Node.TEXT_NODE || 
+        (node.nodeType === Node.ELEMENT_NODE && node.classList && node.classList.contains('htwi__word'))) {
+      const text = node.textContent?.trim().toLowerCase() || '';
+      isImportantWord = keepTogetherPhrases.includes(text);
+    }
 
-      // Nếu thêm node này vượt quá width và currentLine đã có nội dung
-      if (currentLineWidth + width > maxWidth && currentLine.length > 0) {
+    // Nếu gặp từ quan trọng, bắt đầu tích lũy
+    if (isImportantWord && !inPhrase) {
+      inPhrase = true;
+      phraseAccumulatedWidth = 0;
+    }
+
+    // Nếu đang trong cụm từ quan trọng, tích lũy width
+    if (inPhrase) {
+      phraseAccumulatedWidth += width;
+    }
+
+    // Kiểm tra nếu thêm node này sẽ vượt quá width
+    const willExceed = currentLineWidth + width > maxWidth;
+    
+    // Nếu sẽ vượt quá và currentLine đã có nội dung
+    if (willExceed && currentLine.length > 0) {
+      // 👇 QUAN TRỌNG: Nếu đang trong cụm từ quan trọng, cố gắng thêm cụm từ này vào dòng hiện tại
+      if (inPhrase && currentLineWidth + phraseAccumulatedWidth <= maxWidth) {
+        // Có thể chứa cả cụm từ, tiếp tục thêm
+      } else {
+        // Không thể chứa, tạo dòng mới
         lines.push(currentLine);
         currentLine = [];
         currentLineWidth = 0;
+        inPhrase = false; // Reset vì đã chuyển dòng
       }
-
-      currentLine.push(node);
-      currentLineWidth += width;
-    });
-
-    // Thêm dòng cuối
-    if (currentLine.length > 0) {
-      lines.push(currentLine);
     }
 
-    // Tạo các thẻ span.htwi__line và đẩy node vào
-    lines.forEach((nodeList, idx) => {
-      const lineEl = document.createElement('span');
-      lineEl.className = 'htwi__line';
-      lineEl.dataset.line = String(idx);
-      heading.appendChild(lineEl);
+    // Thêm node vào dòng hiện tại
+    currentLine.push(node);
+    currentLineWidth += width;
 
-      nodeList.forEach(node => lineEl.appendChild(node));
-    });
+    // Nếu là từ cuối cùng trong cụm quan trọng, đánh dấu kết thúc
+    if (isImportantWord && inPhrase) {
+      // Kiểm tra xem có phải là từ cuối cùng trong cụm không
+      let nextNode = allNodes[i + 1];
+      let nextText = '';
+      if (nextNode) {
+        if (nextNode.nodeType === Node.TEXT_NODE || 
+            (nextNode.nodeType === Node.ELEMENT_NODE && nextNode.classList && nextNode.classList.contains('htwi__word'))) {
+          nextText = nextNode.textContent?.trim().toLowerCase() || '';
+        }
+      }
+      
+      if (!keepTogetherPhrases.includes(nextText)) {
+        inPhrase = false;
+        phraseAccumulatedWidth = 0;
+      }
+    }
+  }
 
-    heading.dataset.lineCount = String(lines.length);
-  };
+  // Thêm dòng cuối
+  if (currentLine.length > 0) {
+    lines.push(currentLine);
+  }
 
-  const indexWords = () => {
-    const lines = Array.from(heading.querySelectorAll('.htwi__line'));
-    let global = 0;
+  // Tạo các thẻ span.htwi__line và đẩy node vào
+  lines.forEach((nodeList, idx) => {
+    const lineEl = document.createElement('span');
+    lineEl.className = 'htwi__line';
+    lineEl.dataset.line = String(idx);
+    heading.appendChild(lineEl);
 
-    lines.forEach(line => {
-      const words = Array.from(line.querySelectorAll('.htwi__word'));
-      words.forEach(w => {
-        w.dataset.i = String(global++);
-      });
-    });
+    nodeList.forEach(node => lineEl.appendChild(node));
+  });
 
-    heading.dataset.wordCount = String(global);
-  };
+  heading.dataset.lineCount = String(lines.length);
+};
 
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
