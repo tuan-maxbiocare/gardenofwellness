@@ -1,0 +1,199 @@
+<section class="sp-contact-features">
+  <div class="spf-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="spf-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="spf-grid">
+      {% for block in section.blocks %}
+        <div class="spf-card" {{ block.shopify_attributes }}>
+         <div class="spf-icon" aria-hidden="true">
+  {% if block.settings.icon_image != blank %}
+    {{ block.settings.icon_image
+      | image_url: width: 120
+      | image_tag: loading: 'lazy', class: 'spf-icon-img', alt: block.settings.title | escape }}
+  {% else %}
+    {% case block.settings.icon %}
+      {% when 'leaf' %}
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M21 3c-8.5 0-14 5.5-14 14 0 2.2.7 4.2 2 6 8.5 0 14-5.5 14-14 0-2.2-.7-4.2-2-6Z"/>
+          <path d="M7 17c2-2 5-4 9-4"/>
+        </svg>
+      {% when 'shield' %}
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4Z"/>
+          <path d="M9 12l2 2 4-5"/>
+        </svg>
+      {% when 'dna' %}
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M4 6c4 0 4 12 8 12s4-12 8-12"/>
+          <path d="M4 18c4 0 4-12 8-12s4 12 8 12"/>
+        </svg>
+      {% else %}
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 3v8l6 2"/>
+          <path d="M4 20l6-6"/>
+          <path d="M14 14l6 6"/>
+        </svg>
+    {% endcase %}
+  {% endif %}
+</div>
+
+          <h3 class="spf-title">{{ block.settings.title }}</h3>
+          <p class="spf-text">{{ block.settings.text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <style>
+    .sp-contact-features{padding:{{ section.settings.py }}px 0;}
+    .spf-container{width:100%;
+  margin:0;
+  padding:0 24px;
+}
+    .spf-heading{margin:0 0 18px; font-size:clamp(18px, 1.6vw, 22px); line-height:1.2;}
+
+    .spf-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:18px;}
+    .spf-card{
+      padding:20px 18px 32px; border-radius:10px; border:1px solid #e5e7eb;
+      background:#fff; box-shadow:0 10px 22px rgba(17,24,39,.08);
+      min-height:210px;
+    }
+    .spf-icon{
+      width:64px; height:64px;
+      display:grid; place-items:center; 
+      background:#fff; margin-bottom:14px;
+    }
+    .spf-icon svg{
+  width:36px;
+  height:36px;
+}
+.spf-icon-img{
+  width:36px;
+  height:36px;
+  object-fit:contain;
+  display:block;
+}
+    .spf-title{margin:0 0 8px; font-size:16px; line-height:1.2;}
+    .spf-text{margin:0; color:#6b7280; font-size:14px; line-height:1.55;}
+@media (max-width: 980px){
+  .spf-grid{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px){
+  /* container full width, padding đều 2 bên */
+  .spf-container{
+    width:100%;
+    margin:0;
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  /* 1 cột */
+  .spf-grid{
+    grid-template-columns:1fr;
+  }
+
+  /* bo góc card nhẹ hơn */
+  .spf-card{
+    border-radius:8px;
+  }
+}
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Feature cards",
+  "settings": [
+    {
+      "type": "range",
+      "id": "py",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "default": 38
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Optional heading",
+      "default": "he"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom icon (image)"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Fallback icon (used if no image)",
+          "default": "leaf",
+          "options": [
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "dna", "label": "DNA" },
+            { "value": "spark", "label": "Spark" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Natural and certified organic"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Customers can trust that our products are made with natural and certified organic materials."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact - Feature cards",
+      "blocks": [
+        { "type": "feature" },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "Safe to use",
+            "text": "EWG VERIFIED™, made with 99.9%+ natural origin ingredients* including phytoglycogen."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "dna",
+            "title": "Non-allergen",
+            "text": "The SHA accreditation is an instant way to recognise a product meets the highest standards of skin safety."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "spark",
+            "title": "Swipe, Blend, Go",
+            "text": "Buildable makeup sticks that blend naturally for all skin tones. Swipe, blend, go!"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}
