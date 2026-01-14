@@ -1,3 +1,11 @@
+{% comment %}
+  Section: Highlight text with image
+  - Heading supports tokens: [img], [img2], [img3]
+  - Add up to 3 Image blocks (order matters)
+  - Scroll scrub (type 2): reveal color per line while scrolling
+  - Inline images scale with text (em) like sample
+{% endcomment %}
+
 {%- liquid
   assign sid = section.id
   assign heading_raw = section.settings.heading | default: ''
@@ -167,9 +175,10 @@
     letter-spacing: -0.03em !important;
     line-height: 1.05 !important;
 
-
+    /* ✅ QUAN TRỌNG: heading ăn theo schema */
     color: var(--htwi-text) !important;
 
+    /* 👇 THÊM VÀO: đảm bảo chữ không tự break lung tung */
     white-space: normal !important;
     overflow-wrap: break-word !important;
     word-break: keep-all !important;
@@ -216,9 +225,10 @@
   .htwi-{{ sid }} .htwi__heading,
   .htwi-{{ sid }} .htwi__heading .htwi__word,
   .htwi-{{ sid }} .htwi__heading .htwi__word::after{
-    font-family: system-ui !important;   
-    font-weight: 400 !important;      
-    letter-spacing: -0.025em !important; 
+    font-family: system-ui !important;   /* 👈 CHỈ 1 FONT */
+
+    font-weight: 400 !important;         /* mảnh, tinh tế */
+    letter-spacing: -0.025em !important; /* giống ảnh mẫu */
     line-height: 1.08 !important;
   }
 
@@ -229,7 +239,7 @@
     font-style: italic !important;
     font-weight: 400 !important;
     letter-spacing: 0 !important;
-    color: inherit !important; 
+    color: inherit !important; /* ✅ KHÔNG cố định màu */
   }
 
   /* Nếu muốn script có tone xanh như mẫu -> set bằng biến full/muted */
@@ -385,11 +395,6 @@
     color: var(--muted-highlight) !important;
   }
 
-  .htwi-{{ sid }} .htwi__space{
-  display: inline-block;
-  white-space: pre; /* giữ đúng dấu cách */
-}
-
   /* Highlight words: full color revealed layer */
   .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word.is-highlight::after{
     color: var(--full-highlight) !important;
@@ -533,47 +538,56 @@
 
   heading.dataset.scrub = "true";
 
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
   const tokenize = () => {
     if (heading.dataset.tokenized === "true") return;
 
     const nodes = Array.from(heading.childNodes);
     const frag = document.createDocumentFragment();
 
-    const pushTextParts = (text, isScript = false) => {
-      const parts = (text || '').split(/(\s+)/);
-
-      parts.forEach(part => {
-        if (part === '') return;
-
-        if (/^\s+$/.test(part)) {
-          const s = document.createElement('span');
-          s.className = 'htwi__space';
-          s.textContent = part;
-          frag.appendChild(s);
-          return;
-        }
-
-        const w = document.createElement('span');
-        w.className = isScript ? 'htwi__word htwi__script' : 'htwi__word';
-        w.textContent = part;
-        w.setAttribute('data-w', part);
-        frag.appendChild(w);
-      });
-    };
-
     nodes.forEach(node => {
       if (node.nodeType === Node.TEXT_NODE) {
-        pushTextParts(node.nodeValue || '', false);
+        const text = node.nodeValue || '';
+        const parts = text.split(/(\s+)/);
+
+        parts.forEach(part => {
+          if (part === '') return;
+
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+            return;
+          }
+
+          const w = document.createElement('span');
+          w.className = 'htwi__word';
+          w.textContent = part;
+          w.setAttribute('data-w', part);
+          frag.appendChild(w);
+        });
       } else if (
         node.nodeType === Node.ELEMENT_NODE &&
         node.classList &&
         node.classList.contains('htwi__script')
       ) {
-        pushTextParts(node.textContent || '', true);
+        // ✅ tokenize chữ trong script span để nó cũng chạy scrub
+        const text = node.textContent || '';
+        const parts = text.split(/(\s+)/);
+
+        parts.forEach(part => {
+          if (part === '') return;
+
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+            return;
+          }
+
+          const w = document.createElement('span');
+          w.className = 'htwi__word htwi__script';
+          w.textContent = part;
+          w.setAttribute('data-w', part);
+          frag.appendChild(w);
+        });
       } else {
-        frag.appendChild(node); // giữ nguyên inline image, link...
+        frag.appendChild(node);
       }
     });
 
@@ -583,45 +597,57 @@
   };
 
   const groupLines = () => {
-    // unwrap line cũ
+    // Xóa các line cũ
     heading.querySelectorAll('.htwi__line').forEach(line => {
       while (line.firstChild) heading.insertBefore(line.firstChild, line);
       line.remove();
     });
 
-    // wrap theo line thật: word + space + inline-img
-    const items = Array.from(heading.childNodes).filter(n => {
-      if (n.nodeType !== Node.ELEMENT_NODE) return false;
-      const el = n;
-      return el.classList.contains('htwi__word')
-        || el.classList.contains('htwi__space')
-        || el.classList.contains('htwi__inline-img');
-    });
-
-    if (!items.length) return;
+    // Lấy tất cả node con hiện tại
+    const allNodes = Array.from(heading.childNodes);
+    if (!allNodes.length) return;
 
     const lines = [];
-    let current = [];
-    let lastTop = null;
+    let currentLine = [];
+    let currentLineWidth = 0;
+    const maxWidth = heading.offsetWidth;
+    const tempContainer = document.createElement('span');
+    tempContainer.style.cssText = 'display: inline; visibility: hidden; position: absolute; white-space: nowrap; font: inherit;';
+    document.body.appendChild(tempContainer);
 
-    items.forEach(el => {
-      const top = Math.round(el.getBoundingClientRect().top);
-      if (lastTop === null || Math.abs(top - lastTop) <= 1) {
-        current.push(el);
-      } else {
-        lines.push(current);
-        current = [el];
+    allNodes.forEach(node => {
+      // Clone node để đo
+      const clone = node.cloneNode(true);
+      tempContainer.innerHTML = '';
+      tempContainer.appendChild(clone);
+      document.body.appendChild(tempContainer);
+      const width = tempContainer.offsetWidth;
+      document.body.removeChild(tempContainer);
+
+      // Nếu thêm node này vượt quá width và currentLine đã có nội dung
+      if (currentLineWidth + width > maxWidth && currentLine.length > 0) {
+        lines.push(currentLine);
+        currentLine = [];
+        currentLineWidth = 0;
       }
-      lastTop = top;
-    });
-    if (current.length) lines.push(current);
 
+      currentLine.push(node);
+      currentLineWidth += width;
+    });
+
+    // Thêm dòng cuối
+    if (currentLine.length > 0) {
+      lines.push(currentLine);
+    }
+
+    // Tạo các thẻ span.htwi__line và đẩy node vào
     lines.forEach((nodeList, idx) => {
       const lineEl = document.createElement('span');
       lineEl.className = 'htwi__line';
       lineEl.dataset.line = String(idx);
       heading.appendChild(lineEl);
-      nodeList.forEach(n => lineEl.appendChild(n));
+
+      nodeList.forEach(node => lineEl.appendChild(node));
     });
 
     heading.dataset.lineCount = String(lines.length);
@@ -641,6 +667,8 @@
     heading.dataset.wordCount = String(global);
   };
 
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
   const update = () => {
     const rect = root.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
@@ -651,8 +679,10 @@
     const raw = (start - rect.top) / (start - end);
     let p = clamp(raw, 0, 1);
 
+    /* chậm ở đầu, nhanh ở cuối */
     p = Math.pow(p, 1.8);
 
+    /* snap nhanh đoạn cuối (thu màu về nhanh hơn) */
     if (p > 0.75) {
       p = 0.75 + (p - 0.75) * 4.2;
       p = Math.min(1, p);
@@ -661,6 +691,7 @@
     const words = Array.from(heading.querySelectorAll('.htwi__word'));
     const total = words.length || 1;
 
+    /* spread càng lớn -> càng chậm tổng thể */
     const spread = 1.25;
     const x = p * total * spread;
 
@@ -680,16 +711,7 @@
     });
   };
 
-  // init
   tokenize();
-
-  // rebuild khi ảnh inline load xong
-  root.querySelectorAll('.htwi__inline-img img').forEach(img => {
-    if (img.complete) return;
-    img.addEventListener('load', rebuild, { once: true });
-    img.addEventListener('error', rebuild, { once: true });
-  });
-
   requestAnimationFrame(() => {
     groupLines();
     indexWords();
@@ -698,15 +720,14 @@
 
   window.addEventListener('scroll', update, { passive: true });
 
-  // ✅ chỉ 1 biến t
-  let t;
-
+  // 🔁 Rebuild khi kích thước heading thay đổi (font-size, editor chỉnh slider, v.v.)
   const ro = new ResizeObserver(() => {
     clearTimeout(t);
     t = setTimeout(rebuild, 80);
   });
   ro.observe(heading);
 
+  let t;
   window.addEventListener('resize', () => {
     clearTimeout(t);
     t = setTimeout(rebuild, 120);
@@ -717,7 +738,6 @@
   }
 })();
 </script>
-
 
 {% schema %}
 {
