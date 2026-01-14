@@ -385,6 +385,11 @@
     color: var(--muted-highlight) !important;
   }
 
+  .htwi-{{ sid }} .htwi__space{
+  display: inline-block;
+  white-space: pre; /* giữ đúng dấu cách */
+}
+
   /* Highlight words: full color revealed layer */
   .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word.is-highlight::after{
     color: var(--full-highlight) !important;
@@ -527,112 +532,102 @@
 
   heading.dataset.scrub = "true";
 
-  const tokenize = () => {
-    if (heading.dataset.tokenized === "true") return;
+  cconst tokenize = () => {
+  if (heading.dataset.tokenized === "true") return;
 
-    const nodes = Array.from(heading.childNodes);
-    const frag = document.createDocumentFragment();
+  const nodes = Array.from(heading.childNodes);
+  const frag = document.createDocumentFragment();
 
-    nodes.forEach(node => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        const text = node.nodeValue || '';
-        const parts = text.split(/(\s+)/);
+  const pushTextParts = (text, isScript = false) => {
+    const parts = (text || '').split(/(\s+)/);
 
-        parts.forEach(part => {
-          if (part === '') return;
+    parts.forEach(part => {
+      if (part === '') return;
 
-          if (/^\s+$/.test(part)) {
-            frag.appendChild(document.createTextNode(part));
-            return;
-          }
-
-          const w = document.createElement('span');
-          w.className = 'htwi__word';
-          w.textContent = part;
-          w.setAttribute('data-w', part);
-          frag.appendChild(w);
-        });
-      } else if (
-        node.nodeType === Node.ELEMENT_NODE &&
-        node.classList &&
-        node.classList.contains('htwi__script')
-      ) {
-        const text = node.textContent || '';
-        const parts = text.split(/(\s+)/);
-
-        parts.forEach(part => {
-          if (part === '') return;
-
-          if (/^\s+$/.test(part)) {
-            frag.appendChild(document.createTextNode(part));
-            return;
-          }
-
-          const w = document.createElement('span');
-          w.className = 'htwi__word htwi__script';
-          w.textContent = part;
-          w.setAttribute('data-w', part);
-          frag.appendChild(w);
-        });
-      } else {
-        frag.appendChild(node);
+      // whitespace -> span space (để groupLines mang theo)
+      if (/^\s+$/.test(part)) {
+        const s = document.createElement('span');
+        s.className = 'htwi__space';
+        s.textContent = part;
+        frag.appendChild(s);
+        return;
       }
-    });
 
-    heading.innerHTML = '';
-    heading.appendChild(frag);
-    heading.dataset.tokenized = "true";
+      // word
+      const w = document.createElement('span');
+      w.className = isScript ? 'htwi__word htwi__script' : 'htwi__word';
+      w.textContent = part;
+      w.setAttribute('data-w', part);
+      frag.appendChild(w);
+    });
   };
+
+  nodes.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      pushTextParts(node.nodeValue || '', false);
+    } else if (
+      node.nodeType === Node.ELEMENT_NODE &&
+      node.classList &&
+      node.classList.contains('htwi__script')
+    ) {
+      // tokenize chữ trong script span
+      pushTextParts(node.textContent || '', true);
+    } else {
+      // giữ nguyên inline image, link, v.v.
+      frag.appendChild(node);
+    }
+  });
+
+  heading.innerHTML = '';
+  heading.appendChild(frag);
+  heading.dataset.tokenized = "true";
+};
 
   const groupLines = () => {
-    heading.querySelectorAll('.htwi__line').forEach(line => {
-      while (line.firstChild) heading.insertBefore(line.firstChild, line);
-      line.remove();
-    });
+  // unwrap line cũ
+  heading.querySelectorAll('.htwi__line').forEach(line => {
+    while (line.firstChild) heading.insertBefore(line.firstChild, line);
+    line.remove();
+  });
 
-    const words = Array.from(heading.querySelectorAll('.htwi__word'));
-    if (!words.length) return;
+  // Lấy các node cần wrap theo line thật
+  const items = Array.from(heading.childNodes).filter(n => {
+    if (n.nodeType !== Node.ELEMENT_NODE) return false;
+    const el = n;
+    return el.classList.contains('htwi__word')
+      || el.classList.contains('htwi__space')
+      || el.classList.contains('htwi__inline-img');
+  });
 
-    const lines = [];
-    let current = [];
-    let lastTop = null;
+  if (!items.length) return;
 
-    words.forEach(w => {
-      const top = Math.round(w.getBoundingClientRect().top);
-      if (lastTop === null || Math.abs(top - lastTop) <= 1) {
-        current.push(w);
-      } else {
-        lines.push(current);
-        current = [w];
-      }
-      lastTop = top;
-    });
-    if (current.length) lines.push(current);
+  const lines = [];
+  let current = [];
+  let lastTop = null;
 
-    lines.forEach((ws, idx) => {
-      const lineEl = document.createElement('span');
-      lineEl.className = 'htwi__line';
-      lineEl.dataset.line = String(idx);
-      heading.appendChild(lineEl);
-      ws.forEach(w => lineEl.appendChild(w));
-    });
+  items.forEach(el => {
+    const top = Math.round(el.getBoundingClientRect().top);
+    if (lastTop === null || Math.abs(top - lastTop) <= 1) {
+      current.push(el);
+    } else {
+      lines.push(current);
+      current = [el];
+    }
+    lastTop = top;
+  });
+  if (current.length) lines.push(current);
 
-    heading.dataset.lineCount = String(lines.length);
-  };
+  // Wrap thành .htwi__line
+  lines.forEach((nodeList, idx) => {
+    const lineEl = document.createElement('span');
+    lineEl.className = 'htwi__line';
+    lineEl.dataset.line = String(idx);
+    heading.appendChild(lineEl);
+    nodeList.forEach(n => lineEl.appendChild(n));
+  });
 
-  const indexWords = () => {
-    const lines = Array.from(heading.querySelectorAll('.htwi__line'));
-    let global = 0;
-
-    lines.forEach(line => {
-      const words = Array.from(line.querySelectorAll('.htwi__word'));
-      words.forEach(w => {
-        w.dataset.i = String(global++);
-      });
-    });
-
-    heading.dataset.wordCount = String(global);
-  };
+  heading.dataset.lineCount = String(lines.length);
+};
 
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
