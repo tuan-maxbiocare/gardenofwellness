@@ -1698,65 +1698,12 @@
         "show_divider": true,
         "desktop_height": 750,
         "padding_top": 100,
-        "padding_bottom": 100,
+        "padding_bottom": 68,
         "mobile_height": 400,
         "padding_top_mobile": 0,
         "padding_bottom_mobile": 0,
         "base_size": 110,
         "rtl_languages": "none"
-      }
-    },
-    "testimonials_with_card_8NxiYJ": {
-      "type": "testimonials-with-card",
-      "blocks": {
-        "testimonial_baHeG6": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/2H6A1829_9312be68-c526-4c45-8766-0dae9815f62b.webp",
-            "customer_name": "Rosa N.",
-            "testimonial_title": "t",
-            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
-            "featured_product": "garden-of-wellness-nourishing-body-oil-lemon-zest"
-          }
-        },
-        "testimonial_kTpUfU": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/274-2H6A2689.jpg",
-            "customer_name": "Rosa N.",
-            "testimonial_title": "t",
-            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
-            "featured_product": "garden-of-wellness-nourishing-body-oil-lemon-zest"
-          }
-        },
-        "testimonial_YYEq8L": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/15_Dec.webp",
-            "customer_name": "Rosa N.",
-            "testimonial_title": "t",
-            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
-            "featured_product": "garden-of-wellness-nourishing-body-oil-neroli-blossom"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_baHeG6",
-        "testimonial_kTpUfU",
-        "testimonial_YYEq8L"
-      ],
-      "name": "Customer Testimonials",
-      "settings": {
-        "section_width": "page-width",
-        "heading": "Customer Reviews",
-        "enable_auto_slide": true,
-        "auto_slide_speed": 5,
-        "background_color": "#ffffff",
-        "card_bg_color": "#ffffff",
-        "heading_color": "#000000",
-        "text_color": "#000000",
-        "arrow_color": "#000000",
-        "star_color": "#000000"
       }
     },
     "highlight_text_with_image_9mxFcD": {
@@ -1832,6 +1779,59 @@
         "show_section_divider_mobile": true,
         "padding_top_mobile": 64,
         "padding_bottom_mobile": 64
+      }
+    },
+    "testimonials_with_card_8NxiYJ": {
+      "type": "testimonials-with-card",
+      "blocks": {
+        "testimonial_baHeG6": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/2H6A1829_9312be68-c526-4c45-8766-0dae9815f62b.webp",
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": "garden-of-wellness-nourishing-body-oil-lemon-zest"
+          }
+        },
+        "testimonial_kTpUfU": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/274-2H6A2689.jpg",
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": "garden-of-wellness-nourishing-body-oil-lemon-zest"
+          }
+        },
+        "testimonial_YYEq8L": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/15_Dec.webp",
+            "customer_name": "Rosa N.",
+            "testimonial_title": "t",
+            "testimonial_text": "Your beauty routine transforms into an exquisite retreat with Puff. We've reimagined skincare as more than just daily maintenance—it's a celebratory ritual that delights the senses and honors your relationship with yourself.",
+            "featured_product": "garden-of-wellness-nourishing-body-oil-neroli-blossom"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_baHeG6",
+        "testimonial_kTpUfU",
+        "testimonial_YYEq8L"
+      ],
+      "name": "Customer Testimonials",
+      "settings": {
+        "section_width": "page-width",
+        "heading": "Customer Reviews",
+        "enable_auto_slide": true,
+        "auto_slide_speed": 5,
+        "background_color": "#ffffff",
+        "card_bg_color": "#ffffff",
+        "heading_color": "#000000",
+        "text_color": "#000000",
+        "arrow_color": "#000000",
+        "star_color": "#000000"
       }
     },
     "video_hero_cp7FFn": {
@@ -2735,8 +2735,8 @@
     "looping_video_dD4YRe",
     "product_star_8kJJNp",
     "flow_8RRFC4",
-    "testimonials_with_card_8NxiYJ",
     "highlight_text_with_image_9mxFcD",
+    "testimonials_with_card_8NxiYJ",
     "video_hero_cp7FFn",
     "journey_timeline_fQmzcQ",
     "social_feeds_KWVQHM",
