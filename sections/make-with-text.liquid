@@ -1,0 +1,827 @@
+{% comment %}
+  Section: Media with text (custom)
+  - Left: image(s) or video (Shopify-hosted or embed URL)
+  - Right: text (blocks: heading, richtext, button)
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+
+  assign media_on_left = true
+  if s.image_alignment == 'right'
+    assign media_on_left = false
+  endif
+
+  assign has_shopify_video = false
+  if s.video != blank
+    assign has_shopify_video = true
+  endif
+
+  assign has_embed_video = false
+  if s.video_url != blank and s.video == blank
+    assign has_embed_video = true
+  endif
+
+  assign has_images = false
+  if s.first_image != blank or s.second_image != blank
+    assign has_images = true
+  endif
+
+  assign show_media = false
+  if has_shopify_video or has_embed_video or has_images
+    assign show_media = true
+  endif
+
+  assign corner_radius = s.corner_radius | default: 0
+%}
+
+<section
+  id="mwt-{{ section.id }}"
+  class="mwt mwt--{{ section.id }} {% if s.make_section_full_width %}mwt--full{% endif %} {% if s.used_as_hero %}mwt--hero{% endif %}"
+  style="
+    --mwt-radius: {{ corner_radius }}px;
+    --mwt-transition: {{ s.transition_slideshow_ms }}ms;
+    --mwt-pad-top: {{ s.desktop_top_padding }}px;
+    --mwt-pad-bottom: {{ s.desktop_bottom_padding }}px;
+    --mwt-pad-top-m: {{ s.mobile_top_padding }}px;
+    --mwt-pad-bottom-m: {{ s.mobile_bottom_padding }}px;
+    --mwt-mobile-media-h: {{ s.mobile_image_height }}px;
+  "
+>
+  <div class="mwt__wrap {% if s.enable_side_padding %}mwt__wrap--padded{% endif %}">
+    <div class="mwt__grid
+      {% if s.content_layout == 'overlap' %}mwt__grid--overlap{% endif %}
+      {% if s.desktop_image_width == 'large' %}mwt__grid--wide{% endif %}
+      {% if s.add_spacing_between_images %}mwt__grid--gap{% endif %}
+      {% if media_on_left %}mwt__grid--media-left{% else %}mwt__grid--media-right{% endif %}
+    ">
+      {% if show_media %}
+        <div class="mwt__media mwt__media--{{ s.desktop_image_height }} mwt__media--style-{{ s.image_style }}">
+          <div class="mwt__media-inner {% if s.adapt_to_edges %}mwt__media-inner--edges{% endif %}">
+            {% if has_shopify_video %}
+              <div class="mwt__video">
+                {{
+                  s.video
+                  | video_tag:
+                    image_size: '2000x',
+                    autoplay: s.enable_video_autoplay,
+                    loop: s.enable_video_autoplay,
+                    muted: s.enable_video_autoplay,
+                    controls: true,
+                    playsinline: true
+                }}
+                {% if s.video_alt_text != blank %}
+                  <span class="visually-hidden">{{ s.video_alt_text }}</span>
+                {% endif %}
+
+                {% if s.enable_video_autoplay and s.show_sound_control %}
+                  <button type="button" class="mwt__sound" aria-label="Toggle sound">
+                    🔇
+                  </button>
+                {% endif %}
+              </div>
+
+            {% elsif has_embed_video %}
+              <div class="mwt__video mwt__video--embed">
+                <div class="mwt__embed">
+                  {%- assign url = s.video_url | strip -%}
+                  {%- if url contains "youtube.com" or url contains "youtu.be" -%}
+                    {%- comment %} YouTube embed (basic) {% endcomment -%}
+                    {%- assign autoplay = s.enable_video_autoplay | default: false -%}
+                    {%- assign mute = s.enable_video_autoplay | default: false -%}
+                    {%- assign yt_params = "" -%}
+                    {%- if autoplay -%}
+                      {%- assign yt_params = yt_params | append: "autoplay=1&playsinline=1" -%}
+                      {%- if mute -%}{%- assign yt_params = yt_params | append: "&mute=1" -%}{%- endif -%}
+                    {%- endif -%}
+
+                    <iframe
+                      src="{{ url | replace: 'watch?v=', 'embed/' }}{% if yt_params != blank %}?{{ yt_params }}{% endif %}"
+                      title="{{ s.video_alt_text | escape }}"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen>
+                    </iframe>
+                  {%- else -%}
+                    {%- comment %} Vimeo or other URL (simple iframe) {% endcomment -%}
+                    <iframe
+                      src="{{ url }}"
+                      title="{{ s.video_alt_text | escape }}"
+                      frameborder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowfullscreen>
+                    </iframe>
+                  {%- endif -%}
+                </div>
+              </div>
+
+            {% else %}
+              {%- comment %} Images mode {% endcomment -%}
+              <div class="mwt__images">
+                {% if s.first_image != blank %}
+                  <div class="mwt__img">
+                    {{ s.first_image | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'mwt__img-el', alt: s.first_image.alt | escape }}
+                  </div>
+                {% endif %}
+
+                {% if s.image_style == 'stacked' and s.second_image != blank %}
+                  <div class="mwt__img mwt__img--second">
+                    {{ s.second_image | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'mwt__img-el', alt: s.second_image.alt | escape }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="mwt__content mwt__content--pos-{{ s.text_position }} mwt__content--align-{{ s.text_alignment }}">
+        <div class="mwt__content-inner">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'heading' %}
+                {% if block.settings.subheading != blank %}
+                  <div class="mwt__subheading" {{ block.shopify_attributes }}>
+                    {{ block.settings.subheading }}
+                  </div>
+                {% endif %}
+                {% if block.settings.heading != blank %}
+                  <h2 class="mwt__heading" {{ block.shopify_attributes }}>
+                    {{ block.settings.heading }}
+                  </h2>
+                {% endif %}
+
+              {% when 'text' %}
+                {% if block.settings.text != blank %}
+                  <div class="mwt__text rte" {{ block.shopify_attributes }}>
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+
+              {% when 'button' %}
+                {% if block.settings.label != blank and block.settings.link != blank %}
+                  <div class="mwt__btn-wrap" {{ block.shopify_attributes }}>
+                    <a class="mwt__btn" href="{{ block.settings.link }}">
+                      {{ block.settings.label }}
+                    </a>
+                  </div>
+                {% endif %}
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* ===== Base ===== */
+    #mwt-{{ section.id }}{
+      padding-top: var(--mwt-pad-top);
+      padding-bottom: var(--mwt-pad-bottom);
+    }
+    @media (max-width: 749px){
+      #mwt-{{ section.id }}{
+        padding-top: var(--mwt-pad-top-m);
+        padding-bottom: var(--mwt-pad-bottom-m);
+      }
+    }
+
+    #mwt-{{ section.id }} .visually-hidden{
+      position:absolute!important;
+      height:1px;width:1px;
+      overflow:hidden;
+      clip:rect(1px,1px,1px,1px);
+      white-space:nowrap;
+    }
+
+    #mwt-{{ section.id }} .mwt__wrap{
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    #mwt-{{ section.id }} .mwt__wrap--padded{
+      padding-left: 26px;
+      padding-right:26px;
+    }
+
+    /* ===== Grid ===== */
+    #mwt-{{ section.id }} .mwt__grid{
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: stretch;
+      gap: 0;
+    }
+    #mwt-{{ section.id }} .mwt__grid--wide{
+      grid-template-columns: 1.3fr 0.7fr;
+    }
+    #mwt-{{ section.id }} .mwt__grid--media-right{
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+    #mwt-{{ section.id }} .mwt__grid--media-right .mwt__media{ order: 2; }
+    #mwt-{{ section.id }} .mwt__grid--media-right .mwt__content{ order: 1; }
+
+    @media (max-width: 749px){
+      #mwt-{{ section.id }} .mwt__grid{
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+
+    /* ===== Media sizing ===== */
+    #mwt-{{ section.id }} .mwt__media{
+      position: relative;
+      border-radius: var(--mwt-radius);
+      overflow: hidden;
+      background: rgba(0,0,0,0.03);
+    }
+
+    /* Desktop heights */
+    #mwt-{{ section.id }} .mwt__media--fullscreen{
+      min-height: 70vh;
+    }
+    #mwt-{{ section.id }} .mwt__media--medium{
+      min-height: 520px;
+    }
+
+    /* Mobile height */
+    @media (max-width: 749px){
+      #mwt-{{ section.id }} .mwt__media{
+        min-height: var(--mwt-mobile-media-h);
+      }
+    }
+
+    #mwt-{{ section.id }} .mwt__media-inner{
+      width: 100%;
+      height: 100%;
+      border-radius: var(--mwt-radius);
+      overflow: hidden;
+    }
+    #mwt-{{ section.id }} .mwt__media-inner--edges{
+      border-radius: 0;
+    }
+
+    /* ===== Images ===== */
+    #mwt-{{ section.id }} .mwt__images{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: grid;
+      {% if s.image_style == 'stacked' %}
+        grid-template-columns: 1fr;
+      {% else %}
+        grid-template-columns: 1fr;
+      {% endif %}
+    }
+
+    #mwt-{{ section.id }} .mwt__img{
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* object-fit cover + object-position center (như bạn hỏi trước) */
+    #mwt-{{ section.id }} img.mwt__img-el,
+    #mwt-{{ section.id }} video{
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: {{ s.object_position }};
+      vertical-align: middle;
+    }
+
+    /* Animation giống các dòng bạn chụp: scale + transition transform/opacity */
+    #mwt-{{ section.id }} .mwt__img-el{
+      transform: scale({{ s.scale_idle }});
+      transition-property: transform, opacity;
+      transition-timing-function: ease-in;
+      transition-duration: var(--mwt-transition);
+      will-change: transform;
+    }
+    #mwt-{{ section.id }} .mwt__media:hover .mwt__img-el{
+      transform: scale(1);
+    }
+
+    /* Stacked second image (ảnh chồng) */
+    {% if s.image_style == 'stacked' %}
+      #mwt-{{ section.id }} .mwt__img--second{
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        width: min(44%, 360px);
+        height: min(44%, 300px);
+        border-radius: var(--mwt-radius);
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      }
+      @media (max-width: 749px){
+        #mwt-{{ section.id }} .mwt__img--second{
+          right: 12px;
+          bottom: 12px;
+          width: 56%;
+          height: 42%;
+        }
+      }
+    {% endif %}
+
+    /* ===== Video ===== */
+    #mwt-{{ section.id }} .mwt__video{
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    #mwt-{{ section.id }} .mwt__video video{
+      width: 100%;
+      height: 100%;
+    }
+
+    #mwt-{{ section.id }} .mwt__embed{
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    #mwt-{{ section.id }} .mwt__embed iframe{
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #mwt-{{ section.id }} .mwt__sound{
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 12px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* ===== Content ===== */
+    #mwt-{{ section.id }} .mwt__content{
+      position: relative;
+      display: flex;
+      background-color:rgb(238, 238, 233);
+      border-radius: 12px; /* bo nhẹ */
+  overflow: hidden;
+      
+    }
+    #mwt-{{ section.id }} .mwt__content--pos-top{ align-items: flex-start; }
+    #mwt-{{ section.id }} .mwt__content--pos-center{ align-items: center; }
+    #mwt-{{ section.id }} .mwt__content--pos-bottom{ align-items: flex-end; }
+
+    #mwt-{{ section.id }} .mwt__content-inner{
+        padding: 72px 64px;  /* desktop */
+  max-width: 560px;  
+      width: 100%;
+    }
+
+    #mwt-{{ section.id }} .mwt__content--align-left .mwt__content-inner{ text-align: left; }
+    #mwt-{{ section.id }} .mwt__content--align-center .mwt__content-inner{ text-align: center; }
+    #mwt-{{ section.id }} .mwt__content--align-right .mwt__content-inner{ text-align: right; }
+
+    #mwt-{{ section.id }} .mwt__subheading{
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-bottom: 10px;
+    }
+    #mwt-{{ section.id }} .mwt__heading{
+      margin: 0 0 12px;
+        font-size: clamp(22px, 2.4vw, 36px);
+  line-height: 1.2;
+    }
+    #mwt-{{ section.id }} .mwt__heading em {
+  color: #606b57; /* màu bạn muốn */
+  font-style: italic;
+}
+
+    #mwt-{{ section.id }} .mwt__text{
+      font-size: 14px;
+      line-height: 1.7;
+      opacity: .85;
+      max-width: 58ch;
+      margin: 0 auto;
+    }
+    #mwt-{{ section.id }} .mwt__btn-wrap{ margin-top: 40px; }
+    #mwt-{{ section.id }} .mwt__btn{
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: #111;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    /* ===== Overlap mode ===== */
+    #mwt-{{ section.id }} .mwt__grid--overlap{
+      align-items: center;
+    }
+    #mwt-{{ section.id }} .mwt__grid--overlap .mwt__content-inner{
+      background: rgba(255,255,255,0.88);
+      border-radius: 18px;
+      padding: 22px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    }
+    #mwt-{{ section.id }} .mwt__grid--overlap.mwt__grid--media-left .mwt__content{
+      margin-left: -60px;
+    }
+    #mwt-{{ section.id }} .mwt__grid--overlap.mwt__grid--media-right .mwt__content{
+      margin-right: -60px;
+    }
+    @media (max-width: 749px){
+      #mwt-{{ section.id }} .mwt__grid--overlap .mwt__content{
+        margin: 0;
+      }
+    }
+
+    /* ===== Optional gap ===== */
+    #mwt-{{ section.id }} .mwt__grid--gap{
+      gap: 36px;
+    }
+    @media (max-width: 749px){
+
+  /* 1️⃣ Content box gọn lại */
+  #mwt-{{ section.id }} .mwt__content-inner{
+    padding: 20px 16px;      /* ↓ từ 24–32px */
+    max-width: 100%;
+  }
+
+  /* 2️⃣ Heading gọn hơn (ít xuống dòng) */
+  #mwt-{{ section.id }} .mwt__heading{
+    font-size: 19px;         /* ↓ từ ~22px */
+    line-height: 1.18;       /* chặt hơn */
+    margin-bottom: 8px;
+  }
+
+  /* 3️⃣ Subheading sát hơn */
+  #mwt-{{ section.id }} .mwt__subheading{
+    margin-bottom: 6px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  /* 4️⃣ Đoạn text phụ nhỏ & sát */
+  #mwt-{{ section.id }} .mwt__text{
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+
+  /* 5️⃣ Button lên cao hơn (đúng mẫu) */
+  #mwt-{{ section.id }} .mwt__btn-wrap{
+    margin-top: 14px;        /* ↓ từ 24–32px */
+  }
+
+  /* 6️⃣ Nếu content đang bị canh giữa dọc → cho lên trên */
+  #mwt-{{ section.id }} .mwt__content{
+    align-items: flex-start;
+  }
+}
+/* ===== Smooth desktop height when resizing viewport (like video) ===== */
+/* Chỉ áp dụng từ tablet/desktop trở lên, không ảnh hưởng block mobile bạn đã có */
+@media (min-width: 750px){
+
+  /* 1) Tính chiều cao mượt theo viewport width:
+     - viewport càng rộng -> giá trị calc(...) càng nhỏ -> layout thấp dần
+     - clamp(...) giới hạn min/max để không quá thấp/quá cao
+  */
+  #mwt-{{ section.id }}{
+    --mwt-desktop-h: clamp(440px, calc(760px - 0.18 * 100vw), 620px);
+  }
+
+  /* 2) Ép cả 2 cột (media + content) luôn bằng nhau theo cùng 1 height */
+  #mwt-{{ section.id }} .mwt__media,
+  #mwt-{{ section.id }} .mwt__content{
+    min-height: var(--mwt-desktop-h) !important;
+    transition: min-height .25s ease;
+  }
+
+  /* 3) Override luôn 2 class height cũ để khỏi bị 70vh / 520px “đè” */
+  #mwt-{{ section.id }} .mwt__media--fullscreen,
+  #mwt-{{ section.id }} .mwt__media--medium{
+    min-height: var(--mwt-desktop-h) !important;
+  }
+}
+
+  </style>
+<script>
+(function(){
+  const root = document.getElementById("mwt-{{ section.id }}");
+  if (!root) return;
+
+  // Respect reduced motion
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const media = root.querySelector(".mwt__media");
+  if (!media) return;
+
+  // Target element to move (image/video/iframe)
+  const target =
+    media.querySelector(".mwt__img-el") ||
+    media.querySelector("video") ||
+    media.querySelector("iframe");
+
+  if (!target) return;
+
+  // Optional: make motion smooth & safe
+  target.style.willChange = "transform";
+
+  // Tune this: max translate in px
+  const MAX_SHIFT = 18;
+
+  let ticking = false;
+  let inView = true;
+
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  function update(){
+    ticking = false;
+    if (!inView) return;
+
+    const rect = root.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+
+    // progress from 0 -> 1 as section passes through viewport
+    // 0: section top hits bottom of viewport
+    // 1: section bottom hits top of viewport
+    const start = vh;
+    const end = -rect.height;
+    const p = clamp((start - rect.top) / (start - end), 0, 1);
+
+    // Map to translate range [-MAX_SHIFT, +MAX_SHIFT]
+    const shift = (p - 0.5) * 2 * MAX_SHIFT;
+
+    // Apply translate (no hover involved)
+    target.style.transform = `translate3d(0, ${shift.toFixed(2)}px, 0)`;
+  }
+
+  function requestTick(){
+    if (!ticking){
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  // Only run when visible (perf)
+  const io = new IntersectionObserver((entries) => {
+    inView = entries[0] ? entries[0].isIntersecting : true;
+    if (inView) requestTick();
+  }, { threshold: 0.01 });
+
+  io.observe(root);
+
+  // Scroll/resize listeners
+  window.addEventListener("scroll", requestTick, { passive: true });
+  window.addEventListener("resize", requestTick);
+
+  // Initial
+  requestTick();
+})();
+</script>
+
+</section>
+
+{% schema %}
+{
+  "name": "Media with text (custom)",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "used_as_hero",
+      "label": "Used as Hero",
+      "default": false,
+      "info": "Enable if this section is used as hero."
+    },
+
+    {
+      "type": "header",
+      "content": "Media with text"
+    },
+    { "type": "image_picker", "id": "first_image", "label": "First image" },
+    { "type": "image_picker", "id": "second_image", "label": "Second image" },
+
+    {
+      "type": "select",
+      "id": "desktop_image_height",
+      "label": "Desktop image height",
+      "default": "fullscreen",
+      "options": [
+        { "value": "fullscreen", "label": "Fullscreen" },
+        { "value": "medium", "label": "Medium" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "label": "Mobile image height",
+      "min": 240,
+      "max": 700,
+      "step": 10,
+      "default": 400,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_width",
+      "label": "Desktop image width",
+      "default": "medium",
+      "options": [
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "Image style",
+      "default": "normal",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "stacked", "label": "Stacked" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "adapt_to_edges",
+      "label": "Adapt to edges style in theme settings",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+
+    {
+      "type": "header",
+      "content": "Shopify-hosted video"
+    },
+    { "type": "video", "id": "video", "label": "Video" },
+    {
+      "type": "checkbox",
+      "id": "show_sound_control",
+      "label": "Show sound control",
+      "default": false,
+      "info": "Applies to autoplay videos only."
+    },
+    {
+      "type": "header",
+      "content": "Or embed video from URL"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "URL",
+      "info": "Supports YouTube and Vimeo."
+    },
+    { "type": "text", "id": "video_alt_text", "label": "Video alt text", "default": "h" },
+    { "type": "checkbox", "id": "enable_video_autoplay", "label": "Enable video autoplay", "default": false, "info": "Video will be muted when autoplay is on." },
+
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "content_layout",
+      "label": "Content layout",
+      "default": "no_overlap",
+      "options": [
+        { "value": "no_overlap", "label": "No overlap" },
+        { "value": "overlap", "label": "Overlap" }
+      ]
+    },
+    { "type": "checkbox", "id": "add_spacing_between_images", "label": "Add spacing between images", "default": false },
+
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text position",
+      "default": "center",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "info": "Only applies to desktop display."
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "select",
+      "id": "image_alignment",
+      "label": "Image alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "checkbox", "id": "make_section_full_width", "label": "Make section full width", "default": false },
+    { "type": "checkbox", "id": "enable_side_padding", "label": "Enable side padding", "default": true, "info": "Add left and right padding when section is full-width." },
+
+    { "type": "range", "id": "desktop_top_padding", "label": "Top padding", "min": 0, "max": 160, "step": 4, "default": 100, "unit": "px" },
+    { "type": "range", "id": "desktop_bottom_padding", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "default": 100, "unit": "px" },
+
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    { "type": "range", "id": "mobile_top_padding", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" },
+    { "type": "range", "id": "mobile_bottom_padding", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" },
+
+    {
+      "type": "header",
+      "content": "Advanced (CSS behavior)"
+    },
+    {
+      "type": "text",
+      "id": "object_position",
+      "label": "Object position",
+      "default": "50% 50%",
+      "info": "Maps to CSS object-position (e.g. 50% 50% for center)."
+    },
+    {
+      "type": "range",
+      "id": "scale_idle",
+      "label": "Idle scale",
+      "min": 1,
+      "max": 1.4,
+      "step": 0.1,
+      "default": 1.2,
+      "info": "Maps to transform: scale(x) before hover/active."
+    },
+    {
+      "type": "range",
+      "id": "transition_slideshow_ms",
+      "label": "Transition duration",
+      "min": 100,
+      "max": 3000,
+      "step": 50,
+      "default": 800,
+      "unit": "ms",
+      "info": "Maps to transition-duration."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        { "type": "text", "id": "subheading", "label": "Subheading", "default": "OUR PHILOSOPHY" },
+        { "type": "richtext", "id": "heading", "label": "Heading", "default": "<p>This <em>new environmental</em> project has been founded with Eurus founder.</p>" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>We believe in a more conscious approach to clean beauty.</p>" }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Read full" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Media with text (custom)",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}
