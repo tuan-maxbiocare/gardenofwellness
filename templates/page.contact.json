@@ -84,6 +84,7 @@
       "name": "Contact - Hero + Form",
       "settings": {
         "py": 38,
+        "hero_image": "shopify://shop_images/garden-of-wellness-images-761x1080-1.webp",
         "kicker": "Questions? Send us an email",
         "heading": "Send us an email",
         "label_name": "Name",
@@ -143,20 +144,20 @@
       "name": "Contact - Feature cards",
       "settings": {
         "py": 38,
-        "heading": "he"
+        "heading": ""
       }
     },
     "map_store_kzRpqy": {
       "type": "map-store",
       "name": "Contact - Map + Store card",
       "settings": {
-        "py": 38,
-        "map_height": 420,
-        "map_embed": "2ggd",
+        "py": 0,
+        "map_height": 510,
+        "map_embed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d237453.43418084653!2d105.81517410000001!3d21.577727999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1svi!2s!4v1768384323146!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
         "card_heading": "Find Our Store",
-        "store_name": "Viwaseen Tower",
-        "store_hours": "<p>Mon – Fri: 8:30am – 10:00pm<br>Saturday: 8:30am – 10:30pm<br>Sunday: 8:30am – 11:30pm</p>",
-        "directions_url": "",
+        "store_name": "Gadern off wellness shop",
+        "store_hours": "<p>Mon – Fri: 8:30am – 10:00pm<br/>Saturday: 8:30am – 10:30pm<br/>Sunday: 8:30am – 11:30pm</p>",
+        "directions_url": "https://www.google.com/maps/@21.577728,105.8151741,11z?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D",
         "button_text": "Get directions"
       }
     }
