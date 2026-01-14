@@ -400,6 +400,23 @@
     color: var(--full-highlight) !important;
   }
 
+  /* Ngăn các từ quan trọng bị ngắt dòng */
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you"],
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="are"],
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="in"],
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you're"],
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you'll"],
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="you'd"] {
+  white-space: nowrap !important;
+}
+
+/* Đảm bảo khoảng cách giữa các từ này nhỏ hơn */
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="are"] {
+  margin-right: 0.05em !important;
+}
+.htwi-{{ sid }} .htwi__heading .htwi__word[data-w="in"] {
+  margin-left: 0.05em !important;
+}
   {% if is_fullscreen %}
     .htwi__content{
       opacity: 0;
