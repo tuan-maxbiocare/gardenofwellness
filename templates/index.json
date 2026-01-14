@@ -1759,6 +1759,116 @@
         "star_color": "#000000"
       }
     },
+    "highlight_text_with_image_9mxFcD": {
+      "type": "highlight-text-with-image",
+      "blocks": {
+        "image_jG74tn": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/GOW-Icon-02.webp",
+            "image_link": "",
+            "open_image_new_window": false,
+            "image_style": "square",
+            "image_ratio": "adapt",
+            "image_width": 34,
+            "image_width_mobile": 70
+          }
+        },
+        "image_GfPjnN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/4-Rosehip-Oil.e575d7b7.avif",
+            "image_link": "",
+            "open_image_new_window": false,
+            "image_style": "square",
+            "image_ratio": "adapt",
+            "image_width": 34,
+            "image_width_mobile": 70
+          }
+        },
+        "image_pfwzXi": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/GoWshop_Evening_primrose_Oil__1000x1000_cbc44a42-c8bf-4374-a806-0279be4f04ad.webp",
+            "image_link": "",
+            "open_image_new_window": false,
+            "image_style": "rounded",
+            "image_ratio": "1_1",
+            "image_width": 30,
+            "image_width_mobile": 70
+          }
+        }
+      },
+      "block_order": [
+        "image_jG74tn",
+        "image_GfPjnN",
+        "image_pfwzXi"
+      ],
+      "name": "Highlight text with image",
+      "settings": {
+        "section_height": "fit",
+        "animation_speed": "medium",
+        "enable_equal_line_height": false,
+        "heading": "Be your[img][[script]]own eurus [[/script]]. Feeling confident[img2]in the  skin[img3]you are  in.",
+        "marker": "none",
+        "heading_size": 100,
+        "heading_tag": "h2",
+        "subheading": "",
+        "text_alignment": "center",
+        "button_text": "oi",
+        "button_link": "",
+        "open_button_new_window": false,
+        "button_style": "secondary",
+        "text_color_light": "#111111",
+        "heading_highlight_color_light": "#29481f",
+        "background_color_light": "#f6f4ee",
+        "text_color_dark": "#000000",
+        "heading_highlight_color_dark": "#282828",
+        "background_color_dark": "#0f0f10",
+        "show_section_divider_desktop": false,
+        "make_section_full_width": false,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "show_section_divider_mobile": true,
+        "padding_top_mobile": 64,
+        "padding_bottom_mobile": 64
+      }
+    },
+    "video_hero_cp7FFn": {
+      "type": "video-hero",
+      "blocks": {
+        "product_MTwjRL": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_MTwjRL"
+      ],
+      "name": "Video hero",
+      "settings": {
+        "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3739352408842388741.mp4",
+        "video_mp4_url": "",
+        "overlay_opacity": 35,
+        "kicker": "EURUS STORY",
+        "heading": "Because beauty is personal.",
+        "subheading": "",
+        "cta_label": "See the story",
+        "cta_link": "shopify://collections/all",
+        "text_align": "center",
+        "text_color": "#ffffff",
+        "content_max_width": 900,
+        "min_height_desktop": 720,
+        "min_height_mobile": 360,
+        "show_products": true,
+        "products_columns_desktop": 3,
+        "products_columns_mobile": "1",
+        "show_scroll_top": true,
+        "scroll_top_offset": 200
+      }
+    },
     "journey_timeline_fQmzcQ": {
       "type": "journey-timeline",
       "blocks": {
@@ -1824,41 +1934,6 @@
         "heading_weight": "600",
         "padding_top": 40,
         "padding_bottom": 40
-      }
-    },
-    "video_hero_cp7FFn": {
-      "type": "video-hero",
-      "blocks": {
-        "product_MTwjRL": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_MTwjRL"
-      ],
-      "name": "Video hero",
-      "settings": {
-        "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3739352408842388741.mp4",
-        "video_mp4_url": "",
-        "overlay_opacity": 35,
-        "kicker": "EURUS STORY",
-        "heading": "Because beauty is personal.",
-        "subheading": "",
-        "cta_label": "See the story",
-        "cta_link": "shopify://collections/all",
-        "text_align": "center",
-        "text_color": "#ffffff",
-        "content_max_width": 900,
-        "min_height_desktop": 720,
-        "min_height_mobile": 360,
-        "show_products": true,
-        "products_columns_desktop": 3,
-        "products_columns_mobile": "1",
-        "show_scroll_top": true,
-        "scroll_top_offset": 200
       }
     },
     "social_feeds_KWVQHM": {
@@ -2643,81 +2718,6 @@
         "padding-block-start": 0,
         "padding-block-end": 48
       }
-    },
-    "highlight_text_with_image_9mxFcD": {
-      "type": "highlight-text-with-image",
-      "blocks": {
-        "image_jG74tn": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/GOW-Icon-02.webp",
-            "image_link": "",
-            "open_image_new_window": false,
-            "image_style": "square",
-            "image_ratio": "adapt",
-            "image_width": 34,
-            "image_width_mobile": 70
-          }
-        },
-        "image_GfPjnN": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/4-Rosehip-Oil.e575d7b7.avif",
-            "image_link": "",
-            "open_image_new_window": false,
-            "image_style": "square",
-            "image_ratio": "adapt",
-            "image_width": 34,
-            "image_width_mobile": 70
-          }
-        },
-        "image_pfwzXi": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/GoWshop_Evening_primrose_Oil__1000x1000_cbc44a42-c8bf-4374-a806-0279be4f04ad.webp",
-            "image_link": "",
-            "open_image_new_window": false,
-            "image_style": "rounded",
-            "image_ratio": "1_1",
-            "image_width": 30,
-            "image_width_mobile": 70
-          }
-        }
-      },
-      "block_order": [
-        "image_jG74tn",
-        "image_GfPjnN",
-        "image_pfwzXi"
-      ],
-      "name": "Highlight text with image",
-      "settings": {
-        "section_height": "fit",
-        "animation_speed": "medium",
-        "enable_equal_line_height": false,
-        "heading": "Be your [img][[script]] own eurus [[/script]]. Feeling confident[img2]in the  skin[img3]you are  in.",
-        "marker": "none",
-        "heading_size": 100,
-        "heading_tag": "h2",
-        "subheading": "",
-        "text_alignment": "center",
-        "button_text": "oi",
-        "button_link": "",
-        "open_button_new_window": false,
-        "button_style": "secondary",
-        "text_color_light": "#111111",
-        "heading_highlight_color_light": "#29481f",
-        "background_color_light": "#F6F4EE",
-        "text_color_dark": "#000000",
-        "heading_highlight_color_dark": "#282828",
-        "background_color_dark": "#0F0F10",
-        "show_section_divider_desktop": false,
-        "make_section_full_width": false,
-        "padding_top": 100,
-        "padding_bottom": 100,
-        "show_section_divider_mobile": true,
-        "padding_top_mobile": 64,
-        "padding_bottom_mobile": 64
-      }
     }
   },
   "order": [
@@ -2736,10 +2736,10 @@
     "product_star_8kJJNp",
     "flow_8RRFC4",
     "testimonials_with_card_8NxiYJ",
-    "journey_timeline_fQmzcQ",
+    "highlight_text_with_image_9mxFcD",
     "video_hero_cp7FFn",
+    "journey_timeline_fQmzcQ",
     "social_feeds_KWVQHM",
-    "section_BbPeJD",
-    "highlight_text_with_image_9mxFcD"
+    "section_BbPeJD"
   ]
 }
