@@ -522,6 +522,7 @@
     </div>
   </div>
 </section>
+
 <script>
 (() => {
   const root = document.querySelector('.htwi-{{ section.id }}');
@@ -532,104 +533,113 @@
 
   heading.dataset.scrub = "true";
 
-  cconst tokenize = () => {
-  if (heading.dataset.tokenized === "true") return;
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-  const nodes = Array.from(heading.childNodes);
-  const frag = document.createDocumentFragment();
+  const tokenize = () => {
+    if (heading.dataset.tokenized === "true") return;
 
-  const pushTextParts = (text, isScript = false) => {
-    const parts = (text || '').split(/(\s+)/);
+    const nodes = Array.from(heading.childNodes);
+    const frag = document.createDocumentFragment();
 
-    parts.forEach(part => {
-      if (part === '') return;
+    const pushTextParts = (text, isScript = false) => {
+      const parts = (text || '').split(/(\s+)/);
 
-      // whitespace -> span space (để groupLines mang theo)
-      if (/^\s+$/.test(part)) {
-        const s = document.createElement('span');
-        s.className = 'htwi__space';
-        s.textContent = part;
-        frag.appendChild(s);
-        return;
+      parts.forEach(part => {
+        if (part === '') return;
+
+        if (/^\s+$/.test(part)) {
+          const s = document.createElement('span');
+          s.className = 'htwi__space';
+          s.textContent = part;
+          frag.appendChild(s);
+          return;
+        }
+
+        const w = document.createElement('span');
+        w.className = isScript ? 'htwi__word htwi__script' : 'htwi__word';
+        w.textContent = part;
+        w.setAttribute('data-w', part);
+        frag.appendChild(w);
+      });
+    };
+
+    nodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        pushTextParts(node.nodeValue || '', false);
+      } else if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.classList &&
+        node.classList.contains('htwi__script')
+      ) {
+        pushTextParts(node.textContent || '', true);
+      } else {
+        frag.appendChild(node); // giữ nguyên inline image, link...
       }
-
-      // word
-      const w = document.createElement('span');
-      w.className = isScript ? 'htwi__word htwi__script' : 'htwi__word';
-      w.textContent = part;
-      w.setAttribute('data-w', part);
-      frag.appendChild(w);
     });
+
+    heading.innerHTML = '';
+    heading.appendChild(frag);
+    heading.dataset.tokenized = "true";
   };
 
-  nodes.forEach(node => {
-    if (node.nodeType === Node.TEXT_NODE) {
-      pushTextParts(node.nodeValue || '', false);
-    } else if (
-      node.nodeType === Node.ELEMENT_NODE &&
-      node.classList &&
-      node.classList.contains('htwi__script')
-    ) {
-      // tokenize chữ trong script span
-      pushTextParts(node.textContent || '', true);
-    } else {
-      // giữ nguyên inline image, link, v.v.
-      frag.appendChild(node);
-    }
-  });
-
-  heading.innerHTML = '';
-  heading.appendChild(frag);
-  heading.dataset.tokenized = "true";
-};
-
   const groupLines = () => {
-  // unwrap line cũ
-  heading.querySelectorAll('.htwi__line').forEach(line => {
-    while (line.firstChild) heading.insertBefore(line.firstChild, line);
-    line.remove();
-  });
+    // unwrap line cũ
+    heading.querySelectorAll('.htwi__line').forEach(line => {
+      while (line.firstChild) heading.insertBefore(line.firstChild, line);
+      line.remove();
+    });
 
-  // Lấy các node cần wrap theo line thật
-  const items = Array.from(heading.childNodes).filter(n => {
-    if (n.nodeType !== Node.ELEMENT_NODE) return false;
-    const el = n;
-    return el.classList.contains('htwi__word')
-      || el.classList.contains('htwi__space')
-      || el.classList.contains('htwi__inline-img');
-  });
+    // wrap theo line thật: word + space + inline-img
+    const items = Array.from(heading.childNodes).filter(n => {
+      if (n.nodeType !== Node.ELEMENT_NODE) return false;
+      const el = n;
+      return el.classList.contains('htwi__word')
+        || el.classList.contains('htwi__space')
+        || el.classList.contains('htwi__inline-img');
+    });
 
-  if (!items.length) return;
+    if (!items.length) return;
 
-  const lines = [];
-  let current = [];
-  let lastTop = null;
+    const lines = [];
+    let current = [];
+    let lastTop = null;
 
-  items.forEach(el => {
-    const top = Math.round(el.getBoundingClientRect().top);
-    if (lastTop === null || Math.abs(top - lastTop) <= 1) {
-      current.push(el);
-    } else {
-      lines.push(current);
-      current = [el];
-    }
-    lastTop = top;
-  });
-  if (current.length) lines.push(current);
+    items.forEach(el => {
+      const top = Math.round(el.getBoundingClientRect().top);
+      if (lastTop === null || Math.abs(top - lastTop) <= 1) {
+        current.push(el);
+      } else {
+        lines.push(current);
+        current = [el];
+      }
+      lastTop = top;
+    });
+    if (current.length) lines.push(current);
 
-  // Wrap thành .htwi__line
-  lines.forEach((nodeList, idx) => {
-    const lineEl = document.createElement('span');
-    lineEl.className = 'htwi__line';
-    lineEl.dataset.line = String(idx);
-    heading.appendChild(lineEl);
-    nodeList.forEach(n => lineEl.appendChild(n));
-  });
+    lines.forEach((nodeList, idx) => {
+      const lineEl = document.createElement('span');
+      lineEl.className = 'htwi__line';
+      lineEl.dataset.line = String(idx);
+      heading.appendChild(lineEl);
+      nodeList.forEach(n => lineEl.appendChild(n));
+    });
 
-  heading.dataset.lineCount = String(lines.length);
-};
+    heading.dataset.lineCount = String(lines.length);
+  };
 
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  const indexWords = () => {
+    const lines = Array.from(heading.querySelectorAll('.htwi__line'));
+    let global = 0;
+
+    lines.forEach(line => {
+      const words = Array.from(line.querySelectorAll('.htwi__word'));
+      words.forEach(w => {
+        w.dataset.i = String(global++);
+      });
+    });
+
+    heading.dataset.wordCount = String(global);
+  };
 
   const update = () => {
     const rect = root.getBoundingClientRect();
@@ -670,12 +680,14 @@
     });
   };
 
+  // init
   tokenize();
 
-  /* ✅ BƯỚC 2: Rebuild khi ảnh inline load xong (tránh lệch dòng / rơi chữ) */
+  // rebuild khi ảnh inline load xong
   root.querySelectorAll('.htwi__inline-img img').forEach(img => {
     if (img.complete) return;
     img.addEventListener('load', rebuild, { once: true });
+    img.addEventListener('error', rebuild, { once: true });
   });
 
   requestAnimationFrame(() => {
@@ -683,9 +695,11 @@
     indexWords();
     update();
   });
-  let t; 
-  
+
   window.addEventListener('scroll', update, { passive: true });
+
+  // ✅ chỉ 1 biến t
+  let t;
 
   const ro = new ResizeObserver(() => {
     clearTimeout(t);
@@ -703,6 +717,7 @@
   }
 })();
 </script>
+
 
 {% schema %}
 {
