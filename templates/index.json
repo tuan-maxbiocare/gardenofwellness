@@ -2739,7 +2739,7 @@
           "type": "button",
           "settings": {
             "label": "Read full",
-            "link": ""
+            "link": "shopify://pages/contact"
           }
         }
       },
@@ -2751,13 +2751,13 @@
       "name": "Media with text (custom)",
       "settings": {
         "used_as_hero": false,
-        "first_image": "shopify://shop_images/274-2H6A2689.jpg",
+        "first_image": "shopify://shop_images/garden-of-wellness-images-740x740-10.webp",
         "desktop_image_height": "fullscreen",
         "mobile_image_height": 400,
         "desktop_image_width": "medium",
         "image_style": "normal",
         "adapt_to_edges": false,
-        "corner_radius": 0,
+        "corner_radius": 8,
         "show_sound_control": false,
         "video_url": "",
         "video_alt_text": "h",
