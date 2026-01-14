@@ -167,10 +167,9 @@
     letter-spacing: -0.03em !important;
     line-height: 1.05 !important;
 
-    /* ✅ QUAN TRỌNG: heading ăn theo schema */
+
     color: var(--htwi-text) !important;
 
-    /* 👇 THÊM VÀO: đảm bảo chữ không tự break lung tung */
     white-space: normal !important;
     overflow-wrap: break-word !important;
     word-break: keep-all !important;
@@ -217,10 +216,9 @@
   .htwi-{{ sid }} .htwi__heading,
   .htwi-{{ sid }} .htwi__heading .htwi__word,
   .htwi-{{ sid }} .htwi__heading .htwi__word::after{
-    font-family: system-ui !important;   /* 👈 CHỈ 1 FONT */
-
-    font-weight: 400 !important;         /* mảnh, tinh tế */
-    letter-spacing: -0.025em !important; /* giống ảnh mẫu */
+    font-family: system-ui !important;   
+    font-weight: 400 !important;      
+    letter-spacing: -0.025em !important; 
     line-height: 1.08 !important;
   }
 
@@ -231,7 +229,7 @@
     font-style: italic !important;
     font-weight: 400 !important;
     letter-spacing: 0 !important;
-    color: inherit !important; /* ✅ KHÔNG cố định màu */
+    color: inherit !important; 
   }
 
   /* Nếu muốn script có tone xanh như mẫu -> set bằng biến full/muted */
@@ -588,62 +586,61 @@
     heading.dataset.tokenized = "true";
   };
 
-  const groupLines = () => {
-    // Xóa các line cũ
-    heading.querySelectorAll('.htwi__line').forEach(line => {
-      while (line.firstChild) heading.insertBefore(line.firstChild, line);
-      line.remove();
-    });
+ const groupLines = () => {
+  // unwrap line cũ
+  heading.querySelectorAll('.htwi__line').forEach(line => {
+    while (line.firstChild) heading.insertBefore(line.firstChild, line);
+    line.remove();
+  });
 
-    // Lấy tất cả node con hiện tại
-    const allNodes = Array.from(heading.childNodes);
-    if (!allNodes.length) return;
+  const words = Array.from(heading.querySelectorAll('.htwi__word'));
+  if (!words.length) return;
 
-    const lines = [];
-    let currentLine = [];
-    let currentLineWidth = 0;
-    const maxWidth = heading.offsetWidth;
-    const tempContainer = document.createElement('span');
-    tempContainer.style.cssText = 'display: inline; visibility: hidden; position: absolute; white-space: nowrap; font: inherit;';
-    document.body.appendChild(tempContainer);
+  // gom theo top thực tế của từng word
+  const lines = [];
+  let current = [];
+  let lastTop = null;
 
-    allNodes.forEach(node => {
-      // Clone node để đo
-      const clone = node.cloneNode(true);
-      tempContainer.innerHTML = '';
-      tempContainer.appendChild(clone);
-      document.body.appendChild(tempContainer);
-      const width = tempContainer.offsetWidth;
-      document.body.removeChild(tempContainer);
-
-      // Nếu thêm node này vượt quá width và currentLine đã có nội dung
-      if (currentLineWidth + width > maxWidth && currentLine.length > 0) {
-        lines.push(currentLine);
-        currentLine = [];
-        currentLineWidth = 0;
-      }
-
-      currentLine.push(node);
-      currentLineWidth += width;
-    });
-
-    // Thêm dòng cuối
-    if (currentLine.length > 0) {
-      lines.push(currentLine);
+  words.forEach(w => {
+    const top = Math.round(w.getBoundingClientRect().top);
+    if (lastTop === null || Math.abs(top - lastTop) <= 1) {
+      current.push(w);
+    } else {
+      lines.push(current);
+      current = [w];
     }
+    lastTop = top;
+  });
+  if (current.length) lines.push(current);
 
-    // Tạo các thẻ span.htwi__line và đẩy node vào
-    lines.forEach((nodeList, idx) => {
-      const lineEl = document.createElement('span');
-      lineEl.className = 'htwi__line';
-      lineEl.dataset.line = String(idx);
-      heading.appendChild(lineEl);
+  // wrap thành .htwi__line
+  lines.forEach((ws, idx) => {
+    const lineEl = document.createElement('span');
+    lineEl.className = 'htwi__line';
+    lineEl.dataset.line = String(idx);
+    heading.appendChild(lineEl);
 
-      nodeList.forEach(node => lineEl.appendChild(node));
-    });
+    ws.forEach(w => lineEl.appendChild(w));
+  });
 
-    heading.dataset.lineCount = String(lines.length);
-  };
+  // ✅ fix “orphan word”: nếu dòng cuối chỉ có 1 từ (vd: "in.")
+  const lineEls = Array.from(heading.querySelectorAll('.htwi__line'));
+  if (lineEls.length >= 2) {
+    const last = lineEls[lineEls.length - 1];
+    const prev = lineEls[lineEls.length - 2];
+
+    const lastWords = last.querySelectorAll('.htwi__word');
+    if (lastWords.length === 1) {
+      // thêm 1 space trước khi move
+      prev.appendChild(document.createTextNode(' '));
+      prev.appendChild(lastWords[0]);
+      last.remove();
+    }
+  }
+
+  heading.dataset.lineCount = String(heading.querySelectorAll('.htwi__line').length);
+};
+
 
   const indexWords = () => {
     const lines = Array.from(heading.querySelectorAll('.htwi__line'));
