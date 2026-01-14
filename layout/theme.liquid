@@ -26,6 +26,7 @@
 
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
+     <link rel="stylesheet" href="{{ 'overlap-fix.css' | asset_url }}" />
     {%- render 'fonts' -%}
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
@@ -94,6 +95,7 @@
         document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
       })();
     </script>
+    <script src="{{ 'menu-portal.js' | asset_url }}"></script>
 
     <main
       id="MainContent"

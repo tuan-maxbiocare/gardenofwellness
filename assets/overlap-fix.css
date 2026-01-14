@@ -1,0 +1,34 @@
+/* Optimized clone styles used by menu-portal v9/v10 */
+.menu-portal-clone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate3d(-9999px, -9999px, 0);
+  opacity: 0;
+  pointer-events: none;
+  /* GIẢM thời gian transition để close nhanh hơn nhưng vẫn mượt */
+  transition: opacity 0.08s ease, transform 0.08s ease;
+  will-change: transform, opacity;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  background: var(--color-background);
+  border-radius: var(--style-border-radius-popover, 6px);
+  overflow: visible !important;
+  padding: var(--padding-sm);
+}
+
+.menu-portal-clone.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Không hiển thị submenu cấp 2/3 bên trong clone - dùng DOM gốc */
+.menu-portal-clone .menu-list__submenu,
+.menu-portal-clone .sub-menu,
+.menu-portal-clone .dropdown {
+  display: none !important;
+}
+
+/* Keep bundle tabs below portal */
+.bundle-tabs-sticky-container {
+  z-index: calc(var(--layer-sticky, 8) - 1) !important;
+}
