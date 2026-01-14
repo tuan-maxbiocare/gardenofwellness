@@ -1,0 +1,1022 @@
+
+{%- liquid
+  assign sid = section.id
+  assign heading_raw = section.settings.heading | default: ''
+  assign subheading = section.settings.subheading
+
+  assign is_fullscreen = false
+  if section.settings.section_height == 'fullscreen'
+    assign is_fullscreen = true
+  endif
+
+  assign anim_speed = section.settings.animation_speed
+  assign anim_duration = 900
+  if anim_speed == 'slow'
+    assign anim_duration = 1400
+  elsif anim_speed == 'fast'
+    assign anim_duration = 600
+  endif
+
+  assign heading_tag = section.settings.heading_tag | default: 'h2'
+  assign align = section.settings.text_alignment | default: 'center'
+  assign marker = section.settings.marker | default: 'underline'
+
+  assign make_full_width = section.settings.make_section_full_width
+  assign show_divider_desktop = section.settings.show_section_divider_desktop
+  assign show_divider_mobile = section.settings.show_section_divider_mobile
+
+  assign pad_top = section.settings.padding_top | default: 100
+  assign pad_bottom = section.settings.padding_bottom | default: 100
+  assign pad_top_m = section.settings.padding_top_mobile | default: 64
+  assign pad_bottom_m = section.settings.padding_bottom_mobile | default: 64
+
+  assign btn_label = section.settings.button_text
+  assign btn_link = section.settings.button_link
+  assign btn_blank = section.settings.open_button_new_window
+  assign btn_style = section.settings.button_style | default: 'secondary'
+-%}
+
+{%- style -%}
+  .htwi-{{ sid }}{
+    --htwi-pad-top: {{ pad_top }}px;
+    --htwi-pad-bottom: {{ pad_bottom }}px;
+    --htwi-pad-top-m: {{ pad_top_m }}px;
+    --htwi-pad-bottom-m: {{ pad_bottom_m }}px;
+
+    /* Colors (Light) */
+    --htwi-text: {{ section.settings.text_color_light }};
+    --htwi-highlight: {{ section.settings.heading_highlight_color_light }};
+    --htwi-bg: {{ section.settings.background_color_light }};
+
+    /* Colors (Dark) */
+    --htwi-text-dark: {{ section.settings.text_color_dark }};
+    --htwi-highlight-dark: {{ section.settings.heading_highlight_color_dark }};
+    --htwi-bg-dark: {{ section.settings.background_color_dark }};
+
+    /* keep numeric (no %) */
+    --htwi-heading-scale: {{ section.settings.heading_size | default: 180 }};
+    --htwi-anim-duration: {{ anim_duration }}ms;
+
+    background: var(--htwi-bg);
+    color: var(--htwi-text);
+    position: relative;
+  }
+
+  @media (prefers-color-scheme: dark){
+    .htwi-{{ sid }}{
+      background: var(--htwi-bg-dark);
+      color: var(--htwi-text-dark);
+    }
+  }
+
+  /* divider */
+  .htwi-{{ sid }}.htwi--divider-desktop{
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    .htwi-{{ sid }}.htwi--divider-desktop{
+      border-top-color: rgba(255,255,255,.12);
+    }
+  }
+
+  .htwi__wrap{
+    {% if make_full_width %}
+      width: 100%;
+    {% else %}
+      max-width: 1200px;
+      margin: 0 auto;
+    {% endif %}
+    padding: var(--htwi-pad-top) 24px var(--htwi-pad-bottom);
+  }
+
+  @media (max-width: 749px){
+    .htwi-{{ sid }}.htwi--divider-mobile{
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
+    @media (prefers-color-scheme: dark){
+      .htwi-{{ sid }}.htwi--divider-mobile{
+        border-top-color: rgba(255,255,255,.12);
+      }
+    }
+    .htwi__wrap{
+      padding: var(--htwi-pad-top-m) 16px var(--htwi-pad-bottom-m);
+    }
+
+    /* ✅ MOBILE ONLY FIX (chỉ chỉnh khoảng cách/size chữ mobile giống ảnh mẫu) */
+    .htwi-{{ sid }} .htwi__heading{
+      /* nhỏ hơn + dồn đẹp hơn */
+      font-size: calc(
+        clamp(34px, 10.2vw, 46px) * (var(--htwi-heading-scale) / 100)
+      ) !important;
+
+      /* khoảng cách dòng giống sample (đỡ “rụng” chữ) */
+      line-height: 1.12 !important;
+
+      /* giảm tracking nhẹ để chữ gọn hơn */
+      letter-spacing: -0.02em !important;
+
+      /* giúp layout “gom” lại như ảnh */
+      max-width: 420px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    /* icon inline: gọn + không đẩy dòng */
+    .htwi-{{ sid }} .htwi__inline-img{
+      margin: 0 .14em !important;
+    }
+    .htwi-{{ sid }} .htwi__inline-img img{
+      height: 1.00em !important;
+      transform: translateY(-0.02em) !important;
+    }
+
+    /* script (own eurus) giữ nhịp dòng trên mobile */
+    .htwi-{{ sid }} .htwi__heading .htwi__word.htwi__script,
+    .htwi-{{ sid }} .htwi__heading .htwi__word.htwi__script::after{
+      line-height: 1.12 !important;
+    }
+  }
+
+  .htwi__inner{
+    {% if is_fullscreen %}
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+    {% endif %}
+  }
+
+  .htwi__content{
+    text-align: {{ align }};
+  }
+
+  /* ===== Heading size like sample ===== */
+  .htwi-{{ sid }} .htwi__heading{
+    margin: 0 !important;
+
+    /* CHỈ GIỮ 1 font-size (để khỏi bị override) */
+    font-size: calc(
+      clamp(48px, 5.6vw, 104px) * (var(--htwi-heading-scale) / 100)
+    ) !important;
+
+    max-width: 980px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    font-family: "Inter", -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+
+    letter-spacing: -0.03em !important;
+    line-height: 1.05 !important;
+
+    /* ✅ QUAN TRỌNG: heading ăn theo schema */
+    color: var(--htwi-text) !important;
+
+    /* 👇 THÊM VÀO: đảm bảo chữ không tự break lung tung */
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: keep-all !important;
+    hyphens: none !important;
+  }
+
+  @media (prefers-color-scheme: dark){
+    .htwi-{{ sid }} .htwi__heading{
+      color: var(--htwi-text-dark) !important;
+    }
+  }
+
+  /* underline marker option */
+  .htwi-{{ sid }} .htwi__heading.htwi--marker-underline{
+    text-decoration: underline;
+    text-underline-offset: .18em;
+    text-decoration-thickness: .08em;
+  }
+
+  /* ===== Inline images: scale with text (em) like sample ===== */
+  .htwi-{{ sid }} .htwi__inline-img{
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    margin: 0 .22em;
+  }
+
+  .htwi-{{ sid }} .htwi__inline-img img{
+    display: block;
+    width: auto !important;
+    height: 1.05em !important;
+    object-fit: contain;
+    transform: translateY(-0.04em);
+    border-radius: inherit;
+  }
+
+  {% if section.settings.enable_equal_line_height %}
+    .htwi-{{ sid }} .htwi__inline-img img{
+      height: 1em !important;
+    }
+  {% endif %}
+
+  /* ===== FINAL FONT: single system font (clean & refined) ===== */
+  .htwi-{{ sid }} .htwi__heading,
+  .htwi-{{ sid }} .htwi__heading .htwi__word,
+  .htwi-{{ sid }} .htwi__heading .htwi__word::after{
+    font-family: system-ui !important;   /* 👈 CHỈ 1 FONT */
+
+    font-weight: 400 !important;         /* mảnh, tinh tế */
+    letter-spacing: -0.025em !important; /* giống ảnh mẫu */
+    line-height: 1.08 !important;
+  }
+
+  /* Script font vẫn uốn lượn + vẫn scrub được */
+  .htwi-{{ sid }} .htwi__heading .htwi__word.htwi__script,
+  .htwi-{{ sid }} .htwi__heading .htwi__word.htwi__script::after{
+    font-family: "Brush Script MT", "Snell Roundhand", "Apple Chancery", cursive !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    color: inherit !important; /* ✅ KHÔNG cố định màu */
+  }
+
+  /* Nếu muốn script có tone xanh như mẫu -> set bằng biến full/muted */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"]{
+    /* script (own eurus) */
+    --full-script: #606B57;
+    --muted-script: color-mix(in srgb, #606B57 30%, transparent);
+  }
+
+  /* script dùng đúng biến của nó */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word.htwi__script{
+    color: var(--muted-script) !important;
+  }
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word.htwi__script::after{
+    color: var(--full-script) !important;
+  }
+
+  /* ===== Scroll scrub reveal (per line) ===== */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"]{
+    --full: currentColor;
+    --muted: color-mix(in srgb, currentColor 30%, transparent);
+  }
+
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__line{
+    --p: 0;
+    display: block !important;   /* 👈 THAY TỪ inline-block THÀNH block */
+    white-space: normal;
+    width: 100%;
+  }
+
+  .htwi-{{ sid }} .htwi__heading {
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  /* fallback: always show text */
+  /* ===== Robust scrub without background-clip:text ===== */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word{
+    position: relative;
+    display: inline-block;
+    color: var(--muted);           /* chữ nhạt luôn hiện */
+  }
+
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word::after{
+    content: attr(data-w);         /* lớp chữ màu đậm */
+    position: absolute;
+    inset: 0;
+    color: var(--full);
+    pointer-events: none;
+
+    /* reveal từ trái sang phải theo --p */
+    clip-path: inset(0 calc((1 - var(--wp)) * 100%) 0 0);
+    -webkit-clip-path: inset(0 calc((1 - var(--wp)) * 100%) 0 0);
+  }
+
+  /* only use clip-text when supported; prevents "text disappears" in editor */
+  .htwi__subheading{
+    margin-top: 14px;
+    font-size: 16px;
+    opacity: .75;
+  }
+
+  .htwi__actions{
+    margin-top: 22px;
+  }
+
+  .htwi__btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid rgba(0,0,0,.18);
+    color: inherit;
+    background: transparent;
+  }
+
+  @media (prefers-color-scheme: dark){
+    .htwi__btn{
+      border-color: rgba(255,255,255,.20);
+    }
+  }
+
+  .htwi__btn.htwi__btn--primary{
+    background: currentColor;
+    color: var(--htwi-bg);
+  }
+
+  @media (prefers-color-scheme: dark){
+    .htwi__btn.htwi__btn--primary{
+      color: var(--htwi-bg-dark);
+    }
+  }
+
+  .htwi__btn.htwi__btn--secondary{
+    background: transparent;
+  }
+
+  /* =========================
+    COLOR SYSTEM (schema-driven)
+    - normal + highlight: full + muted
+    - light + dark
+    ========================= */
+  /* Heading base color follows schema (normal text) */
+  .htwi-{{ sid }} .htwi__heading{
+    color: var(--htwi-text) !important;
+  }
+
+  @media (prefers-color-scheme: dark){
+    .htwi-{{ sid }} .htwi__heading{
+      color: var(--htwi-text-dark) !important;
+    }
+  }
+
+  /* Define scrub colors (LIGHT) */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"]{
+    /* full (after reveal) */
+    --full: var(--htwi-text);
+    --full-highlight: var(--htwi-highlight);
+
+    /* muted (before reveal) */
+    --muted: color-mix(in srgb, var(--htwi-text) 28%, transparent);
+    --muted-highlight: color-mix(in srgb, var(--htwi-highlight) 28%, transparent);
+  }
+
+  /* Define scrub colors (DARK) */
+  @media (prefers-color-scheme: dark){
+    .htwi-{{ sid }} .htwi__heading[data-scrub="true"]{
+      --full: var(--htwi-text-dark);
+      --full-highlight: var(--htwi-highlight-dark);
+
+      --muted: color-mix(in srgb, var(--htwi-text-dark) 28%, transparent);
+      --muted-highlight: color-mix(in srgb, var(--htwi-highlight-dark) 28%, transparent);
+    }
+  }
+
+  /* Normal words: muted before scroll */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word{
+    color: var(--muted) !important;
+  }
+
+  /* Normal words: full color revealed layer */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word::after{
+    color: var(--full) !important;
+  }
+
+  /* Highlight words: muted before scroll */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word.is-highlight{
+    color: var(--muted-highlight) !important;
+  }
+
+  /* Highlight words: full color revealed layer */
+  .htwi-{{ sid }} .htwi__heading[data-scrub="true"] .htwi__word.is-highlight::after{
+    color: var(--full-highlight) !important;
+  }
+
+  {% if is_fullscreen %}
+    .htwi__content{
+      opacity: 0;
+      transform: translateY(10px);
+      animation: htwiFadeUp var(--htwi-anim-duration) ease forwards;
+    }
+
+    @keyframes htwiFadeUp{
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+{%- assign divider_classes = '' -%}
+{%- if show_divider_desktop -%}
+  {%- assign divider_classes = divider_classes | append: ' htwi--divider-desktop' -%}
+{%- endif -%}
+{%- if show_divider_mobile -%}
+  {%- assign divider_classes = divider_classes | append: ' htwi--divider-mobile' -%}
+{%- endif -%}
+
+<section class="htwi-{{ sid }}{{ divider_classes }}">
+  <div class="htwi__wrap">
+    <div class="htwi__inner">
+      <div class="htwi__content">
+
+        {%- assign img_urls = '' -%}
+        {%- assign img_alts = '' -%}
+        {%- assign img_styles = '' -%}
+        {%- assign img_links = '' -%}
+        {%- assign img_blanks = '' -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'image' -%}
+            {%- assign u = '' -%}
+            {%- if block.settings.image != blank -%}
+              {%- assign u = block.settings.image | image_url: width: 240 -%}
+            {%- endif -%}
+
+            {%- assign alt_text = 'inline image' -%}
+            {%- if block.settings.image != blank -%}
+              {%- assign alt_text = block.settings.image.alt | default: 'inline image' -%}
+            {%- endif -%}
+
+            {%- assign img_urls = img_urls | append: u | append: '||' -%}
+            {%- assign img_alts = img_alts | append: alt_text | append: '||' -%}
+            {%- assign img_styles = img_styles | append: block.settings.image_style | append: '||' -%}
+            {%- assign img_links = img_links | append: block.settings.image_link | append: '||' -%}
+            {%- assign img_blanks = img_blanks | append: block.settings.open_image_new_window | append: '||' -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- assign urls_arr = img_urls | split: '||' -%}
+        {%- assign alts_arr = img_alts | split: '||' -%}
+        {%- assign styles_arr = img_styles | split: '||' -%}
+        {%- assign links_arr = img_links | split: '||' -%}
+        {%- assign blanks_arr = img_blanks | split: '||' -%}
+
+        {%- assign heading_rendered = heading_raw -%}
+
+        {%- for i in (0..2) -%}
+          {%- assign token = '[img]' -%}
+          {%- if i == 1 -%}{%- assign token = '[img2]' -%}{%- endif -%}
+          {%- if i == 2 -%}{%- assign token = '[img3]' -%}{%- endif -%}
+
+          {%- assign img_url = urls_arr[i] -%}
+          {%- assign img_alt = alts_arr[i] -%}
+          {%- assign img_style = styles_arr[i] | default: 'square' -%}
+          {%- assign img_link = links_arr[i] -%}
+          {%- assign img_blank = blanks_arr[i] -%}
+
+          {%- assign br = '0' -%}
+          {%- if img_style == 'rounded' -%}{%- assign br = '999px' -%}{%- endif -%}
+
+          {%- capture img_html -%}
+            {%- if img_url != blank -%}
+              <span class="htwi__inline-img" style="border-radius: {{ br }};">
+                {%- if img_link != blank -%}
+                  <a href="{{ img_link }}" {% if img_blank %}target="_blank" rel="noopener noreferrer"{% endif %} style="display:inline-flex; text-decoration:none;">
+                {%- endif -%}
+
+                <img
+                  src="{{ img_url }}"
+                  alt="{{ img_alt | escape }}"
+                  loading="lazy"
+                >
+
+                {%- if img_link != blank -%}</a>{%- endif -%}
+              </span>
+            {%- endif -%}
+          {%- endcapture -%}
+
+          {%- assign heading_rendered = heading_rendered | replace: token, img_html -%}
+        {%- endfor -%}
+
+        {%- assign heading_rendered = heading_rendered
+  | replace: '[[script]]', '<span class="htwi__script">'
+  | replace: '[[/script]]', '</span>'
+-%}
+
+        <{{ heading_tag }} class="htwi__heading {% if marker == 'underline' %}htwi--marker-underline{% endif %}">
+          {{ heading_rendered }}
+        </{{ heading_tag }}>
+
+        {%- if subheading != blank -%}
+          <div class="htwi__subheading">{{ subheading }}</div>
+        {%- endif -%}
+
+        {%- if btn_label != blank and btn_link != blank -%}
+          <div class="htwi__actions">
+            <a
+              class="htwi__btn {% if btn_style == 'primary' %}htwi__btn--primary{% else %}htwi__btn--secondary{% endif %}"
+              href="{{ btn_link }}"
+              {% if btn_blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+            >
+              {{ btn_label }}
+            </a>
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const root = document.querySelector('.htwi-{{ section.id }}');
+  if (!root) return;
+
+  const heading = root.querySelector('.htwi__heading');
+  if (!heading) return;
+
+  heading.dataset.scrub = "true";
+
+  const tokenize = () => {
+    if (heading.dataset.tokenized === "true") return;
+
+    const nodes = Array.from(heading.childNodes);
+    const frag = document.createDocumentFragment();
+
+    nodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.nodeValue || '';
+        const parts = text.split(/(\s+)/);
+
+        parts.forEach(part => {
+          if (part === '') return;
+
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+            return;
+          }
+
+          const w = document.createElement('span');
+          w.className = 'htwi__word';
+          w.textContent = part;
+          w.setAttribute('data-w', part);
+          frag.appendChild(w);
+        });
+      } else if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.classList &&
+        node.classList.contains('htwi__script')
+      ) {
+        // ✅ tokenize chữ trong script span để nó cũng chạy scrub
+        const text = node.textContent || '';
+        const parts = text.split(/(\s+)/);
+
+        parts.forEach(part => {
+          if (part === '') return;
+
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+            return;
+          }
+
+          const w = document.createElement('span');
+          w.className = 'htwi__word htwi__script';
+          w.textContent = part;
+          w.setAttribute('data-w', part);
+          frag.appendChild(w);
+        });
+      } else {
+        frag.appendChild(node);
+      }
+    });
+
+    heading.innerHTML = '';
+    heading.appendChild(frag);
+    heading.dataset.tokenized = "true";
+  };
+
+  const groupLines = () => {
+    // Xóa các line cũ
+    heading.querySelectorAll('.htwi__line').forEach(line => {
+      while (line.firstChild) heading.insertBefore(line.firstChild, line);
+      line.remove();
+    });
+
+    // Lấy tất cả node con hiện tại
+    const allNodes = Array.from(heading.childNodes);
+    if (!allNodes.length) return;
+
+    const lines = [];
+    let currentLine = [];
+    let currentLineWidth = 0;
+    const maxWidth = heading.offsetWidth;
+    const tempContainer = document.createElement('span');
+    tempContainer.style.cssText = 'display: inline; visibility: hidden; position: absolute; white-space: nowrap; font: inherit;';
+    document.body.appendChild(tempContainer);
+
+    allNodes.forEach(node => {
+      // Clone node để đo
+      const clone = node.cloneNode(true);
+      tempContainer.innerHTML = '';
+      tempContainer.appendChild(clone);
+      document.body.appendChild(tempContainer);
+      const width = tempContainer.offsetWidth;
+      document.body.removeChild(tempContainer);
+
+      // Nếu thêm node này vượt quá width và currentLine đã có nội dung
+      if (currentLineWidth + width > maxWidth && currentLine.length > 0) {
+        lines.push(currentLine);
+        currentLine = [];
+        currentLineWidth = 0;
+      }
+
+      currentLine.push(node);
+      currentLineWidth += width;
+    });
+
+    // Thêm dòng cuối
+    if (currentLine.length > 0) {
+      lines.push(currentLine);
+    }
+
+    // Tạo các thẻ span.htwi__line và đẩy node vào
+    lines.forEach((nodeList, idx) => {
+      const lineEl = document.createElement('span');
+      lineEl.className = 'htwi__line';
+      lineEl.dataset.line = String(idx);
+      heading.appendChild(lineEl);
+
+      nodeList.forEach(node => lineEl.appendChild(node));
+    });
+
+    heading.dataset.lineCount = String(lines.length);
+  };
+
+  const indexWords = () => {
+    const lines = Array.from(heading.querySelectorAll('.htwi__line'));
+    let global = 0;
+
+    lines.forEach(line => {
+      const words = Array.from(line.querySelectorAll('.htwi__word'));
+      words.forEach(w => {
+        w.dataset.i = String(global++);
+      });
+    });
+
+    heading.dataset.wordCount = String(global);
+  };
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  const update = () => {
+    const rect = root.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+
+    const start = vh * 0.95;
+    const end   = vh * -0.45;
+
+    const raw = (start - rect.top) / (start - end);
+    let p = clamp(raw, 0, 1);
+
+    /* chậm ở đầu, nhanh ở cuối */
+    p = Math.pow(p, 1.8);
+
+    /* snap nhanh đoạn cuối (thu màu về nhanh hơn) */
+    if (p > 0.75) {
+      p = 0.75 + (p - 0.75) * 4.2;
+      p = Math.min(1, p);
+    }
+
+    const words = Array.from(heading.querySelectorAll('.htwi__word'));
+    const total = words.length || 1;
+
+    /* spread càng lớn -> càng chậm tổng thể */
+    const spread = 1.25;
+    const x = p * total * spread;
+
+    words.forEach((w, idx) => {
+      const wp = clamp(x - idx, 0, 1);
+      w.style.setProperty('--wp', wp.toFixed(4));
+    });
+  };
+
+  const rebuild = () => {
+    heading.dataset.tokenized = "false";
+    tokenize();
+    requestAnimationFrame(() => {
+      groupLines();
+      indexWords();
+      update();
+    });
+  };
+
+  tokenize();
+  requestAnimationFrame(() => {
+    groupLines();
+    indexWords();
+    update();
+  });
+
+  window.addEventListener('scroll', update, { passive: true });
+
+  // 🔁 Rebuild khi kích thước heading thay đổi (font-size, editor chỉnh slider, v.v.)
+  const ro = new ResizeObserver(() => {
+    clearTimeout(t);
+    t = setTimeout(rebuild, 80);
+  });
+  ro.observe(heading);
+
+  let t;
+  window.addEventListener('resize', () => {
+    clearTimeout(t);
+    t = setTimeout(rebuild, 120);
+  });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(rebuild);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Highlight text with image",
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Section height",
+      "default": "fit",
+      "options": [
+        { "value": "fit", "label": "Fit content" },
+        { "value": "fullscreen", "label": "Fullscreen" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "animation_speed",
+      "label": "Animation speed",
+      "default": "medium",
+      "info": "Only applies to fullscreen height. With fit content height, animation speed depends on content height.",
+      "options": [
+        { "value": "slow", "label": "Slow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "fast", "label": "Fast" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_equal_line_height",
+      "label": "Enable equal line height",
+      "default": false,
+      "info": "Ensure consistent line spacing regardless of different image height."
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Highlight products, [img] a collection, or [img2] images alongside a brand message [img3]",
+      "info": "Use tokens: [img], [img2], [img3] to insert images from blocks."
+    },
+    {
+      "type": "select",
+      "id": "marker",
+      "label": "Marker",
+      "default": "underline",
+      "options": [
+        { "value": "underline", "label": "Underline" },
+        { "value": "none", "label": "None" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 100,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "default": 180
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "p", "label": "P" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "oi"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "oi"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_button_new_window",
+      "label": "Open this link in a new window",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "primary", "label": "Primary" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color_light",
+      "label": "Text color (light)",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "heading_highlight_color_light",
+      "label": "Heading highlight color (light)",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "background_color_light",
+      "label": "Background color (light)",
+      "default": "#F6F4EE"
+    },
+    {
+      "type": "color",
+      "id": "text_color_dark",
+      "label": "Text color (dark)",
+      "default": "#F2F2F2"
+    },
+    {
+      "type": "color",
+      "id": "heading_highlight_color_dark",
+      "label": "Heading highlight color (dark)",
+      "default": "#F2F2F2"
+    },
+    {
+      "type": "color",
+      "id": "background_color_dark",
+      "label": "Background color (dark)",
+      "default": "#0F0F10"
+    },
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_divider_desktop",
+      "label": "Show section divider",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "make_section_full_width",
+      "label": "Make section full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_divider_mobile",
+      "label": "Show section divider",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 3,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "url", "id": "image_link", "label": "Image link" },
+        { "type": "checkbox", "id": "open_image_new_window", "label": "Open this link in a new window", "default": false },
+        {
+          "type": "select",
+          "id": "image_style",
+          "label": "Image style",
+          "default": "square",
+          "options": [
+            { "value": "square", "label": "Square" },
+            { "value": "rounded", "label": "Rounded" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "Image ratio",
+          "default": "adapt",
+          "options": [
+            { "value": "adapt", "label": "Adapt to section settings" },
+            { "value": "1_1", "label": "Square (1:1)" }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Image width (not used - scales with text)",
+          "min": 18,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "default": 34
+        },
+        {
+          "type": "range",
+          "id": "image_width_mobile",
+          "label": "Image width mobile (not used - scales with text)",
+          "min": 24,
+          "max": 140,
+          "step": 2,
+          "unit": "px",
+          "default": 70
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Highlight text with image",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}
