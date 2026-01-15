@@ -466,7 +466,12 @@
       ],
       "name": "t:names.collections_grid",
       "settings": {
-        "collection_list": [],
+        "collection_list": [
+          "all-collections",
+          "beauty-products",
+          "best-sellers-1",
+          "best-sellers"
+        ],
         "layout_type": "grid",
         "carousel_on_mobile": true,
         "columns": 4,
