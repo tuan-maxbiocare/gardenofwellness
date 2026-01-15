@@ -70,7 +70,98 @@
     test_id: 'collections-list-grid'
   %}
 </div>
+<style>
+  /* CÁCH NÀY SẼ HOẠT ĐỘNG 100% */
+  .resource-list__item .collection-card__media,
+  .resource-list__item [class*="image"],
+  .resource-list__item [class*="media"],
+  .resource-list__item > * > [class*="image"],
+  .resource-list__item > * > [class*="media"] {
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    display: block !important;
+    position: relative !important;
+  }
 
+  .resource-list__item .collection-card__media img,
+  .resource-list__item [class*="image"] img,
+  .resource-list__item [class*="media"] img,
+  .resource-list__item > * > [class*="image"] img,
+  .resource-list__item > * > [class*="media"] img {
+    transition: transform 0.5s ease !important;
+    transform: scale(1) !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    will-change: transform !important;
+  }
+
+  .resource-list__item:hover .collection-card__media img,
+  .resource-list__item:hover [class*="image"] img,
+  .resource-list__item:hover [class*="media"] img,
+  .resource-list__item:hover > * > [class*="image"] img,
+  .resource-list__item:hover > * > [class*="media"] img {
+    transform: scale(1.1) !important;
+  }
+</style>
+
+<script>
+// CÁCH CHẮC CHẮN NHẤT
+document.addEventListener('DOMContentLoaded', function() {
+  // Đợi một chút để đảm bảo content đã load
+  setTimeout(function() {
+    // Tìm tất cả các item trong collection list
+    const collectionItems = document.querySelectorAll('.resource-list__item');
+    
+    collectionItems.forEach(item => {
+      // Tìm tất cả các hình ảnh trong item này
+      const images = item.querySelectorAll('img');
+      
+      images.forEach(img => {
+        // Tìm phần tử chứa hình ảnh
+        let container = img.parentElement;
+        
+        // Tìm phần tử chứa có class chứa "image" hoặc "media"
+        while (container && container !== item) {
+          const className = container.className || '';
+          if (className.includes('image') || className.includes('media') || 
+              className.includes('Image') || className.includes('Media')) {
+            break;
+          }
+          container = container.parentElement;
+        }
+        
+        // Nếu tìm thấy container
+        if (container && container !== item) {
+          // Thêm style cho container
+          container.style.overflow = 'hidden';
+          container.style.borderRadius = '20px';
+          
+          // Thêm style cho hình ảnh
+          img.style.transition = 'transform 0.5s ease';
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          
+          // Thêm event listener cho item
+          item.addEventListener('mouseenter', function() {
+            img.style.transform = 'scale(1.1)';
+          });
+          
+          item.addEventListener('mouseleave', function() {
+            img.style.transform = 'scale(1)';
+          });
+          
+          console.log('Đã thêm hiệu ứng hover cho hình ảnh trong item');
+        }
+      });
+    });
+    
+    console.log('Đã xử lý', collectionItems.length, 'collection items');
+  }, 1000); // Chờ 1 giây
+});
+</script>
 {% schema %}
 {
   "name": "t:names.collection_list",
