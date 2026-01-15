@@ -18,6 +18,7 @@
           "settings": {
             "text": "<h1>{{ closest.collection.title }}</h1>",
             "width": "fit-content",
+            "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
             "type_preset": "h2",
@@ -44,6 +45,7 @@
           "settings": {
             "text": "{{ closest.collection.description }}",
             "width": "fit-content",
+            "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
             "type_preset": "rte",
@@ -76,7 +78,7 @@
         "horizontal_alignment": "flex-start",
         "vertical_alignment": "center",
         "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
+        "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "page-width",
@@ -96,6 +98,28 @@
         "gradient_direction": "to top",
         "padding-block-start": 48,
         "padding-block-end": 48
+      }
+    },
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+        "text_alignment": "center",
+        "text_alignment_mobile": "center",
+        "full_width": false,
+        "full_width_mobile": false,
+        "full_page": false,
+        "container_width": "full",
+        "container_padding": 0,
+        "container_padding_mobile": 0,
+        "section_paddings": 8,
+        "section_paddings_mobile": 8,
+        "color_type": "custom",
+        "background_color": "#fafafa",
+        "text_color": "#000000",
+        "link_color": "#000000",
+        "link_hover_color": "#555555",
+        "section_id": "",
+        "section_class": ""
       }
     },
     "main": {
@@ -145,6 +169,7 @@
               "type": "_product-card-gallery",
               "settings": {
                 "image_ratio": "adapt",
+                "media_background": "#f5f5f5",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -196,6 +221,7 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "color": "var(--color-foreground)",
+                "price_color": "#000000",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -227,10 +253,84 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "social_feeds_CYwmeT": {
+      "type": "social-feeds",
+      "blocks": {
+        "instagram_post_jg4DD6": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_CpJiVk": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_aQcchi": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_kt9RY6": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_PtwAwT": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        }
+      },
+      "block_order": [
+        "instagram_post_jg4DD6",
+        "instagram_post_CpJiVk",
+        "instagram_post_aQcchi",
+        "instagram_post_kt9RY6",
+        "instagram_post_PtwAwT"
+      ],
+      "settings": {
+        "section_width": "page-width",
+        "heading": "As seen on the GRAM.",
+        "instagram_url": "",
+        "instagram_handle": "yourbrand",
+        "default_caption": "Loving these products from our latest collection! 😍 The quality is amazing and they fit perfectly. #fashion #style #ootd",
+        "background_color": "#ffffff",
+        "heading_color": "#000000",
+        "accent_color": "#91b474"
+      }
     }
   },
   "order": [
     "section",
-    "main"
+    "breadcrumbs",
+    "main",
+    "social_feeds_CYwmeT"
   ]
 }

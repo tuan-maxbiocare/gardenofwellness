@@ -1,0 +1,313 @@
+{% comment %}
+  Breadcrumbs Section
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    padding: {{ section.settings.section_paddings }}px 0;
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    {% if section.settings.full_width %}
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+    {% endif %}
+  }
+
+  {% if section.settings.full_page %}
+    #shopify-section-{{ section.id }} {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .breadcrumbs-section__content {
+      width: 100%;
+    }
+  {% endif %}
+
+  .breadcrumbs {
+    font-size: 14px;
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    {% if section.settings.text_alignment == 'center' %}
+      justify-content: center;
+    {% elsif section.settings.text_alignment == 'right' %}
+      justify-content: flex-end;
+    {% else %}
+      justify-content: flex-start;
+    {% endif %}
+  }
+
+  .breadcrumbs__link {
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+  }
+
+  .breadcrumbs__link:hover {
+    opacity: 0.7;
+  }
+
+  .breadcrumbs__item--current .breadcrumbs__link {
+    font-weight: 600;
+  }
+
+  .breadcrumbs__separator {
+    opacity: 0.5;
+  }
+
+  /* Container width control */
+  {% if section.settings.container_width == 'full' %}
+    .breadcrumbs-section__content {
+      max-width: 100%;
+      padding: 0 {{ section.settings.container_padding }}px;
+    }
+  {% elsif section.settings.container_width == 'large' %}
+    .breadcrumbs-section__content {
+      max-width: 1400px;
+      padding: 0 {{ section.settings.container_padding }}px;
+    }
+  {% else %}
+    .breadcrumbs-section__content {
+      max-width: 1200px;
+      padding: 0 {{ section.settings.container_padding }}px;
+    }
+  {% endif %}
+
+  /* Mobile responsive */
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding: {{ section.settings.section_paddings_mobile }}px 0;
+      {% if section.settings.full_width_mobile %}
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+      {% endif %}
+    }
+
+    .breadcrumbs-section__content {
+      padding: 0 {{ section.settings.container_padding_mobile }}px;
+    }
+
+    .breadcrumbs__list {
+      flex-wrap: wrap;
+      {% if section.settings.text_alignment_mobile == 'center' %}
+        justify-content: center;
+      {% elsif section.settings.text_alignment_mobile == 'right' %}
+        justify-content: flex-end;
+      {% else %}
+        justify-content: flex-start;
+      {% endif %}
+    }
+
+    .breadcrumbs__item {
+      font-size: 13px;
+    }
+  }
+
+  /* Desktop only full page adjustment */
+  @media screen and (min-width: 769px) {
+    {% if section.settings.full_page %}
+      .breadcrumbs-section__content {
+        text-align: {{ section.settings.text_alignment }};
+      }
+    {% endif %}
+  }
+</style>
+
+<section
+  id="shopify-section-{{ section.id }}"
+  class="breadcrumbs-section color-{{ section.settings.color_type }} {% if section.settings.full_page %}breadcrumbs-section--full-page{% endif %} {% if section.settings.full_width %}breadcrumbs-section--full-width{% endif %}"
+  {% if section.settings.section_id != blank %}id="{{ section.settings.section_id }}"{% endif %}
+>
+  {% if template.name != 'index' %}
+    <div class="breadcrumbs-section__content page-width">
+      {% render 'breadcrumbs' %}
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Breadcrumbs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment (Desktop)",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "label": "Text alignment (Mobile)",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width section",
+      "default": false,
+      "info": "Section sẽ tràn full chiều ngang"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_mobile",
+      "label": "Full width on mobile",
+      "default": true,
+      "info": "Áp dụng full width cho thiết bị di động"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_page",
+      "label": "Full page height",
+      "default": false,
+      "info": "Section sẽ chiếm toàn bộ chiều cao màn hình"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Container width",
+      "default": "normal",
+      "options": [
+        { "value": "full", "label": "Full width" },
+        { "value": "large", "label": "Large (1400px)" },
+        { "value": "normal", "label": "Normal (1200px)" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "container_padding",
+      "label": "Container padding (Desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "container_padding_mobile",
+      "label": "Container padding (Mobile)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_paddings",
+      "label": "Vertical padding (Desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_paddings_mobile",
+      "label": "Vertical padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "select",
+      "id": "color_type",
+      "label": "Color type",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "invert", "label": "Invert" },
+        { "value": "custom", "label": "Custom" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#555555"
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "text",
+      "id": "section_id",
+      "label": "Section ID",
+      "info": "Dùng để tạo anchor link hoặc custom CSS"
+    },
+    {
+      "type": "text",
+      "id": "section_class",
+      "label": "Custom CSS class",
+      "info": "Thêm class CSS tùy chỉnh"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumbs",
+      "settings": {
+        "text_alignment": "left",
+        "full_width": false,
+        "full_page": false,
+        "container_width": "normal",
+        "section_paddings": 20,
+        "color_type": "default"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,49 @@
+{% comment %}
+  Breadcrumbs snippet
+  Used by section
+{% endcomment %}
+
+{% assign t = template | split: '.' | first %}
+
+{% if t != 'index' %}
+<nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+  <ol class="breadcrumbs__list">
+
+    <!-- Home -->
+    <li class="breadcrumbs__item">
+      <a class="breadcrumbs__link" href="{{ routes.root_url }}">
+        Home
+      </a>
+    </li>
+
+    {%- case t -%}
+
+      {%- when 'collection' -%}
+        <li class="breadcrumbs__separator">></li>
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <a class="breadcrumbs__link" href="{{ collection.url }}" aria-current="page">
+            {{ collection.title }}
+          </a>
+        </li>
+
+      {%- when 'page' -%}
+        <li class="breadcrumbs__separator">></li>
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <a class="breadcrumbs__link" href="{{ page.url }}" aria-current="page">
+            {{ page.title }}
+          </a>
+        </li>
+
+      {%- else -%}
+        <li class="breadcrumbs__separator">></li>
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span class="breadcrumbs__link" aria-current="page">
+            {{ page_title }}
+          </span>
+        </li>
+
+    {%- endcase -%}
+
+  </ol>
+</nav>
+{% endif %}
