@@ -399,7 +399,12 @@
       ],
       "name": "t:names.collections_grid",
       "settings": {
-        "collection_list": [],
+        "collection_list": [
+          "beauty-products",
+          "best-sellers-1",
+          "best-sellers",
+          "body-care"
+        ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "columns": 4,
