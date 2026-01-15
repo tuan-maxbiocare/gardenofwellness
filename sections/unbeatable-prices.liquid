@@ -677,6 +677,9 @@
     padding-top: 12px;
   }
 
+  /* ===================================
+     STEP ITEM - THÊM NÚT XÓA
+  =================================== */
   .step-item {
     display: flex;
     align-items: center;
@@ -685,6 +688,8 @@
     background: #f8fff8;
     border-radius: 16px;
     margin-bottom: 12px;
+    position: relative;
+    padding-right: 50px; /* Tạo không gian cho nút xóa */
   }
 
   .step-item-img {
@@ -699,6 +704,26 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  /* Nút xóa sản phẩm */
+  .step-item-remove {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .step-item-remove:hover {
+    color: #ff0000;
+    background: #f5f5f5;
   }
 
   .bundle-total-wrapper {
@@ -1136,6 +1161,7 @@
       this.positionTimeout = null;
       this.discountPercentage = 0; // Thêm biến lưu % discount
       this.isAddingToCart = false; // Thêm biến tránh click nhiều lần
+      this.cartErrors = []; // Lưu các lỗi khi thêm vào cart
     }
 
     // Khởi tạo mọi thứ
@@ -1228,9 +1254,9 @@
         h.addEventListener('click', (e) => this.toggleStep(e));
       });
 
-      // Add all to cart - THÊM {once: true} ĐỂ TRÁNH CLICK NHIỀU LẦN
+      // Add all to cart
       if (this.addAllBtn) {
-        this.addAllBtn.addEventListener('click', () => this.addAllToCart(), { once: true });
+        this.addAllBtn.addEventListener('click', () => this.addAllToCart());
       }
 
       // Tab arrows navigation
@@ -1244,7 +1270,7 @@
     }
 
     // ==============================================
-    // CORE BUNDLE FUNCTIONS
+    // CORE BUNDLE FUNCTIONS - THÊM XÓA SẢN PHẨM
     // ==============================================
     updateAddButtonsState() {
       const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
@@ -1270,16 +1296,79 @@
         const content = this.stepContents[item.step - 1];
         if (!content) return;
         content.insertAdjacentHTML('beforeend', `
-          <div class="step-item" data-variant-id="${item.id}">
+          <div class="step-item" data-variant-id="${item.id}" data-step="${item.step}">
             <div class="step-item-img"><img src="${item.img}" alt="${item.title}"></div>
             <div class="step-item-info">
               <div class="step-item-title">${item.title}</div>
               <div class="step-item-quantity">Qty: ${item.quantity}</div>
               <div class="step-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
             </div>
+            <button class="step-item-remove" data-variant-id="${item.id}" data-step="${item.step}">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
           </div>
         `);
       });
+
+      // Bind sự kiện xóa sản phẩm
+      this.bindRemoveEvents();
+    }
+
+    // Thêm hàm bindRemoveEvents
+    bindRemoveEvents() {
+      document.querySelectorAll('.step-item-remove').forEach(btn => {
+        // Xóa event listener cũ trước khi thêm mới
+        btn.removeEventListener('click', this.handleRemoveItem);
+        btn.addEventListener('click', (e) => this.handleRemoveItem(e));
+      });
+    }
+
+    // Thêm hàm xử lý xóa sản phẩm
+    handleRemoveItem(e) {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const btn = e.currentTarget;
+        const variantId = btn.dataset.variantId;
+        const step = parseInt(btn.dataset.step);
+
+        if (!variantId || !step) {
+          console.error('Missing variantId or step for removal');
+          return;
+        }
+
+        // Tìm item cần xóa
+        const itemIndex = this.items.findIndex(i => i.id === variantId && i.step === step);
+        if (itemIndex === -1) return;
+
+        const item = this.items[itemIndex];
+
+        // Giảm số lượng hoặc xóa hẳn
+        if (item.quantity > 1) {
+          item.quantity -= 1;
+          this.originalTotal -= item.price;
+        } else {
+          this.originalTotal -= item.price * item.quantity;
+          this.items.splice(itemIndex, 1);
+        }
+
+        // Cập nhật UI
+        this.renderStepContents();
+        this.updateUI();
+
+        console.log('Item removed from bundle:', { variantId, step, remainingItems: this.items.length });
+        
+        // Reset button state nếu đang có lỗi
+        if (this.isAddingToCart) {
+          this.resetAddToCartState();
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+        alert('Error removing item. Please try again.');
+      }
     }
 
     updateUI() {
@@ -1339,6 +1428,10 @@
       if (this.addAllBtn) {
         this.addAllBtn.disabled = totalCount === 0 || this.isAddingToCart;
         this.addAllBtn.style.cursor = (totalCount === 0 || this.isAddingToCart) ? 'not-allowed' : 'pointer';
+        // Reset text nếu không đang thêm
+        if (!this.isAddingToCart) {
+          this.addAllBtn.textContent = 'Add all to cart';
+        }
       }
 
       // Update mobile summary
@@ -1396,11 +1489,14 @@
           title, 
           step 
         });
+        const originalText = btn.textContent;
         btn.textContent = 'ADDED ✓';
         
         // Reset button text after 1.5 seconds
         setTimeout(() => {
-          btn.textContent = 'ADD TO BUNDLE';
+          if (btn.textContent === 'ADDED ✓') {
+            btn.textContent = originalText;
+          }
         }, 1500);
       }
 
@@ -1415,20 +1511,24 @@
     }
 
     // ==============================================
-    // ADD TO CART WITH AUTOMATIC DISCOUNT - PHƯƠNG THỨC MỚI
+    // ADD TO CART WITH ERROR HANDLING - CẢI THIỆN
     // ==============================================
     addAllToCart() {
       if (this.items.length === 0 || this.isAddingToCart) return;
       
-      console.log('Adding all items to cart with automatic discount...');
+      console.log('Adding all items to cart...');
       
       // Đặt cờ đang thêm vào cart
       this.isAddingToCart = true;
+      this.cartErrors = [];
       
       // Hiển thị loading state
       const originalText = this.addAllBtn.textContent;
       this.addAllBtn.textContent = 'Adding...';
       this.addAllBtn.disabled = true;
+      
+      // Cập nhật mobile button state
+      this.updateMobileButtonsState('adding');
       
       // Tạo mảng items để thêm vào cart - ĐẢM BẢO KHÔNG TRÙNG LẶP
       const itemsToAdd = [];
@@ -1442,15 +1542,13 @@
             quantity: i.quantity 
           });
           addedIds.add(key);
-        } else {
-          console.warn('Duplicate item found and removed:', i.id);
         }
       });
       
-      console.log('Items to add (deduplicated):', itemsToAdd);
+      console.log('Items to add:', itemsToAdd);
       console.log('Bundle discount:', this.discountPercentage + '%');
       
-      // Bước 1: Thêm sản phẩm vào cart
+      // Thêm sản phẩm vào cart với error handling
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 
@@ -1460,19 +1558,23 @@
         body: JSON.stringify({ items: itemsToAdd })
       })
       .then(response => {
-        if (!response.ok) throw new Error('Failed to add items to cart');
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+          });
+        }
         return response.json();
       })
-      .then(() => {
-        console.log('Items added to cart successfully');
+      .then(cartData => {
+        console.log('Items added to cart successfully:', cartData);
         
-        // Bước 2: Thêm cart attributes để tracking
+        // Thêm cart attributes để tracking
         return this.addCartAttributes();
       })
       .then(() => {
         console.log('Cart attributes added');
         
-        // Bước 3: Chuyển hướng đến trang cart
+        // Chuyển hướng đến trang cart
         console.log('Redirecting to cart page');
         setTimeout(() => {
           window.location.href = '/cart';
@@ -1480,13 +1582,195 @@
       })
       .catch(error => {
         console.error('Error in addAllToCart:', error);
-        alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.');
+        
+        // Phân tích lỗi để hiển thị thông báo thích hợp
+        this.handleCartError(error, itemsToAdd);
         
         // Restore button state
-        this.isAddingToCart = false;
-        this.addAllBtn.textContent = originalText;
-        this.addAllBtn.disabled = false;
+        this.resetAddToCartState();
       });
+    }
+
+    // Xử lý lỗi cart
+    handleCartError(error, itemsToAdd) {
+      let errorMessage = 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.';
+      let invalidItems = [];
+      
+      // Phân tích lỗi để tìm sản phẩm lỗi
+      if (error.message.includes('sold out') || error.message.includes('hết hàng') || error.message.includes('out of stock')) {
+        errorMessage = 'Một số sản phẩm đã hết hàng. Đã tự động xóa khỏi bundle.';
+        
+        // Tìm sản phẩm lỗi dựa trên thông tin lỗi
+        // Giả định lỗi về variant không hợp lệ
+        const variantMatch = error.message.match(/variant (\d+)/i);
+        if (variantMatch) {
+          const invalidVariantId = variantMatch[1];
+          invalidItems = this.items.filter(item => item.id.toString() === invalidVariantId);
+        }
+      } else if (error.message.includes('not available') || error.message.includes('unavailable')) {
+        errorMessage = 'Một số sản phẩm không có sẵn. Đã tự động xóa khỏi bundle.';
+      } else if (error.message.includes('422') || error.message.includes('validation')) {
+        errorMessage = 'Thông tin sản phẩm không hợp lệ. Đã tự động xóa sản phẩm lỗi.';
+        
+        // Cố gắng tìm tất cả variant IDs từ lỗi
+        const variantIds = error.message.match(/\d+/g);
+        if (variantIds) {
+          invalidItems = this.items.filter(item => variantIds.includes(item.id.toString()));
+        }
+      }
+      
+      // Xóa các sản phẩm lỗi khỏi bundle
+      if (invalidItems.length > 0) {
+        this.removeInvalidItems(invalidItems);
+        errorMessage += '\n\nBạn có thể thêm sản phẩm khác và thử lại.';
+      } else {
+        // Nếu không xác định được sản phẩm lỗi cụ thể, đề xuất xóa thủ công
+        errorMessage += '\n\nVui lòng xóa các sản phẩm có vấn đề và thử lại.';
+      }
+      
+      // Hiển thị thông báo lỗi
+      this.showErrorNotification(errorMessage);
+      
+      // Log chi tiết lỗi
+      console.log('Cart error details:', {
+        error: error.message,
+        invalidItems: invalidItems,
+        allItems: this.items
+      });
+    }
+
+    // Xóa các sản phẩm lỗi khỏi bundle
+    removeInvalidItems(invalidItems) {
+      invalidItems.forEach(invalidItem => {
+        const itemIndex = this.items.findIndex(i => i.id === invalidItem.id && i.step === invalidItem.step);
+        if (itemIndex !== -1) {
+          const item = this.items[itemIndex];
+          this.originalTotal -= item.price * item.quantity;
+          this.items.splice(itemIndex, 1);
+          
+          console.log('Removed invalid item:', invalidItem);
+        }
+      });
+      
+      // Cập nhật UI sau khi xóa
+      this.renderStepContents();
+      this.updateUI();
+    }
+
+    // Hiển thị thông báo lỗi
+    showErrorNotification(message) {
+      // Tạo thông báo tạm thời
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff4444;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        z-index: 1000;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+      `;
+      
+      notification.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          <div>
+            <strong style="display: block; margin-bottom: 4px;">Thông báo</strong>
+            <div style="font-size: 14px; line-height: 1.4;">${message}</div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Tự động ẩn sau 8 giây
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 8000);
+      
+      // Thêm CSS animation
+      if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+          @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+          @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    // Reset trạng thái button sau lỗi
+    resetAddToCartState() {
+      this.isAddingToCart = false;
+      
+      // Reset desktop button
+      if (this.addAllBtn) {
+        this.addAllBtn.textContent = 'Add all to cart';
+        this.addAllBtn.disabled = this.items.length === 0;
+        this.addAllBtn.style.cursor = this.items.length === 0 ? 'not-allowed' : 'pointer';
+      }
+      
+      // Reset mobile buttons
+      this.updateMobileButtonsState('reset');
+      
+      // Reset event listeners để có thể click lại
+      if (this.addAllBtn) {
+        this.addAllBtn.removeEventListener('click', this.addAllToCart);
+        this.addAllBtn.addEventListener('click', () => this.addAllToCart());
+      }
+      
+      // Reset mobile button event listeners
+      this.resetMobileButtonListeners();
+    }
+
+    // Cập nhật trạng thái mobile buttons
+    updateMobileButtonsState(state) {
+      const isDisabled = state === 'adding';
+      
+      if (this.mobileAddAllBtn) {
+        this.mobileAddAllBtn.disabled = isDisabled;
+        this.mobileAddAllBtn.textContent = isDisabled ? 'Adding...' : 'Add all to cart';
+        this.mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
+        this.mobileAddAllBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+      }
+      
+      if (this.collapsedAddBtn) {
+        this.collapsedAddBtn.disabled = isDisabled;
+        this.collapsedAddBtn.textContent = isDisabled ? 'Adding...' : 'Add all';
+        this.collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
+        this.collapsedAddBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+      }
+    }
+
+    // Reset mobile button listeners
+    resetMobileButtonListeners() {
+      if (this.mobileAddAllBtn) {
+        this.mobileAddAllBtn.removeEventListener('click', this.addAllToCart);
+        this.mobileAddAllBtn.addEventListener('click', () => this.addAllToCart());
+      }
+      
+      if (this.collapsedAddBtn) {
+        this.collapsedAddBtn.removeEventListener('click', this.addAllToCart);
+        this.collapsedAddBtn.addEventListener('click', () => this.addAllToCart());
+      }
     }
 
     // Thêm cart attributes để tracking bundle
@@ -1620,7 +1904,7 @@
       
       this.isCollapsed = false;
       
-      // Bind mobile events - THÊM {once: true}
+      // Bind mobile events
       this.bindMobileEvents();
       
       // Initial setup
@@ -1633,13 +1917,13 @@
         this.toggleBtn.addEventListener('click', () => this.toggleMobileView());
       }
       
-      // Add to cart từ mobile buttons - THÊM {once: true}
+      // Add to cart từ mobile buttons
       if (this.mobileAddAllBtn) {
-        this.mobileAddAllBtn.addEventListener('click', () => this.addAllToCart(), { once: true });
+        this.mobileAddAllBtn.addEventListener('click', () => this.addAllToCart());
       }
       
       if (this.collapsedAddBtn) {
-        this.collapsedAddBtn.addEventListener('click', () => this.addAllToCart(), { once: true });
+        this.collapsedAddBtn.addEventListener('click', () => this.addAllToCart());
       }
       
       // Listeners với debounce
@@ -1746,11 +2030,13 @@
         this.mobileAddAllBtn.disabled = isDisabled;
         this.mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
         this.mobileAddAllBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+        this.mobileAddAllBtn.textContent = this.isAddingToCart ? 'Adding...' : 'Add all to cart';
       }
       if (this.collapsedAddBtn) {
         this.collapsedAddBtn.disabled = isDisabled;
         this.collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
         this.collapsedAddBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+        this.collapsedAddBtn.textContent = this.isAddingToCart ? 'Adding...' : 'Add all';
       }
     }
   }
@@ -1807,22 +2093,7 @@
       initializeBundle();
     }
   }, 1000);
-
-  // ==============================================
-  // FIX: NGĂN CHẶN CLICK NHIỀU LẦN
-  // ==============================================
-  document.addEventListener('click', function(e) {
-    if (e.target.closest('.add-all-to-cart, .mobile-add-all-btn, .collapsed-add-btn')) {
-      const btn = e.target.closest('button');
-      if (btn && btn.disabled) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Prevented click on disabled button');
-      }
-    }
-  }, true);
 </script>
-
 {% schema %}
 {
   "name": "Bundle Builder with Tabs",
