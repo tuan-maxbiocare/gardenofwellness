@@ -1,0 +1,521 @@
+{% comment %}
+  Section: Featured Categories Hover (Customizable with Blocks)
+  - Hover zoom on image only
+  - No clickable links
+  - Schema with blocks + section settings
+  - Mobile: Carousel showing one image at a time with proper centering
+{% endcomment %}
+
+{%- style -%}
+  /* Desktop styles */
+  .category-hover-grid {
+    --gap: {{ section.settings.gap | default: 25 }}px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax({{ section.settings.min_width | default: 280 }}px, 1fr));
+    gap: var(--gap);
+    padding: {{ section.settings.padding | default: 32 }}px 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.border_radius | default: 12 }}px;
+    background: #f8f9fa;
+    aspect-ratio: 4 / 5;
+    isolation: isolate;
+    flex-shrink: 0;
+  }
+
+  .category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+  }
+
+  /* Desktop hover effect - phóng to ảnh */
+  @media (min-width: 641px) {
+    .category-card:hover img {
+      transform: scale(1.15); /* Phóng to hơn */
+      filter: brightness(0.92) saturate(1.1);
+    }
+  }
+
+  .category-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 50%, transparent 80%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 2.2rem 1.5rem;
+    pointer-events: none;
+  }
+
+  .category-title {
+    color: white;
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    margin: 0;
+    letter-spacing: 0.5px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (min-width: 641px) {
+    .category-card:hover .category-title {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Mobile Carousel Styles - chỉ hiển thị 1 ảnh với height nhỏ hơn */
+  @media (max-width: 640px) {
+    .category-hover-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 auto;
+      max-width: 100%;
+      align-items: center; /* Căn giữa theo chiều dọc */
+      height: auto; /* Chiều cao tự động */
+    }
+    
+    .category-hover-grid::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* KHUNG CỐ ĐỊNH - ảnh sẽ fit vào khung này */
+    .category-card {
+      width: calc(100vw - 2rem); /* Khung cố định chiều rộng */
+      height: {{ section.settings.mobile_card_height | default: 400 }}px; /* Khung cố định chiều cao */
+      min-width: calc(100vw - 2rem); /* Không co giãn */
+      min-height: {{ section.settings.mobile_card_height | default: 400 }}px; /* Không co giãn */
+      scroll-snap-align: center; /* Căn giữa khi scroll */
+      border-radius: {{ section.settings.mobile_border_radius | default: 10 }}px;
+      flex: 0 0 auto; /* Không co giãn */
+      margin: 0;
+      position: relative; /* Cần cho absolute của overlay */
+      overflow: hidden; /* Ẩn phần thừa của ảnh */
+    }
+    
+    /* ẢNH sẽ tự động fit vào khung cố định */
+    .category-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ảnh cover khung, cắt phần thừa */
+      object-position: center; /* Căn giữa ảnh */
+      position: absolute; /* Đặt ảnh trong khung cố định */
+      top: 0;
+      left: 0;
+    }
+    
+    .category-title {
+      font-size: {{ section.settings.mobile_font_size | default: 18 }}px;
+      /* Title luôn hiển thị trên mobile */
+      transform: translateY(0);
+      opacity: 1;
+      padding: 1.5rem;
+    }
+    
+    .category-overlay {
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 70%);
+      position: absolute; /* Đặt overlay trong khung cố định */
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+    
+    /* Tạo padding ở cả hai đầu để căn giữa đẹp */
+    .category-hover-grid::before {
+      content: '';
+      min-width: 0.5rem;
+      height: 1px;
+      flex-shrink: 0;
+    }
+    
+    .category-hover-grid::after {
+      content: '';
+      min-width: 0.5rem;
+      height: 1px;
+      flex-shrink: 0;
+    }
+    
+    /* Container cho mobile để căn giữa đẹp */
+    .section-featured-categories {
+      padding-top: {{ section.settings.mobile_padding_top | default: 20 }}px;
+      padding-bottom: {{ section.settings.mobile_padding_bottom | default: 20 }}px;
+    }
+    
+    /* Placeholder khi không có ảnh */
+    .category-card .placeholder {
+      width: 100%;
+      height: 100%;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+{%- endstyle -%}
+
+{% if section.settings.show_heading %}
+  <div class="container" style="text-align: center; margin: {{ section.settings.heading_margin_top | default: 2 }}rem 0 {{ section.settings.heading_margin_bottom | default: 1 }}rem;">
+    <h2 style="font-size: {{ section.settings.heading_font_size | default: 32 }}px; font-weight: {{ section.settings.heading_font_weight | default: 700 }}; color: {{ section.settings.heading_color | default: '#000000' }};">
+      {{ section.settings.heading | escape }}
+    </h2>
+    {% if section.settings.show_subheading %}
+      <p style="font-size: {{ section.settings.subheading_font_size | default: 16 }}px; color: {{ section.settings.subheading_color | default: '#666' }}; margin-top: 0.5rem;">
+        {{ section.settings.subheading | escape }}
+      </p>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="category-hover-grid">
+  {% for block in section.blocks %}
+    <div class="category-card" {{ block.shopify_attributes }}>
+      {% if block.settings.image %}
+        <img 
+          src="{{ block.settings.image | image_url: width: 800 }}" 
+          alt="{{ block.settings.title | escape }}" 
+          loading="lazy" 
+          width="600" 
+          height="750"
+          style="object-position: {{ block.settings.image_position | default: 'center' }};">
+      {% else %}
+        <div class="placeholder">
+          {{ block.settings.title | escape }}
+        </div>
+      {% endif %}
+
+      <div class="category-overlay">
+        <h3 class="category-title">{{ block.settings.title | escape }}</h3>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Featured Categories Hover",
+  "tag": "section",
+  "class": "section-featured-categories",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show section heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "Our Categories"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading font size",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading font weight",
+      "options": [
+        {"value": "300", "label": "Light"},
+        {"value": "400", "label": "Normal"},
+        {"value": "600", "label": "Semi Bold"},
+        {"value": "700", "label": "Bold"}
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_top",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Heading top margin",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Heading bottom margin",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "label": "Show subheading",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading text",
+      "default": "Discover our collections"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading font size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Desktop Layout"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 80,
+      "step": 8,
+      "unit": "px",
+      "label": "Section vertical padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "min_width",
+      "min": 220,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Minimum card width (desktop)",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Card border radius (desktop)",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile top padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile bottom padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius (mobile)",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title font size (mobile)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_height",
+      "min": 300,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Card height on mobile",
+      "default": 400,
+      "info": "Chiều cao cố định của khung ảnh trên mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_fit",
+      "label": "Image fitting on mobile",
+      "options": [
+        {"value": "cover", "label": "Cover (crop to fill)"},
+        {"value": "contain", "label": "Contain (fit entire image)"}
+      ],
+      "default": "cover",
+      "info": "Cách ảnh fit vào khung: Cover sẽ cắt ảnh, Contain sẽ hiển thị toàn bộ ảnh"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_card",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (overlay text)",
+          "default": "Skin care"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image focal point",
+          "options": [
+            {"value": "center", "label": "Center"},
+            {"value": "top", "label": "Top"},
+            {"value": "bottom", "label": "Bottom"},
+            {"value": "left", "label": "Left"},
+            {"value": "right", "label": "Right"}
+          ],
+          "default": "center"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Categories Hover",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Skin care"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Moisturizing"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Body"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "White skin"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}
+
+{%- style -%}
+  /* Mobile image fitting setting */
+  @media (max-width: 640px) {
+    .category-card img {
+      object-fit: {{ section.settings.mobile_image_fit | default: 'cover' }};
+    }
+    
+    /* Nếu là contain thì thêm background */
+    {% if section.settings.mobile_image_fit == 'contain' %}
+      .category-card {
+        background: #f8f9fa;
+      }
+      .category-card img {
+        background: #f8f9fa;
+      }
+    {% endif %}
+  }
+{%- endstyle -%}
+
+{% comment %}
+  Optional: prevent clicks completely
+{% endcomment %}
+<script>
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.category-card')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, { passive: false });
+</script>
