@@ -1123,10 +1123,9 @@
     }
   }
 </style>
-
 <script>
   // ==============================================
-  // MAIN BUNDLE FUNCTIONALITY - VIẾT LẠI ĐỂ CHẠY NGAY
+  // MAIN BUNDLE FUNCTIONALITY - SỬ DỤNG AUTOMATIC DISCOUNT
   // ==============================================
   class BundleBuilder {
     constructor() {
@@ -1135,13 +1134,15 @@
       this.initialized = false;
       this.scrollTimeout = null;
       this.positionTimeout = null;
+      this.discountPercentage = 0; // CHỈ CẦN LƯU PHẦN TRĂM DISCOUNT
+      this.isAddingToCart = false;
     }
 
     // Khởi tạo mọi thứ
     init() {
       if (this.initialized) return;
       
-      console.log('Initializing Bundle Builder...');
+      console.log('Initializing Bundle Builder with Automatic Discount...');
       
       // Cache tất cả elements
       this.cacheElements();
@@ -1170,33 +1171,37 @@
 
     // Cache tất cả elements
     cacheElements() {
-      // Bundle elements
-      this.totalEl = document.querySelector('.bundle-total-price');
-      this.saveRow = document.querySelector('.bundle-save-row');
-      this.saveAmountEl = document.querySelector('.bundle-save-amount');
-      this.remainingEl = document.querySelector('.bundle-remaining');
-      this.discountEl = document.querySelector('.bundle-current-discount');
-      this.defaultHint = document.querySelector('.bundle-hint-default');
-      this.congratsHint = document.querySelector('.bundle-hint-congrats');
-      this.addAllBtn = document.querySelector('.add-all-to-cart');
-      this.dots = document.querySelectorAll('.progress-dot');
-      this.lineActive = document.querySelector('.progress-line-active');
-      this.panels = document.querySelectorAll('.bundle-panel');
-      this.stepContents = document.querySelectorAll('.step-content');
-      this.tabs = Array.from(document.querySelectorAll('.bundle-tab'));
-      
-      // Mobile summary elements
-      this.mobileSummaryBar = document.querySelector('.mobile-summary-bar');
-      this.mobileStickyWrapper = document.querySelector('.mobile-summary-sticky-wrapper');
-      
-      // Tab navigation
-      this.prevBtn = document.querySelector('.tab-arrow.prev');
-      this.nextBtn = document.querySelector('.tab-arrow.next');
-      
-      // Sticky elements
-      this.header = document.querySelector('header-component');
-      this.tabsStickyContainer = document.querySelector('.bundle-tabs-sticky-container');
-      this.bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
+      try {
+        // Bundle elements
+        this.totalEl = document.querySelector('.bundle-total-price');
+        this.saveRow = document.querySelector('.bundle-save-row');
+        this.saveAmountEl = document.querySelector('.bundle-save-amount');
+        this.remainingEl = document.querySelector('.bundle-remaining');
+        this.discountEl = document.querySelector('.bundle-current-discount');
+        this.defaultHint = document.querySelector('.bundle-hint-default');
+        this.congratsHint = document.querySelector('.bundle-hint-congrats');
+        this.addAllBtn = document.querySelector('.add-all-to-cart');
+        this.dots = document.querySelectorAll('.progress-dot');
+        this.lineActive = document.querySelector('.progress-line-active');
+        this.panels = document.querySelectorAll('.bundle-panel');
+        this.stepContents = document.querySelectorAll('.step-content');
+        this.tabs = Array.from(document.querySelectorAll('.bundle-tab'));
+        
+        // Mobile summary elements
+        this.mobileSummaryBar = document.querySelector('.mobile-summary-bar');
+        this.mobileStickyWrapper = document.querySelector('.mobile-summary-sticky-wrapper');
+        
+        // Tab navigation
+        this.prevBtn = document.querySelector('.tab-arrow.prev');
+        this.nextBtn = document.querySelector('.tab-arrow.next');
+        
+        // Sticky elements
+        this.header = document.querySelector('header-component, header');
+        this.tabsStickyContainer = document.querySelector('.bundle-tabs-sticky-container');
+        this.bundleWrapper = document.querySelector('.bundle-sticky-wrapper');
+      } catch (error) {
+        console.error('Error caching elements:', error);
+      }
     }
 
     // Kiểm tra các elements cần thiết
@@ -1212,302 +1217,530 @@
 
     // Bind tất cả events
     bindEvents() {
-      // Tab switching
-      this.tabs.forEach(tab => {
-        tab.addEventListener('click', (e) => this.switchTab(e));
-      });
+      try {
+        // Remove existing listeners trước khi bind mới
+        this.removeEventListeners();
+        
+        // Tab switching
+        this.tabs.forEach(tab => {
+          tab.addEventListener('click', (e) => this.switchTab(e));
+        });
 
-      // Add to bundle buttons
+        // Add to bundle buttons
+        const addButtons = document.querySelectorAll('.add-to-bundle');
+        console.log('Found', addButtons.length, 'add-to-bundle buttons');
+        
+        addButtons.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            console.log('Add button clicked');
+            this.addToBundle(e);
+          });
+        });
+
+        // Step headers (accordion)
+        document.querySelectorAll('.step-header').forEach(h => {
+          h.addEventListener('click', (e) => this.toggleStep(e));
+        });
+
+        // Add all to cart - SỬ DỤNG AUTOMATIC DISCOUNT
+        if (this.addAllBtn) {
+          this.addAllBtn.addEventListener('click', () => {
+            console.log('Add all to cart clicked');
+            this.addAllToCartWithAutomaticDiscount();
+          }, { once: true });
+        }
+
+        // Tab arrows navigation
+        if (this.prevBtn && this.nextBtn) {
+          this.prevBtn.addEventListener('click', () => this.navigateTabs('prev'));
+          this.nextBtn.addEventListener('click', () => this.navigateTabs('next'));
+        }
+      } catch (error) {
+        console.error('Error binding events:', error);
+      }
+    }
+    
+    // Hàm để remove event listeners
+    removeEventListeners() {
+      // Remove từ add buttons
       document.querySelectorAll('.add-to-bundle').forEach(btn => {
-        btn.addEventListener('click', (e) => this.addToBundle(e));
+        btn.replaceWith(btn.cloneNode(true));
       });
-
-      // Step headers (accordion)
-      document.querySelectorAll('.step-header').forEach(h => {
-        h.addEventListener('click', (e) => this.toggleStep(e));
+      
+      // Remove từ step headers
+      document.querySelectorAll('.step-header').forEach(header => {
+        header.replaceWith(header.cloneNode(true));
       });
-
-      // Add all to cart
+      
+      // Remove từ add all button
       if (this.addAllBtn) {
-        this.addAllBtn.addEventListener('click', () => this.addAllToCart());
+        const newBtn = this.addAllBtn.cloneNode(true);
+        this.addAllBtn.parentNode.replaceChild(newBtn, this.addAllBtn);
+        this.addAllBtn = newBtn;
       }
-
-      // Tab arrows navigation
-      if (this.prevBtn && this.nextBtn) {
-        this.prevBtn.addEventListener('click', () => this.navigateTabs('prev'));
-        this.nextBtn.addEventListener('click', () => this.navigateTabs('next'));
-      }
-
-      // Window resize và scroll
-      window.addEventListener('resize', () => this.handleResize());
     }
 
     // ==============================================
     // CORE BUNDLE FUNCTIONS
     // ==============================================
     updateAddButtonsState() {
-      const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
-      document.querySelectorAll('.add-to-bundle').forEach(btn => {
-        const panel = btn.closest('.bundle-panel');
-        if (!panel) return;
-        const step = Array.from(this.panels).indexOf(panel) + 1;
-        if (step === 2 && step2Qty >= 3) {
-          btn.disabled = true;
-          btn.style.opacity = '0.5';
-          btn.style.cursor = 'not-allowed';
-        } else {
-          btn.disabled = false;
-          btn.style.opacity = '1';
-          btn.style.cursor = 'pointer';
-        }
-      });
+      try {
+        const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
+        document.querySelectorAll('.add-to-bundle').forEach(btn => {
+          const panel = btn.closest('.bundle-panel');
+          if (!panel) return;
+          const step = Array.from(this.panels).indexOf(panel) + 1;
+          if (step === 2 && step2Qty >= 3) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+          } else {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+          }
+        });
+      } catch (error) {
+        console.error('Error updating add buttons:', error);
+      }
     }
 
     renderStepContents() {
-      this.stepContents.forEach(c => c.innerHTML = '');
-      this.items.forEach(item => {
-        const content = this.stepContents[item.step - 1];
-        if (!content) return;
-        content.insertAdjacentHTML('beforeend', `
-          <div class="step-item" data-variant-id="${item.id}">
-            <div class="step-item-img"><img src="${item.img}" alt="${item.title}"></div>
-            <div class="step-item-info">
-              <div class="step-item-title">${item.title}</div>
-              <div class="step-item-quantity">Qty: ${item.quantity}</div>
-              <div class="step-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+      try {
+        this.stepContents.forEach(c => c.innerHTML = '');
+        this.items.forEach(item => {
+          const content = this.stepContents[item.step - 1];
+          if (!content) return;
+          content.insertAdjacentHTML('beforeend', `
+            <div class="step-item" data-variant-id="${item.id}">
+              <div class="step-item-img"><img src="${item.img}" alt="${item.title}"></div>
+              <div class="step-item-info">
+                <div class="step-item-title">${item.title}</div>
+                <div class="step-item-quantity">Qty: ${item.quantity}</div>
+                <div class="step-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+              </div>
             </div>
-          </div>
-        `);
-      });
+          `);
+        });
+      } catch (error) {
+        console.error('Error rendering step contents:', error);
+      }
     }
 
     updateUI() {
-      const counts = [0,0,0];
-      this.items.forEach(i => counts[i.step - 1] += i.quantity);
-      const totalCount = counts.reduce((a,b) => a + b, 0);
+      try {
+        const counts = [0,0,0];
+        this.items.forEach(i => counts[i.step - 1] += i.quantity);
+        const totalCount = counts.reduce((a,b) => a + b, 0);
 
-      // Update desktop step counts
-      document.querySelector('.step-1').textContent = `${counts[0]} item(s) added`;
-      document.querySelector('.step-2').textContent = `${counts[1]} item(s) added`;
-      document.querySelector('.step-3').textContent = `${counts[2]} item(s) added`;
+        // Update desktop step counts
+        const step1El = document.querySelector('.step-1');
+        const step2El = document.querySelector('.step-2');
+        const step3El = document.querySelector('.step-3');
+        
+        if (step1El) step1El.textContent = `${counts[0]} item(s) added`;
+        if (step2El) step2El.textContent = `${counts[1]} item(s) added`;
+        if (step3El) step3El.textContent = `${counts[2]} item(s) added`;
 
-      // Calculate discount
-      let discount = 0;
-      if (totalCount >= 10) discount = 15;
-      else if (totalCount >= 8) discount = 10;
-      else if (totalCount >= 5) discount = 5;
+        // Calculate discount percentage - KHÔNG CẦN DISCOUNT CODE NỮA
+        let discount = 0;
+        
+        if (totalCount >= 10) {
+          discount = 15;
+        } else if (totalCount >= 8) {
+          discount = 10;
+        } else if (totalCount >= 5) {
+          discount = 5;
+        }
+        
+        this.discountPercentage = discount;
 
-      if (this.discountEl) this.discountEl.textContent = discount + '%';
+        if (this.discountEl) this.discountEl.textContent = discount + '%';
 
-      // Update progress dots
-      this.dots.forEach(dot => {
-        const t = Number(dot.dataset.threshold);
-        dot.classList.toggle('active', totalCount >= t);
-      });
+        // Update progress dots
+        this.dots.forEach(dot => {
+          const t = Number(dot.dataset.threshold);
+          dot.classList.toggle('active', totalCount >= t);
+        });
 
-      // Update progress line
-      if (this.lineActive) {
-        this.lineActive.style.width = totalCount >= 10 ? '100%' : totalCount >= 8 ? '66%' : totalCount >= 5 ? '33%' : '0%';
+        // Update progress line
+        if (this.lineActive) {
+          this.lineActive.style.width = totalCount >= 10 ? '100%' : totalCount >= 8 ? '66%' : totalCount >= 5 ? '33%' : '0%';
+        }
+
+        // Update hints
+        if (totalCount >= 10) {
+          if (this.defaultHint) this.defaultHint.style.display = 'none';
+          if (this.congratsHint) this.congratsHint.style.display = 'block';
+        } else {
+          if (this.defaultHint) this.defaultHint.style.display = 'block';
+          if (this.congratsHint) this.congratsHint.style.display = 'none';
+          const next = totalCount < 5 ? 5 : totalCount < 8 ? 8 : 10;
+          if (this.remainingEl) this.remainingEl.textContent = next - totalCount;
+        }
+
+        // Calculate savings
+        const saved = (this.originalTotal * discount / 100).toFixed(2);
+        if (discount > 0 && this.originalTotal > 0) {
+          if (this.saveAmountEl) this.saveAmountEl.textContent = '$' + saved;
+          if (this.saveRow) this.saveRow.style.display = 'flex';
+        } else {
+          if (this.saveRow) this.saveRow.style.display = 'none';
+        }
+
+        // Update total
+        const finalTotal = (this.originalTotal - parseFloat(saved || 0)).toFixed(2);
+        if (this.totalEl) this.totalEl.textContent = '$' + finalTotal;
+        if (this.addAllBtn) {
+          this.addAllBtn.disabled = totalCount === 0 || this.isAddingToCart;
+          this.addAllBtn.style.cursor = (totalCount === 0 || this.isAddingToCart) ? 'not-allowed' : 'pointer';
+        }
+
+        // Update mobile summary
+        this.updateMobileSummary();
+        this.updateAddButtonsState();
+      } catch (error) {
+        console.error('Error updating UI:', error);
       }
-
-      // Update hints
-      if (totalCount >= 10) {
-        if (this.defaultHint) this.defaultHint.style.display = 'none';
-        if (this.congratsHint) this.congratsHint.style.display = 'block';
-      } else {
-        if (this.defaultHint) this.defaultHint.style.display = 'block';
-        if (this.congratsHint) this.congratsHint.style.display = 'none';
-        const next = totalCount < 5 ? 5 : totalCount < 8 ? 8 : 10;
-        if (this.remainingEl) this.remainingEl.textContent = next - totalCount;
-      }
-
-      // Calculate savings
-      const saved = (this.originalTotal * discount / 100).toFixed(2);
-      if (discount > 0 && this.originalTotal > 0) {
-        if (this.saveAmountEl) this.saveAmountEl.textContent = '$' + saved;
-        if (this.saveRow) this.saveRow.style.display = 'flex';
-      } else {
-        if (this.saveRow) this.saveRow.style.display = 'none';
-      }
-
-      // Update total
-      const finalTotal = (this.originalTotal - parseFloat(saved || 0)).toFixed(2);
-      if (this.totalEl) this.totalEl.textContent = '$' + finalTotal;
-      if (this.addAllBtn) this.addAllBtn.disabled = totalCount === 0;
-
-      // Update mobile summary
-      this.updateMobileSummary();
-      this.updateAddButtonsState();
     }
 
     // ==============================================
     // EVENT HANDLERS
     // ==============================================
     switchTab(e) {
-      const tab = e.currentTarget;
-      const id = tab.dataset.tab;
-      
-      // Update active tab
-      this.tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      
-      // Show corresponding panel
-      this.panels.forEach(p => p.classList.remove('active'));
-      const activePanel = document.querySelector(`[data-panel="${id}"]`);
-      if (activePanel) {
-        activePanel.classList.add('active');
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const tab = e.currentTarget;
+        const id = tab.dataset.tab;
+        
+        console.log('Switching to tab:', id);
+        
+        // Update active tab
+        this.tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show corresponding panel
+        this.panels.forEach(p => p.classList.remove('active'));
+        const activePanel = document.querySelector(`[data-panel="${id}"]`);
+        if (activePanel) {
+          activePanel.classList.add('active');
+        }
+        
+        this.updateAddButtonsState();
+      } catch (error) {
+        console.error('Error switching tab:', error);
       }
-      
-      this.updateAddButtonsState();
     }
 
     addToBundle(e) {
-      const btn = e.currentTarget;
-      const panel = btn.closest('.bundle-panel');
-      const step = Array.from(this.panels).indexOf(panel) + 1;
-      
-      // Check step 2 limit
-      if (step === 2) {
-        const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
-        if (step2Qty >= 3) return;
-      }
-
-      const variantId = btn.dataset.variantId;
-      const price = parseFloat(btn.dataset.price);
-      const img = btn.closest('.bundle-item-new').querySelector('.product-card__image')?.src || '';
-      const title = btn.closest('.bundle-item-new').querySelector('.product-card__title').textContent.trim();
-
-      // Check if item already exists
-      const existing = this.items.find(i => i.id === variantId && i.step === step);
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        this.items.push({ 
-          id: variantId, 
-          price, 
-          quantity: 1, 
-          img, 
-          title, 
-          step 
-        });
-        btn.textContent = 'ADDED ✓';
+      try {
+        e.preventDefault();
+        e.stopPropagation();
         
-        // Reset button text after 1.5 seconds
-        setTimeout(() => {
-          btn.textContent = 'ADD TO BUNDLE';
-        }, 1500);
-      }
+        const btn = e.currentTarget;
+        const panel = btn.closest('.bundle-panel');
+        
+        if (!panel) {
+          console.error('Panel not found');
+          return;
+        }
+        
+        // Get step number
+        const panelIndex = Array.from(this.panels).indexOf(panel);
+        const step = panelIndex + 1;
+        
+        console.log('Adding to bundle, step:', step);
+        
+        // Check step 2 limit
+        if (step === 2) {
+          const step2Qty = this.items.filter(i => i.step === 2).reduce((sum, i) => sum + i.quantity, 0);
+          if (step2Qty >= 3) {
+            alert('You can only add maximum 3 items in Step 2');
+            return;
+          }
+        }
 
-      this.originalTotal += price;
-      this.renderStepContents();
-      this.updateUI();
+        const variantId = btn.dataset.variantId;
+        const price = parseFloat(btn.dataset.price);
+        const productCard = btn.closest('.bundle-item-new');
+        
+        if (!productCard) {
+          console.error('Product card not found');
+          return;
+        }
+        
+        const img = productCard.querySelector('.product-card__image')?.src || 
+                   productCard.querySelector('img')?.src || '';
+        const titleElement = productCard.querySelector('.product-card__title');
+        const title = titleElement ? titleElement.textContent.trim() : 'Product';
+
+        // Check if item already exists
+        const existing = this.items.find(i => i.id === variantId && i.step === step);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          this.items.push({ 
+            id: variantId, 
+            price, 
+            quantity: 1, 
+            img, 
+            title, 
+            step 
+          });
+          const originalText = btn.textContent;
+          btn.textContent = 'ADDED ✓';
+          btn.style.backgroundColor = '#4CAF50';
+          
+          // Reset button text after 1.5 seconds
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.backgroundColor = '';
+          }, 1500);
+        }
+
+        this.originalTotal += price;
+        this.renderStepContents();
+        this.updateUI();
+        
+        console.log('Item added to bundle:', { variantId, price, step });
+      } catch (error) {
+        console.error('Error adding to bundle:', error);
+      }
     }
 
     toggleStep(e) {
-      const step = e.currentTarget.closest('.bundle-step');
-      step.classList.toggle('active');
+      try {
+        e.preventDefault();
+        const step = e.currentTarget.closest('.bundle-step');
+        step.classList.toggle('active');
+      } catch (error) {
+        console.error('Error toggling step:', error);
+      }
     }
 
-    addAllToCart() {
-      if (this.items.length === 0) return;
+    // ==============================================
+    // ADD TO CART WITH AUTOMATIC DISCOUNT - PHƯƠNG THỨC MỚI
+    // ==============================================
+    addAllToCartWithAutomaticDiscount() {
+      // Kiểm tra nếu đang trong quá trình thêm vào cart
+      if (this.isAddingToCart || this.items.length === 0) {
+        console.log('Already adding to cart or no items');
+        return;
+      }
       
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({ 
-          items: this.items.map(i => ({ 
+      console.log('Adding all items to cart with automatic discount...');
+      
+      // Đặt cờ đang thêm vào cart
+      this.isAddingToCart = true;
+      
+      // Hiển thị loading state
+      const originalText = this.addAllBtn.textContent;
+      this.addAllBtn.textContent = 'Adding...';
+      this.addAllBtn.disabled = true;
+      this.addAllBtn.style.cursor = 'not-allowed';
+      
+      // Tính toán note cho bundle discount
+      const bundleNote = this.generateBundleNote();
+      
+      // Tạo mảng items để thêm vào cart - ĐẢM BẢO KHÔNG TRÙNG LẶP
+      const itemsToAdd = [];
+      const addedIds = new Set();
+      
+      this.items.forEach(i => {
+        const key = `${i.id}-${i.step}`;
+        if (!addedIds.has(key)) {
+          itemsToAdd.push({ 
             id: i.id, 
-            quantity: i.quantity 
-          })) 
+            quantity: i.quantity,
+            properties: {
+              '_bundle_item': `step-${i.step}`,
+              '_bundle_discount': `${this.discountPercentage}%`
+            }
+          });
+          addedIds.add(key);
+        } else {
+          console.warn('Duplicate item found and removed:', i.id);
+        }
+      });
+      
+      console.log('Items to add:', itemsToAdd);
+      console.log('Bundle discount:', this.discountPercentage + '%');
+      console.log('Bundle note:', bundleNote);
+      
+      // Tạo cart attributes để lưu thông tin bundle
+      const cartAttributes = {
+        '_bundle_discount': `${this.discountPercentage}%`,
+        '_bundle_total_items': this.items.length,
+        '_bundle_note': bundleNote
+      };
+      
+      // Bước 1: Thêm sản phẩm vào cart với attributes
+      this.addItemsToCartWithAttributes(itemsToAdd, cartAttributes)
+        .then(cartData => {
+          console.log('Items added to cart successfully:', cartData);
+          
+          // Bước 2: Áp dụng automatic discount qua cart attributes
+          return this.updateCartNoteWithDiscount(bundleNote);
         })
-      })
-      .then(response => response.json())
-      .then(() => {
-        window.location.href = '/cart';
-      })
-      .catch(error => {
-        console.error('Error adding to cart:', error);
+        .then(() => {
+          console.log('Cart updated with bundle discount info');
+          
+          // Bước 3: Chuyển hướng đến trang cart
+          console.log('Redirecting to cart page');
+          setTimeout(() => {
+            window.location.href = '/cart';
+          }, 500);
+        })
+        .catch(error => {
+          console.error('Error in addAllToCartWithAutomaticDiscount:', error);
+          alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.');
+          
+          // Restore button state
+          this.isAddingToCart = false;
+          this.addAllBtn.textContent = originalText;
+          this.addAllBtn.disabled = false;
+          this.addAllBtn.style.cursor = 'pointer';
+        });
+    }
+
+    // Hàm tạo bundle note
+    generateBundleNote() {
+      const counts = [0, 0, 0];
+      this.items.forEach(i => counts[i.step - 1] += i.quantity);
+      const totalCount = counts.reduce((a, b) => a + b, 0);
+      
+      return `Bundle Discount: ${this.discountPercentage}% off for ${totalCount} items (Step 1: ${counts[0]}, Step 2: ${counts[1]}, Step 3: ${counts[2]})`;
+    }
+
+    // Hàm thêm items vào cart với attributes
+    addItemsToCartWithAttributes(items, attributes) {
+      return new Promise((resolve, reject) => {
+        // Đầu tiên, thêm items vào cart
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ items: items })
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to add items to cart');
+          return response.json();
+        })
+        .then(cartData => {
+          // Sau đó, cập nhật cart attributes
+          return this.updateCartAttributes(attributes);
+        })
+        .then(() => {
+          // Lấy lại cart data mới nhất
+          return fetch('/cart.js').then(res => res.json());
+        })
+        .then(cartData => {
+          resolve(cartData);
+        })
+        .catch(error => {
+          reject(error);
+        });
+      });
+    }
+
+    // Hàm cập nhật cart attributes
+    updateCartAttributes(attributes) {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        
+        // Thêm từng attribute vào formData
+        Object.keys(attributes).forEach(key => {
+          formData.append(`attributes[${key}]`, attributes[key]);
+        });
+        
+        fetch('/cart/update.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to update cart attributes');
+          return response.json();
+        })
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
+      });
+    }
+
+    // Hàm cập nhật cart note với thông tin discount
+    updateCartNoteWithDiscount(note) {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('note', note);
+        
+        fetch('/cart/update.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to update cart note');
+          return response.json();
+        })
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
       });
     }
 
     navigateTabs(direction) {
-      const currentIndex = this.tabs.findIndex(t => t.classList.contains('active'));
-      let newIndex;
-      
-      if (direction === 'prev') {
-        newIndex = currentIndex <= 0 ? this.tabs.length - 1 : currentIndex - 1;
-      } else {
-        newIndex = currentIndex >= this.tabs.length - 1 ? 0 : currentIndex + 1;
-      }
-      
-      this.tabs[newIndex].click();
-    }
-
-    handleResize() {
-      // Re-initialize mobile summary bar on resize
-      if (window.innerWidth <= 768) {
-        this.initMobileSummaryBar();
-      }
-      
-      // Update sticky positions
-      if (this.tabsStickyContainer) {
-        this.updateTabsPosition();
+      try {
+        const currentIndex = this.tabs.findIndex(t => t.classList.contains('active'));
+        let newIndex;
+        
+        if (direction === 'prev') {
+          newIndex = currentIndex <= 0 ? this.tabs.length - 1 : currentIndex - 1;
+        } else {
+          newIndex = currentIndex >= this.tabs.length - 1 ? 0 : currentIndex + 1;
+        }
+        
+        // Trigger click event trên tab mới
+        if (this.tabs[newIndex]) {
+          this.tabs[newIndex].click();
+        }
+      } catch (error) {
+        console.error('Error navigating tabs:', error);
       }
     }
 
     // ==============================================
-    // STICKY TABS với HEADER COORDINATION
+    // STICKY TABS & MOBILE FUNCTIONS (GIỮ NGUYÊN)
     // ==============================================
     initStickyTabs() {
-      if (!this.header || !this.tabsStickyContainer || !this.bundleWrapper) {
+      if (!this.tabsStickyContainer || !this.bundleWrapper) {
         console.warn('Sticky tabs elements not found');
         return;
       }
       
-      // Initial call
       this.updateTabsPosition();
-      
-      // Event listeners với debounce
       window.addEventListener('scroll', () => this.debouncedUpdateTabs(), { passive: true });
       window.addEventListener('resize', () => this.debouncedUpdateTabs());
-      
-      // Theo dõi thay đổi của header
-      const headerObserver = new MutationObserver(() => this.debouncedUpdateTabs());
-      headerObserver.observe(this.header, { 
-        attributes: true, 
-        attributeFilter: ['data-scroll-direction', 'data-sticky-state'] 
-      });
     }
 
     updateTabsPosition() {
-      if (!this.header || !this.tabsStickyContainer || !this.bundleWrapper) return;
+      if (!this.tabsStickyContainer || !this.bundleWrapper) return;
       
-      const headerHeight = this.header.offsetHeight;
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const headerState = this.header.dataset.scrollDirection || 'none';
-      
-      // Kiểm tra xem header có đang hiện không
-      const isHeaderVisible = headerState === 'up' || headerState === 'none';
-      
-      // Tính toán vị trí của bundle section
       const bundleRect = this.bundleWrapper.getBoundingClientRect();
       const bundleTopFromViewport = bundleRect.top + scrollTop;
       
-      // Nếu đã scroll qua phần đầu của section
       if (scrollTop >= bundleTopFromViewport) {
-        // Section đã vào viewport
-        if (isHeaderVisible) {
-          // Header đang hiện: tabs ở dưới header
-          this.tabsStickyContainer.style.top = `${headerHeight}px`;
-        } else {
-          // Header đang ẩn: tabs ở top viewport
-          this.tabsStickyContainer.style.top = '0px';
-        }
+        this.tabsStickyContainer.style.top = '0px';
       } else {
-        // Chưa scroll đến section: reset
         this.tabsStickyContainer.style.top = '0px';
       }
     }
@@ -1517,16 +1750,12 @@
       this.scrollTimeout = setTimeout(() => this.updateTabsPosition(), 10);
     }
 
-    // ==============================================
-    // MOBILE SUMMARY STICKY BAR
-    // ==============================================
     initMobileSummaryBar() {
       if (!this.mobileSummaryBar || !this.mobileStickyWrapper || window.innerWidth > 768) {
         if (this.mobileStickyWrapper) this.mobileStickyWrapper.style.display = 'none';
         return;
       }
       
-      // Show on mobile
       this.mobileStickyWrapper.style.display = 'block';
       
       // Elements
@@ -1543,28 +1772,58 @@
       // Bind mobile events
       this.bindMobileEvents();
       
-      // Initial setup
       this.updateMobileSummaryPosition();
     }
 
     bindMobileEvents() {
-      // Toggle between expanded and collapsed view
-      if (this.toggleBtn) {
-        this.toggleBtn.addEventListener('click', () => this.toggleMobileView());
+      try {
+        // Remove existing listeners trước
+        if (this.toggleBtn) {
+          this.toggleBtn.replaceWith(this.toggleBtn.cloneNode(true));
+          this.toggleBtn = this.mobileSummaryBar.querySelector('.mobile-summary-toggle');
+        }
+        
+        if (this.mobileAddAllBtn) {
+          this.mobileAddAllBtn.replaceWith(this.mobileAddAllBtn.cloneNode(true));
+          this.mobileAddAllBtn = this.mobileSummaryBar.querySelector('.mobile-add-all-btn');
+        }
+        
+        if (this.collapsedAddBtn) {
+          this.collapsedAddBtn.replaceWith(this.collapsedAddBtn.cloneNode(true));
+          this.collapsedAddBtn = this.mobileSummaryBar.querySelector('.collapsed-add-btn');
+        }
+        
+        // Toggle between expanded and collapsed view
+        if (this.toggleBtn) {
+          this.toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.toggleMobileView();
+          });
+        }
+        
+        // Add to cart từ mobile buttons - SỬ DỤNG AUTOMATIC DISCOUNT
+        if (this.mobileAddAllBtn) {
+          this.mobileAddAllBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.addAllToCartWithAutomaticDiscount();
+          }, { once: true });
+        }
+        
+        if (this.collapsedAddBtn) {
+          this.collapsedAddBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.addAllToCartWithAutomaticDiscount();
+          }, { once: true });
+        }
+        
+        window.addEventListener('scroll', () => this.debouncedUpdateMobilePosition(), { passive: true });
+        window.addEventListener('resize', () => this.debouncedUpdateMobilePosition());
+      } catch (error) {
+        console.error('Error binding mobile events:', error);
       }
-      
-      // Add to cart từ mobile buttons
-      if (this.mobileAddAllBtn) {
-        this.mobileAddAllBtn.addEventListener('click', () => this.addAllToCart());
-      }
-      
-      if (this.collapsedAddBtn) {
-        this.collapsedAddBtn.addEventListener('click', () => this.addAllToCart());
-      }
-      
-      // Listeners với debounce
-      window.addEventListener('scroll', () => this.debouncedUpdateMobilePosition(), { passive: true });
-      window.addEventListener('resize', () => this.debouncedUpdateMobilePosition());
     }
 
     toggleMobileView() {
@@ -1586,23 +1845,19 @@
     }
 
     updateMobileSummaryPosition() {
-      if (!this.header || !this.bundleWrapper || !this.mobileStickyWrapper) return;
+      if (!this.bundleWrapper || !this.mobileStickyWrapper) return;
       
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
       const bundleRect = this.bundleWrapper.getBoundingClientRect();
       const bundleTopFromViewport = bundleRect.top + scrollTop;
       const bundleBottomFromViewport = bundleRect.bottom + scrollTop;
       
-      // Kiểm tra nếu section đã scroll vào viewport
       const isInViewport = scrollTop >= bundleTopFromViewport && 
                           scrollTop <= bundleBottomFromViewport - window.innerHeight;
       
       if (isInViewport) {
-        // Section đang trong viewport - hiển thị sticky bar
         this.mobileStickyWrapper.style.display = 'block';
       } else {
-        // Section không trong viewport - ẩn sticky bar
         this.mobileStickyWrapper.style.display = 'none';
       }
     }
@@ -1612,119 +1867,153 @@
       this.positionTimeout = setTimeout(() => this.updateMobileSummaryPosition(), 10);
     }
 
-    // Update mobile summary data
     updateMobileSummary() {
       if (!this.mobileSummaryBar || window.innerWidth > 768) return;
       
-      // Update remaining count
-      const remainingEl = this.mobileSummaryBar.querySelector('.mobile-remaining-count');
-      const discountEl = this.mobileSummaryBar.querySelector('.mobile-current-discount');
-      if (remainingEl && this.remainingEl) {
-        remainingEl.textContent = this.remainingEl.textContent;
-      }
-      if (discountEl && this.discountEl) {
-        discountEl.textContent = this.discountEl.textContent;
-      }
-      
-      // Update progress dots
-      const totalCount = this.items.reduce((sum, item) => sum + item.quantity, 0);
-      this.mobileSummaryBar.querySelectorAll('.mobile-progress-dot').forEach(dot => {
-        const threshold = parseInt(dot.dataset.threshold);
-        dot.classList.toggle('active', totalCount >= threshold);
-      });
-      
-      // Update step counts
-      const counts = [0, 0, 0];
-      this.items.forEach(i => counts[i.step - 1] += i.quantity);
-      
-      this.mobileSummaryBar.querySelectorAll('.step-1-mobile').forEach(el => el.textContent = counts[0]);
-      this.mobileSummaryBar.querySelectorAll('.step-2-mobile').forEach(el => el.textContent = counts[1]);
-      this.mobileSummaryBar.querySelectorAll('.step-3-mobile').forEach(el => el.textContent = counts[2]);
-      
-      // Update prices
-      if (this.totalEl) {
-        const totalPrice = this.totalEl.textContent;
-        const saveAmount = this.saveAmountEl ? this.saveAmountEl.textContent : null;
+      try {
+        // Update remaining count
+        const remainingEl = this.mobileSummaryBar.querySelector('.mobile-remaining-count');
+        const discountEl = this.mobileSummaryBar.querySelector('.mobile-current-discount');
+        if (remainingEl && this.remainingEl) {
+          remainingEl.textContent = this.remainingEl.textContent;
+        }
+        if (discountEl && this.discountEl) {
+          discountEl.textContent = this.discountEl.textContent;
+        }
         
-        this.mobileSummaryBar.querySelectorAll('.mobile-total-price, .collapsed-price').forEach(el => {
-          el.textContent = totalPrice;
+        // Update progress dots
+        const totalCount = this.items.reduce((sum, item) => sum + item.quantity, 0);
+        this.mobileSummaryBar.querySelectorAll('.mobile-progress-dot').forEach(dot => {
+          const threshold = parseInt(dot.dataset.threshold);
+          dot.classList.toggle('active', totalCount >= threshold);
         });
         
-        const mobileSaveRow = this.mobileSummaryBar.querySelector('.mobile-save-row');
-        if (mobileSaveRow && saveAmount && saveAmount !== '$0.00') {
-          mobileSaveRow.style.display = 'flex';
-          mobileSaveRow.querySelector('.mobile-save-amount').textContent = saveAmount;
-        } else if (mobileSaveRow) {
-          mobileSaveRow.style.display = 'none';
+        // Update step counts
+        const counts = [0, 0, 0];
+        this.items.forEach(i => counts[i.step - 1] += i.quantity);
+        
+        this.mobileSummaryBar.querySelectorAll('.step-1-mobile').forEach(el => el.textContent = counts[0]);
+        this.mobileSummaryBar.querySelectorAll('.step-2-mobile').forEach(el => el.textContent = counts[1]);
+        this.mobileSummaryBar.querySelectorAll('.step-3-mobile').forEach(el => el.textContent = counts[2]);
+        
+        // Update prices
+        if (this.totalEl) {
+          const totalPrice = this.totalEl.textContent;
+          const saveAmount = this.saveAmountEl ? this.saveAmountEl.textContent : null;
+          
+          this.mobileSummaryBar.querySelectorAll('.mobile-total-price, .collapsed-price').forEach(el => {
+            el.textContent = totalPrice;
+          });
+          
+          const mobileSaveRow = this.mobileSummaryBar.querySelector('.mobile-save-row');
+          if (mobileSaveRow && saveAmount && saveAmount !== '$0.00') {
+            mobileSaveRow.style.display = 'flex';
+            mobileSaveRow.querySelector('.mobile-save-amount').textContent = saveAmount;
+          } else if (mobileSaveRow) {
+            mobileSaveRow.style.display = 'none';
+          }
         }
-      }
-      
-      // Update button state
-      const isDisabled = this.items.length === 0;
-      
-      if (this.mobileAddAllBtn) {
-        this.mobileAddAllBtn.disabled = isDisabled;
-        this.mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
-      }
-      if (this.collapsedAddBtn) {
-        this.collapsedAddBtn.disabled = isDisabled;
-        this.collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
+        
+        // Update button state
+        const isDisabled = this.items.length === 0 || this.isAddingToCart;
+        
+        if (this.mobileAddAllBtn) {
+          this.mobileAddAllBtn.disabled = isDisabled;
+          this.mobileAddAllBtn.style.opacity = isDisabled ? '0.5' : '1';
+          this.mobileAddAllBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+        }
+        if (this.collapsedAddBtn) {
+          this.collapsedAddBtn.disabled = isDisabled;
+          this.collapsedAddBtn.style.opacity = isDisabled ? '0.5' : '1';
+          this.collapsedAddBtn.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+        }
+      } catch (error) {
+        console.error('Error updating mobile summary:', error);
       }
     }
   }
 
   // ==============================================
-  // INITIALIZATION - CHẠY NGAY KHI DOM SẴN SÀNG
+  // INITIALIZATION
   // ==============================================
   let bundleBuilder;
+  let initializationAttempts = 0;
+  const MAX_INIT_ATTEMPTS = 3;
 
-  // Khởi tạo ngay khi DOM sẵn sàng
   function initializeBundle() {
-    if (bundleBuilder && bundleBuilder.initialized) return;
+    if (initializationAttempts >= MAX_INIT_ATTEMPTS) {
+      console.error('Max initialization attempts reached');
+      return;
+    }
     
-    console.log('Starting bundle initialization...');
+    initializationAttempts++;
+    console.log(`Starting bundle initialization (attempt ${initializationAttempts})...`);
     
+    // Tạo instance mới
     bundleBuilder = new BundleBuilder();
     
-    // Kiểm tra nếu DOM đã sẵn sàng
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOM loaded, initializing bundle...');
-        bundleBuilder.init();
-      });
-    } else {
-      // DOM đã sẵn sàng, chạy ngay
-      console.log('DOM already ready, initializing bundle immediately...');
+    try {
       bundleBuilder.init();
+      console.log('Bundle initialization successful');
+    } catch (error) {
+      console.error('Error during initialization:', error);
+      
+      setTimeout(() => {
+        try {
+          bundleBuilder.init();
+        } catch (retryError) {
+          console.error('Retry failed:', retryError);
+        }
+      }, 500);
     }
   }
 
-  // Khởi tạo ngay lập tức
-  initializeBundle();
+  // Đợi DOM sẵn sàng
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function onDOMLoaded() {
+      document.removeEventListener('DOMContentLoaded', onDOMLoaded);
+      initializeBundle();
+    });
+  } else {
+    initializeBundle();
+  }
 
-  // Backup: Nếu không chạy, thử lại sau 100ms
-  setTimeout(() => {
+  // Backup initialization
+  const backupTimer = setTimeout(() => {
     if (!bundleBuilder || !bundleBuilder.initialized) {
-      console.log('Retrying bundle initialization (100ms)...');
+      console.log('Backup initialization triggered');
       initializeBundle();
     }
-  }, 100);
+    clearTimeout(backupTimer);
+  }, 2000);
 
-  // Backup 2: Thử lại sau 500ms nếu vẫn chưa chạy
-  setTimeout(() => {
-    if (!bundleBuilder || !bundleBuilder.initialized) {
-      console.log('Retrying bundle initialization (500ms)...');
-      initializeBundle();
+  // ==============================================
+  // FIX: NGĂN CHẶN FORM SUBMIT MẶC ĐỊNH
+  // ==============================================
+  document.addEventListener('submit', function(e) {
+    if (e.target.closest('.bundle-wrapper')) {
+      e.preventDefault();
+      console.log('Prevented form submit in bundle');
     }
-  }, 500);
+  });
 
-  // Backup 3: Thử lại sau 1000ms
-  setTimeout(() => {
-    if (!bundleBuilder || !bundleBuilder.initialized) {
-      console.log('Force initializing bundle (1000ms)...');
-      initializeBundle();
+  // Ngăn chặn click nhiều lần trên các button
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.add-all-to-cart, .mobile-add-all-btn, .collapsed-add-btn')) {
+      const btn = e.target.closest('button');
+      if (btn && btn.disabled) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Prevented click on disabled button');
+      }
     }
-  }, 1000);
+  }, true);
+
+  // ==============================================
+  // GLOBAL EXPORT (để debug)
+  // ==============================================
+  window.BundleBuilder = BundleBuilder;
+  window.bundleBuilder = bundleBuilder;
 </script>
 
 {% schema %}
