@@ -122,6 +122,73 @@
         "section_class": ""
       }
     },
+    "image_gird_UUWwwD": {
+      "type": "image-gird",
+      "blocks": {
+        "category_card_yRAtxe": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/garden-of-wellness-images-812x1244-8.webp",
+            "title": "Skin care",
+            "image_position": "center"
+          }
+        },
+        "category_card_ADrk8g": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/nh_ch_p_man_hinh_2026-01-13_222422.png",
+            "title": "Moisturizing",
+            "image_position": "center"
+          }
+        },
+        "category_card_GFX4aU": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/193-2H6A3144.jpg",
+            "title": "Body",
+            "image_position": "center"
+          }
+        },
+        "category_card_VMhPkg": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/image_10.png",
+            "title": "White skin",
+            "image_position": "center"
+          }
+        }
+      },
+      "block_order": [
+        "category_card_yRAtxe",
+        "category_card_ADrk8g",
+        "category_card_GFX4aU",
+        "category_card_VMhPkg"
+      ],
+      "name": "Featured Categories Hover",
+      "settings": {
+        "show_heading": false,
+        "heading": "Our Categories",
+        "heading_color": "#000000",
+        "heading_font_size": 20,
+        "heading_font_weight": "700",
+        "heading_margin_top": 2,
+        "heading_margin_bottom": 2,
+        "show_subheading": false,
+        "subheading": "Discover our collections",
+        "subheading_color": "#666666",
+        "subheading_font_size": 16,
+        "gap": 20,
+        "padding": 32,
+        "min_width": 250,
+        "border_radius": 12,
+        "mobile_padding_top": 20,
+        "mobile_padding_bottom": 20,
+        "mobile_border_radius": 10,
+        "mobile_font_size": 18,
+        "mobile_card_height": 400,
+        "mobile_image_fit": "cover"
+      }
+    },
     "main": {
       "type": "main-collection",
       "blocks": {
@@ -671,79 +738,16 @@
         "heading_color": "#000000",
         "accent_color": "#91b474"
       }
-    },
-    "image_gird_UUWwwD": {
-      "type": "image-gird",
-      "blocks": {
-        "category_card_yRAtxe": {
-          "type": "category_card",
-          "settings": {
-            "title": "Skin care",
-            "image_position": "center"
-          }
-        },
-        "category_card_ADrk8g": {
-          "type": "category_card",
-          "settings": {
-            "title": "Moisturizing",
-            "image_position": "center"
-          }
-        },
-        "category_card_GFX4aU": {
-          "type": "category_card",
-          "settings": {
-            "title": "Body",
-            "image_position": "center"
-          }
-        },
-        "category_card_VMhPkg": {
-          "type": "category_card",
-          "settings": {
-            "title": "White skin",
-            "image_position": "center"
-          }
-        }
-      },
-      "block_order": [
-        "category_card_yRAtxe",
-        "category_card_ADrk8g",
-        "category_card_GFX4aU",
-        "category_card_VMhPkg"
-      ],
-      "name": "Featured Categories Hover",
-      "settings": {
-        "show_heading": false,
-        "heading": "Our Categories",
-        "heading_color": "#000000",
-        "heading_font_size": 20,
-        "heading_font_weight": "700",
-        "heading_margin_top": 2,
-        "heading_margin_bottom": 2,
-        "show_subheading": false,
-        "subheading": "Discover our collections",
-        "subheading_color": "#666666",
-        "subheading_font_size": 16,
-        "gap": 20,
-        "padding": 32,
-        "min_width": 250,
-        "border_radius": 12,
-        "mobile_padding_top": 20,
-        "mobile_padding_bottom": 20,
-        "mobile_border_radius": 10,
-        "mobile_font_size": 18,
-        "mobile_card_height": 400,
-        "mobile_image_fit": "cover"
-      }
     }
   },
   "order": [
     "section",
     "breadcrumbs",
+    "image_gird_UUWwwD",
     "main",
     "collection_list_iKk8LT",
     "image_product_grid_dYLVwX",
     "feature_card_kUQXJf",
-    "social_feeds_CYwmeT",
-    "image_gird_UUWwwD"
+    "social_feeds_CYwmeT"
   ]
 }
