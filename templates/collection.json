@@ -423,78 +423,6 @@
         "padding-block-end": 48
       }
     },
-    "social_feeds_CYwmeT": {
-      "type": "social-feeds",
-      "blocks": {
-        "instagram_post_jg4DD6": {
-          "type": "instagram_post",
-          "settings": {
-            "is_video": false,
-            "username": "",
-            "caption": "",
-            "products": [],
-            "show_placeholder_products": true
-          }
-        },
-        "instagram_post_CpJiVk": {
-          "type": "instagram_post",
-          "settings": {
-            "is_video": false,
-            "username": "",
-            "caption": "",
-            "products": [],
-            "show_placeholder_products": true
-          }
-        },
-        "instagram_post_aQcchi": {
-          "type": "instagram_post",
-          "settings": {
-            "is_video": false,
-            "username": "",
-            "caption": "",
-            "products": [],
-            "show_placeholder_products": true
-          }
-        },
-        "instagram_post_kt9RY6": {
-          "type": "instagram_post",
-          "settings": {
-            "is_video": false,
-            "username": "",
-            "caption": "",
-            "products": [],
-            "show_placeholder_products": true
-          }
-        },
-        "instagram_post_PtwAwT": {
-          "type": "instagram_post",
-          "settings": {
-            "is_video": false,
-            "username": "",
-            "caption": "",
-            "products": [],
-            "show_placeholder_products": true
-          }
-        }
-      },
-      "block_order": [
-        "instagram_post_jg4DD6",
-        "instagram_post_CpJiVk",
-        "instagram_post_aQcchi",
-        "instagram_post_kt9RY6",
-        "instagram_post_PtwAwT"
-      ],
-      "settings": {
-        "section_width": "page-width",
-        "heading": "As seen on the GRAM.",
-        "instagram_url": "",
-        "instagram_handle": "yourbrand",
-        "default_caption": "Loving these products from our latest collection! 😍 The quality is amazing and they fit perfectly. #fashion #style #ootd",
-        "background_color": "#ffffff",
-        "heading_color": "#000000",
-        "accent_color": "#91b474"
-      }
-    },
     "image_product_grid_dYLVwX": {
       "type": "image-product-grid",
       "blocks": {
@@ -628,6 +556,78 @@
         "padding_left_mobile": 16,
         "padding_right_mobile": 16
       }
+    },
+    "social_feeds_CYwmeT": {
+      "type": "social-feeds",
+      "blocks": {
+        "instagram_post_jg4DD6": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_CpJiVk": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_aQcchi": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_kt9RY6": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        },
+        "instagram_post_PtwAwT": {
+          "type": "instagram_post",
+          "settings": {
+            "is_video": false,
+            "username": "",
+            "caption": "",
+            "products": [],
+            "show_placeholder_products": true
+          }
+        }
+      },
+      "block_order": [
+        "instagram_post_jg4DD6",
+        "instagram_post_CpJiVk",
+        "instagram_post_aQcchi",
+        "instagram_post_kt9RY6",
+        "instagram_post_PtwAwT"
+      ],
+      "settings": {
+        "section_width": "page-width",
+        "heading": "As seen on the GRAM.",
+        "instagram_url": "",
+        "instagram_handle": "yourbrand",
+        "default_caption": "Loving these products from our latest collection! 😍 The quality is amazing and they fit perfectly. #fashion #style #ootd",
+        "background_color": "#ffffff",
+        "heading_color": "#000000",
+        "accent_color": "#91b474"
+      }
     }
   },
   "order": [
@@ -635,7 +635,7 @@
     "breadcrumbs",
     "main",
     "collection_list_iKk8LT",
-    "social_feeds_CYwmeT",
-    "image_product_grid_dYLVwX"
+    "image_product_grid_dYLVwX",
+    "social_feeds_CYwmeT"
   ]
 }
