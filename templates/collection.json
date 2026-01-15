@@ -557,6 +557,54 @@
         "padding_right_mobile": 16
       }
     },
+    "feature_card_kUQXJf": {
+      "type": "feature-card",
+      "blocks": {
+        "feature_XefjKK": {
+          "type": "feature",
+          "settings": {
+            "icon": "leaf",
+            "title": "Natural and certified organic",
+            "text": "Customers can trust that our products are made with natural and certified organic materials."
+          }
+        },
+        "feature_mHMyGW": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "Safe to use",
+            "text": "EWG VERIFIED™, made with 99.9%+ natural origin ingredients* including phytoglycogen."
+          }
+        },
+        "feature_MEiU8T": {
+          "type": "feature",
+          "settings": {
+            "icon": "dna",
+            "title": "Non-allergen",
+            "text": "The SHA accreditation is an instant way to recognise a product meets the highest standards of skin safety."
+          }
+        },
+        "feature_4GhepB": {
+          "type": "feature",
+          "settings": {
+            "icon": "spark",
+            "title": "Swipe, Blend, Go",
+            "text": "Buildable makeup sticks that blend naturally for all skin tones. Swipe, blend, go!"
+          }
+        }
+      },
+      "block_order": [
+        "feature_XefjKK",
+        "feature_mHMyGW",
+        "feature_MEiU8T",
+        "feature_4GhepB"
+      ],
+      "name": "Contact - Feature cards",
+      "settings": {
+        "py": 38,
+        "heading": ""
+      }
+    },
     "social_feeds_CYwmeT": {
       "type": "social-feeds",
       "blocks": {
@@ -636,6 +684,7 @@
     "main",
     "collection_list_iKk8LT",
     "image_product_grid_dYLVwX",
+    "feature_card_kUQXJf",
     "social_feeds_CYwmeT"
   ]
 }
