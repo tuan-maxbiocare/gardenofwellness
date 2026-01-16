@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -24,6 +25,7 @@
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "right",
             "thumbnail_width": 44,
+            "thumbnail_radius": 0,
             "aspect_ratio": "adapt",
             "constrain_to_viewport": true,
             "media_fit": "contain",
@@ -70,7 +72,6 @@
               "type": "group",
               "name": "Header",
               "settings": {
-                "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "flex-start",
@@ -98,6 +99,9 @@
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -110,6 +114,7 @@
                   "settings": {
                     "text": "<h1>{{ closest.product.title }}</h1>",
                     "width": "100%",
+                    "text_style": "solid",
                     "max_width": "normal",
                     "alignment": "left",
                     "type_preset": "h3",
@@ -145,6 +150,7 @@
                     "letter_spacing": "normal",
                     "case": "none",
                     "color": "var(--color-foreground)",
+                    "price_color": "#000000",
                     "padding-block-start": 4,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
@@ -188,6 +194,7 @@
               "settings": {
                 "stacking": true,
                 "show_pickup_availability": false,
+                "gift_card_form": true,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -223,6 +230,7 @@
               "settings": {
                 "text": "{{ closest.product.description }}",
                 "width": "100%",
+                "text_style": "solid",
                 "max_width": "normal",
                 "alignment": "left",
                 "type_preset": "rte",
@@ -259,6 +267,7 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 48,
+        "enable_sticky_add_to_cart": true,
         "color_scheme": "",
         "padding-block-start": 0,
         "padding-block-end": 0
@@ -273,6 +282,7 @@
           "settings": {
             "text": "<h3>You may also like </h3>",
             "width": "fit-content",
+            "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
             "type_preset": "h4",
@@ -315,11 +325,12 @@
               "type": "_product-card-gallery",
               "name": "t:names.product_card_media",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "portrait",
+                "media_background": "#eef1ea",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
-                "border_radius": 0,
+                "border_radius": 16,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -367,6 +378,7 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "color": "var(--color-foreground)",
+                "price_color": "#000000",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -388,6 +400,7 @@
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
+        "tab_collections": [],
         "recommendation_type": "related",
         "layout_type": "grid",
         "carousel_on_mobile": false,
