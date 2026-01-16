@@ -1,4 +1,4 @@
-<script 
+<script
   src="{{ 'marquee.js' | asset_url }}"
   type="module"
   fetchpriority="low"
@@ -72,6 +72,16 @@ marquee-component {
   display: block;
 }
 
+/* IMAGE STYLE - STYLE CHO ẢNH */
+.marquee__repeated-items img,
+.marquee__repeated-items .marquee-image {
+  display: block;
+  height: auto;
+  max-height: 60px; /* Có thể điều chỉnh theo ý muốn */
+  width: auto;
+  object-fit: contain;
+}
+
 /* CHỮ ĐẶC */
 .marquee-solid {
   color: white !important;
@@ -91,23 +101,52 @@ marquee-component {
 .marquee__repeated-items > * {
   align-content: center;
 }
+
+/* ============================= */
+/* MARQUEE ANIMATION - SỬA LẠI */
+/* ============================= */
 marquee-component {
   --marquee-speed: 25s;
 }
-/* Marquee chạy trên cả desktop & mobile */
+
+/* Marquee animation hoạt động trên cả desktop & mobile */
 marquee-component:not([data-disabled]) .marquee__wrapper {
-  animation: marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
+  animation: marquee-motion var(--marquee-speed) linear infinite;
+  animation-direction: var(--marquee-direction, normal);
+  will-change: transform; /* Tối ưu hiệu suất animation */
 }
-/* Tôn trọng user bật Reduce Motion */
+
+/* Đảm bảo animation không bị ảnh hưởng bởi prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   marquee-component .marquee__wrapper {
     animation: none !important;
   }
 }
 
+/* Keyframes cho animation */
 @keyframes marquee-motion {
-  to {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
     transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Đảm bảo hoạt động tốt trên mobile */
+@media screen and (max-width: 768px) {
+  .marquee__repeated-items :is(p, h1, h2, h3, h4, h5, h6, span, div) {
+    font-size: 32px; /* Giảm kích thước chữ trên mobile */
+  }
+  
+  .marquee__repeated-items img,
+  .marquee__repeated-items .marquee-image {
+    max-height: 50px; /* Giảm kích thước ảnh trên mobile */
+  }
+  
+  /* Tăng tốc độ trên mobile nếu cần */
+  marquee-component {
+    --marquee-speed: 20s;
   }
 }
 {% endstylesheet %}
@@ -122,6 +161,7 @@ marquee-component:not([data-disabled]) .marquee__wrapper {
     { "type": "text" },
     { "type": "icon" },
     { "type": "logo" },
+    { "type": "image" },
     { "type": "_divider" }
   ],
   "settings": [
@@ -181,7 +221,8 @@ marquee-component:not([data-disabled]) .marquee__wrapper {
       "name": "t:names.marquee_section",
       "category": "t:categories.text",
       "blocks": [
-        { "type": "text" }
+        { "type": "text" },
+        { "type": "image" }
       ]
     }
   ]

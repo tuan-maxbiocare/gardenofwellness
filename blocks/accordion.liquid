@@ -1,8 +1,6 @@
-
-
 {% assign block_settings = block.settings %}
 <div
-  class="accordion accordion--{{ block.id }} accordion--{{ block_settings.icon }} border-style spacing-style{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}{% if block_settings.dividers %} accordion--dividers{% endif %}"
+  class="accordion accordion--{{ block.id }} accordion--{{ block_settings.icon }}{% if block_settings.layout == 'two-column' %} accordion--two-column{% endif %} border-style spacing-style{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}{% if block_settings.dividers %} accordion--dividers{% endif %}"
   style="
     --summary-font-family: var(--font-{{ block_settings.type_preset }}--family);
      --summary-font-style: var(--font-{{ block_settings.type_preset }}--style);
@@ -24,7 +22,44 @@
     width: 100%;
   }
 
-  .accordion--dividers accordion-custom:not(:first-child) .details {
+  /* Two column layout */
+  .accordion--two-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  @media (min-width: 768px) {
+    .accordion--two-column {
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+  }
+
+  .accordion--two-column accordion-custom {
+    break-inside: avoid;
+  }
+
+  /* Divider styles - Updated for two-column layout */
+  .accordion--dividers accordion-custom .details {
+    border-block-start: var(--style-border-width) solid transparent;
+  }
+
+  .accordion--dividers accordion-custom:first-child .details,
+  .accordion--dividers accordion-custom:nth-child(2) .details {
+    border-block-start: var(--style-border-width) solid var(--color-border);
+  }
+
+  .accordion--dividers accordion-custom:not(:first-child):not(:nth-child(2)) .details {
+    border-block-start: var(--style-border-width) solid var(--color-border);
+  }
+
+  /* For single column layout */
+  .accordion:not(.accordion--two-column).accordion--dividers accordion-custom:first-child .details {
+    border-block-start: none;
+  }
+
+  .accordion:not(.accordion--two-column).accordion--dividers accordion-custom:not(:first-child) .details {
     border-block-start: var(--style-border-width) solid var(--color-border);
   }
 
@@ -39,11 +74,19 @@
     --show-fallback-borders: 1;
   }
 
-  .accordion--dividers accordion-custom:first-child .details {
-    border-block-start: calc(var(--style-border-width) * var(--show-fallback-borders)) solid var(--color-border);
+  /* Last item border for single column */
+  .accordion:not(.accordion--two-column).accordion--dividers accordion-custom:last-child .details {
+    border-block-end: calc(var(--style-border-width) * var(--show-fallback-borders)) solid var(--color-border);
   }
 
-  .accordion--dividers accordion-custom:last-child .details {
+  /* Last items border for two columns */
+  .accordion--two-column.accordion--dividers accordion-custom:last-child .details,
+  .accordion--two-column.accordion--dividers accordion-custom:nth-last-child(2) .details {
+    border-block-end: calc(var(--style-border-width) * var(--show-fallback-borders)) solid var(--color-border);
+  }
+
+  /* For odd number of items in two columns */
+  .accordion--two-column.accordion--dividers accordion-custom:last-child:nth-child(odd) .details {
     border-block-end: calc(var(--style-border-width) * var(--show-fallback-borders)) solid var(--color-border);
   }
 
@@ -66,6 +109,23 @@
     text-transform: var(--summary-font-case);
     min-height: var(--minimum-touch-target);
   }
+
+  /* Spacing between columns */
+  .accordion--two-column {
+    column-gap: 40px;
+  }
+
+  /* Remove top padding from first items in each column */
+  .accordion--two-column accordion-custom:first-child,
+  .accordion--two-column accordion-custom:nth-child(2) {
+    padding-top: 0;
+  }
+
+  /* Remove bottom padding from last items in each column */
+  .accordion--two-column accordion-custom:last-child,
+  .accordion--two-column accordion-custom:nth-last-child(2) {
+    padding-bottom: 0;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -79,6 +139,22 @@
     }
   ],
   "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "single-column",
+          "label": "Single column"
+        },
+        {
+          "value": "two-column",
+          "label": "Two columns"
+        }
+      ],
+      "default": "single-column"
+    },
     {
       "type": "select",
       "id": "icon",
@@ -255,58 +331,42 @@
     {
       "name": "t:names.accordion",
       "category": "t:categories.layout",
-      "blocks": {
-        "row-1": {
-          "type": "_accordion-row",
-          "settings": {
-            "open_by_default": true,
-            "heading": "t:text_defaults.return_policy"
-          },
-          "blocks": {
-            "text-1": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.goal_for_every_customer",
-                "width": "100%"
-              }
-            }
-          },
-          "block_order": ["text-1"]
-        },
-        "row-2": {
-          "type": "_accordion-row",
-          "settings": {
-            "heading": "t:text_defaults.shipping"
-          },
-          "blocks": {
-            "text-1": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.work_quickly_to_ship",
-                "width": "100%"
-              }
-            }
-          },
-          "block_order": ["text-1"]
-        },
-        "row-3": {
-          "type": "_accordion-row",
-          "settings": {
-            "heading": "t:text_defaults.manufacturing"
-          },
-          "blocks": {
-            "text-1": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.made_local_and_global",
-                "width": "100%"
-              }
-            }
-          },
-          "block_order": ["text-1"]
-        }
+      "settings": {
+        "layout": "two-column",
+        "dividers": true
       },
-      "block_order": ["row-1", "row-2", "row-3"]
+      "blocks": [
+        {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "When will I get my order?"
+          }
+        },
+        {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "What is the return policy?"
+          }
+        },
+        {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "Are any purchases final sale?"
+          }
+        },
+        {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "Where are your products manufactured?"
+          }
+        },
+        {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "How much does shipping cost?"
+          }
+        }
+      ]
     }
   ]
 }
