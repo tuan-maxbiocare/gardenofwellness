@@ -304,6 +304,12 @@
           ]
         }
       },
+      "custom_css": [
+        ".collection-reveal {grid-column: 1 / -1; justify-self: center; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px;}",
+        " .collection-reveal {flex-basis: 100%;}",
+        ".collection-reveal__btn {border-radius: 999px; padding: 10px 26px;}",
+        ".collection-reveal__count {font-size: 12px; opacity: 0.8;}"
+      ],
       "settings": {
         "layout_type": "grid",
         "product_card_size": "medium",
@@ -318,7 +324,18 @@
         "padding-inline-end": 0,
         "color_scheme": "scheme-1",
         "padding-block-start": 0,
-        "padding-block-end": 32
+        "padding-block-end": 32,
+        "banner_enable": true,
+        "banner_position": "left",
+        "banner_image": "shopify://shop_images/2H6A1829_9312be68-c526-4c45-8766-0dae9815f62b.webp",
+        "banner_title": "Body care",
+        "banner_text": "More our favorite mindfull...",
+        "banner_button_label": "Shop now",
+        "banner_link": "",
+        "banner_heading_color": "#ffffff",
+        "banner_subheading_color": "#ffffff",
+        "banner_button_bg": "#ffffff",
+        "banner_button_text": "#111111"
       }
     },
     "collection_list_iKk8LT": {
