@@ -417,10 +417,34 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "breadcrumbs_zjy3xi": {
+      "type": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "settings": {
+        "text_alignment": "center",
+        "text_alignment_mobile": "center",
+        "full_width": false,
+        "full_width_mobile": true,
+        "full_page": false,
+        "container_width": "full",
+        "container_padding": 20,
+        "container_padding_mobile": 15,
+        "section_paddings": 8,
+        "section_paddings_mobile": 8,
+        "color_type": "default",
+        "background_color": "#f5f5f5",
+        "text_color": "#000000",
+        "link_color": "#000000",
+        "link_hover_color": "#555555",
+        "section_id": "",
+        "section_class": ""
+      }
     }
   },
   "order": [
     "main",
-    "product_recommendations_qggXJq"
+    "product_recommendations_qggXJq",
+    "breadcrumbs_zjy3xi"
   ]
 }
