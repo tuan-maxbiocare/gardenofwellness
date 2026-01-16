@@ -624,7 +624,7 @@
               "settings": {
                 "heading": "When will I get my order?",
                 "open_by_default": false,
-                "icon": "none",
+                "icon": "apple",
                 "width": 20
               },
               "blocks": {
