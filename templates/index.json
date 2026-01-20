@@ -400,77 +400,6 @@
         "padding-block-end": 48
       }
     },
-    "feaure_category_8mYehU": {
-      "type": "feaure_category",
-      "blocks": {
-        "category_yQwxaz": {
-          "type": "category",
-          "settings": {
-            "collection": "clearance-sale",
-            "title": "Cleanser",
-            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-4_9b1bd37b-6a3c-4322-8af5-017db14c256e.webp"
-          }
-        },
-        "category_kCbEmV": {
-          "type": "category",
-          "settings": {
-            "collection": "beauty-products",
-            "title": "Serums",
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x799-2_d8656211-dfa1-4439-b418-7f0d01f10c75.webp"
-          }
-        },
-        "category_4884AT": {
-          "type": "category",
-          "settings": {
-            "collection": "contour-body-oil",
-            "title": "Toner",
-            "image": "shopify://shop_images/Untitled_design_46_88e8dc9a-88b6-4b07-9afb-cde49fa1a471.webp"
-          }
-        },
-        "category_brdjwi": {
-          "type": "category",
-          "settings": {
-            "collection": "body-care",
-            "title": "Bodycare",
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-1_99012931-73c6-42a4-85ac-65638645b17b.webp"
-          }
-        }
-      },
-      "block_order": [
-        "category_yQwxaz",
-        "category_kCbEmV",
-        "category_4884AT",
-        "category_brdjwi"
-      ],
-      "name": "Featured categories (List + pill image)",
-      "settings": {
-        "heading": "",
-        "marker_style": "underline",
-        "heading_size": 50,
-        "heading_tag": "h2",
-        "heading_align": "left",
-        "card_title_size": 100,
-        "image_style": "rounded",
-        "image_ratio": "wide_16_9",
-        "content_alignment": "left",
-        "content_position": "right",
-        "image_width": 160,
-        "image_width_mobile": 102,
-        "show_item_count": true,
-        "show_line_border": true,
-        "show_section_divider": false,
-        "padding_top": "100",
-        "padding_bottom": "100",
-        "padding_top_mobile": "48",
-        "padding_bottom_mobile": "48",
-        "bg_color": "#5c6350",
-        "title_color": "#ffffff",
-        "text_color": "#e1e3e1",
-        "line_color": "#ffffff",
-        "base_size": 110,
-        "color_scheme": "default"
-      }
-    },
     "image_product_grid_bjq3xR": {
       "type": "image-product-grid",
       "blocks": {
@@ -1353,7 +1282,6 @@
         "shoppable_video_UJPQzG": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1766644813_36.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1373,7 +1301,6 @@
         "shoppable_video_AtFQbx": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1766645496_56.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1393,7 +1320,6 @@
         "shoppable_video_ai6nzn": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1766645300_50.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1413,7 +1339,6 @@
         "shoppable_video_cAD9VF": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1766645060_44.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1433,7 +1358,6 @@
         "shoppable_video_6PUnN4": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1766645398_53.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1453,7 +1377,6 @@
         "shoppable_video_cbkPyg": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1766644997_42.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1597,7 +1520,6 @@
         "max_width": "1440px",
         "bg_color": "#ffffff",
         "media_type": "video",
-        "video": "shopify://files/videos/video_1766645430_54.mp4",
         "autoplay": true,
         "loop_video": true,
         "product": "garden-of-wellness-nourishing-body-oil-frankincense",
@@ -1849,7 +1771,6 @@
       ],
       "name": "Video hero",
       "settings": {
-        "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3739352408842388741.mp4",
         "video_mp4_url": "",
         "overlay_opacity": 35,
         "kicker": "EURUS STORY",
@@ -1940,7 +1861,6 @@
             "year": "2025",
             "eyebrow": "TODAY & TOMORROW",
             "title": "New vinergy® patent",
-            "video": "shopify://files/videos/LoveInsta.com_Instagram_Media_001_3781937743342586992.mp4",
             "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.<br/></p>"
           }
         },
@@ -1964,7 +1884,6 @@
             "year": "2015",
             "eyebrow": "MILE STONE 2",
             "title": "Our first organic & vegan center",
-            "video": "shopify://files/videos/8293512-hd_1280_720_30fps.mp4",
             "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.</p>"
           }
         },
@@ -2783,7 +2702,6 @@
   "order": [
     "slideshow_d9P9bw",
     "product_recommendations_JhEgQx",
-    "feaure_category_8mYehU",
     "image_product_grid_bjq3xR",
     "mega_deal_countdown_KcUUWk",
     "unbeatable_prices_wPMB9Q",
