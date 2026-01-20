@@ -16,7 +16,7 @@
           "type": "text",
           "name": "Title",
           "settings": {
-            "text": "<h1>Our Research Park</h1>",
+            "text": "<h1>About-us</h1>",
             "width": "100%",
             "text_style": "solid",
             "max_width": "normal",
