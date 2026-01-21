@@ -1,0 +1,40 @@
+
+
+{% assign ratio_value = ratio | default: "16/9" %}
+
+<div class="sbg-media" style="--sbg-ratio: {{ ratio_value }}; --sbg-radius: {{ radius | default: 0 }}px;">
+  {% if image != blank %}
+    {{
+      image
+      | image_url: width: 2000
+      | image_tag:
+        loading: 'lazy',
+        sizes: '(min-width: 750px) 50vw, 100vw',
+        widths: '400, 600, 800, 1000, 1400, 1800, 2000',
+        class: 'sbg-media__img'
+    }}
+  {% else %}
+    <div class="sbg-media__ph"></div>
+  {% endif %}
+</div>
+
+<style>
+  .sbg-media{
+    width: 100%;
+    border-radius: var(--sbg-radius);
+    overflow: hidden;
+    background: #eee;
+    aspect-ratio: var(--sbg-ratio);
+  }
+  .sbg-media__img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .sbg-media__ph{
+    width: 100%;
+    height: 100%;
+    background: #e9e9e9;
+  }
+</style>
