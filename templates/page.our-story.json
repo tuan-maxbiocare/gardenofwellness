@@ -736,6 +736,73 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "products_bg_columns_ff3Cqq": {
+      "type": "products-bg-columns",
+      "blocks": {
+        "column_aW6mKW": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/fb061717924ab59520bdc09bff40532069b07611.jpg",
+            "icon": "shopify://shop_images/Frame_5.png",
+            "title": "Harmonia",
+            "text": "Hydrating formula for daily balance",
+            "overlay_opacity": 40,
+            "button_link": "",
+            "new_tab": false
+          }
+        },
+        "column_bYCpXm": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/041277f92ddba83de03ac308a9a0f4045f916c33.jpg",
+            "icon": "shopify://shop_images/Frame_5.png",
+            "title": "Serena",
+            "text": "Gentle cleansing for sensitive skin",
+            "overlay_opacity": 40,
+            "button_link": "",
+            "new_tab": false
+          }
+        },
+        "column_4MLhcc": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/d5140364155066e9236f097043e21eae13799232.jpg",
+            "icon": "shopify://shop_images/Frame_5.png",
+            "title": "Revivemist",
+            "text": "Refreshing mist for instant hydration",
+            "overlay_opacity": 40,
+            "button_link": "",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "column_aW6mKW",
+        "column_bYCpXm",
+        "column_4MLhcc"
+      ],
+      "name": "Products - Image Columns",
+      "settings": {
+        "heading": "The Products",
+        "heading_size": "heading-xl",
+        "heading_tag": "h2",
+        "heading_color": "#000000",
+        "subheading": "Designed as Daily Rituals",
+        "subheading_size": "subheading-sm",
+        "subheading_tag": "p",
+        "subheading_color": "#000000",
+        "show_divider": true,
+        "text_color": "#000000",
+        "columns_desktop": 3,
+        "columns_mobile": "1",
+        "section_width": "full-width",
+        "background_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
     }
   },
   "order": [
@@ -744,6 +811,7 @@
     "main",
     "section_w4QMXw",
     "image_banner_garden_qHWicC",
-    "section_7LQbPn"
+    "section_7LQbPn",
+    "products_bg_columns_ff3Cqq"
   ]
 }
