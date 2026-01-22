@@ -77,15 +77,10 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
-    },
-    "media_2col_text": {
-      "type": "Media-2col-text",
-      "settings": {}
     }
   },
   "order": [
     "breadcrumbs",
     "main",
-    "media_2col_text"
   ]
 }
