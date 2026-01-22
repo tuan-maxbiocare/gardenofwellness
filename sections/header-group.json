@@ -73,7 +73,7 @@
         "section_width": "full-width",
         "color_scheme": "scheme-4",
         "divider_width": 0,
-        "padding-block-start": 15,
+        "padding-block-start": 5,
         "padding-block-end": 15
       }
     },
