@@ -13,14 +13,14 @@
       "type": "breadcrumbs",
       "settings": {
         "text_alignment": "left",
-        "text_alignment_mobile": "left",
+        "text_alignment_mobile": "center",
         "full_width": false,
         "full_width_mobile": true,
         "full_page": false,
         "container_width": "normal",
         "container_padding": 20,
         "container_padding_mobile": 15,
-        "section_paddings": 20,
+        "section_paddings": 8,
         "section_paddings_mobile": 16,
         "color_type": "default",
         "background_color": "#f5f5f5",
@@ -70,6 +70,7 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 12,
@@ -81,6 +82,6 @@
   },
   "order": [
     "breadcrumbs",
-    "main",
+    "main"
   ]
 }
