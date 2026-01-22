@@ -549,12 +549,58 @@
         "padding-block-start": 64,
         "padding-block-end": 64
       }
+    },
+    "image_banner_garden_qHWicC": {
+      "type": "image-banner-garden",
+      "blocks": {
+        "heading_tn9WRW": {
+          "type": "heading",
+          "settings": {
+            "heading": "The Gardens"
+          }
+        },
+        "button_8LJj3f": {
+          "type": "button",
+          "settings": {
+            "label": "Explore Our Research Park",
+            "link": ""
+          }
+        },
+        "text_Uhaj9b": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>A Living Sanctuary of Wellness</strong></p>"
+          }
+        },
+        "text_pRfKYM": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our Research Park began as six hectares of open pasture — now transformed into a thriving ecosystem of medicinal herbs, native plants, fruit trees, bees, birds, and pollinators. It’s more than a research site — it’s the living heart of Garden of Wellness, where innovation and ecology come together to inspire every formula. Wander through the gardens and you’ll be enveloped in the natural fragrance of herbs and blossoms. The scent clings to the air and your skin, awakening your senses. Bees move from bloom to bloom. Frogs sing from 4,000m² of water channels that run through the site. These are the rhythms of nature — the same rhythms we bring to our products.<br/><br/> This is where Garden of Wellness was born.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_tn9WRW",
+        "button_8LJj3f",
+        "text_Uhaj9b",
+        "text_pRfKYM"
+      ],
+      "name": "Image Banner – Garden",
+      "settings": {
+        "bg_image": "shopify://shop_images/9e027c0ba94136d89968949a36b151f522502831.jpg",
+        "content_position": "bottom",
+        "box_bg": "#2f4a2f",
+        "text_color": "#ffffff",
+        "button_color": "#ffffff",
+        "button_border": "#ffffff"
+      }
     }
   },
   "order": [
     "slideshow_ktbwPR",
     "breadcrumbs",
     "main",
-    "section_w4QMXw"
+    "section_w4QMXw",
+    "image_banner_garden_qHWicC"
   ]
 }
