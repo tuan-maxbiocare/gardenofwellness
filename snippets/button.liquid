@@ -10,6 +10,87 @@
 
 {% assign block_settings = block.settings %}
 
+{% comment %} Xử lý border radius {% endcomment %}
+{%- case block_settings.border_radius -%}
+  {%- when 'none' -%}
+    {%- assign radius_value = '0' -%}
+    {%- assign radius_class = 'border-radius-none' -%}
+  {%- when 'small' -%}
+    {%- assign radius_value = '4px' -%}
+    {%- assign radius_class = 'border-radius-small' -%}
+  {%- when 'medium' -%}
+    {%- assign radius_value = '8px' -%}
+    {%- assign radius_class = 'border-radius-medium' -%}
+  {%- when 'large' -%}
+    {%- assign radius_value = '16px' -%}
+    {%- assign radius_class = 'border-radius-large' -%}
+  {%- when 'pill' -%}
+    {%- assign radius_value = '9999px' -%}
+    {%- assign radius_class = 'border-radius-pill' -%}
+  {%- when 'custom' -%}
+    {%- assign radius_value = block_settings.custom_border_radius | append: 'px' -%}
+    {%- assign radius_class = '' -%}
+  {%- else -%}
+    {%- assign radius_value = '8px' -%}
+    {%- assign radius_class = 'border-radius-medium' -%}
+{%- endcase -%}
+
+{% comment %} Xử lý height {% endcomment %}
+{%- case block_settings.button_height -%}
+  {%- when 'small' -%}
+    {%- assign height_value = '36px' -%}
+    {%- assign height_class = 'button-height-small' -%}
+  {%- when 'medium' -%}
+    {%- assign height_value = '44px' -%}
+    {%- assign height_class = 'button-height-medium' -%}
+  {%- when 'large' -%}
+    {%- assign height_value = '52px' -%}
+    {%- assign height_class = 'button-height-large' -%}
+  {%- when 'custom' -%}
+    {%- assign height_value = block_settings.custom_button_height | append: 'px' -%}
+    {%- assign height_class = '' -%}
+  {%- else -%}
+    {%- assign height_value = '44px' -%}
+    {%- assign height_class = 'button-height-medium' -%}
+{%- endcase -%}
+
+{% comment %} Tạo style cho border radius và height custom {% endcomment %}
+{%- if block_settings.border_radius == 'custom' or block_settings.button_height == 'custom' or block_settings.hover_color != blank or block_settings.hover_background != blank -%}
+  {% style %}
+    {%- if block_settings.border_radius == 'custom' -%}
+      .{{ block_settings.style_class }}--{{ block.id }} {
+        border-radius: {{ radius_value }} !important;
+      }
+    {%- endif -%}
+    
+    {%- if block_settings.button_height == 'custom' -%}
+      .{{ block_settings.style_class }}--{{ block.id }} {
+        min-height: {{ height_value }} !important;
+        height: {{ height_value }} !important;
+        line-height: {{ height_value }} !important;
+      }
+    {%- endif -%}
+    
+    {%- if block_settings.hover_color != blank -%}
+      .{{ block_settings.style_class }}--{{ block.id }}:hover {
+        color: {{ block_settings.hover_color }} !important;
+      }
+    {%- endif -%}
+    
+    {%- if block_settings.hover_background != blank -%}
+      .{{ block_settings.style_class }}--{{ block.id }}:hover {
+        background-color: {{ block_settings.hover_background }} !important;
+      }
+    {%- endif -%}
+    
+    {%- if block_settings.hover_border_color != blank -%}
+      .{{ block_settings.style_class }}--{{ block.id }}:hover {
+        border-color: {{ block_settings.hover_border_color }} !important;
+      }
+    {%- endif -%}
+  {% endstyle %}
+{%- endif -%}
+
 <a
   {% if link == blank %}
     role="link"
@@ -21,8 +102,14 @@
     size-style
     {{ block_settings.style_class }}
     {{ block_settings.style_class }}--{{ block.id }}
+    {{ radius_class }}
+    {{ height_class }}
   "
-  style="{% render 'size-style', settings: block_settings %}"
+  style="
+    {% render 'size-style', settings: block_settings %}
+    {% if block_settings.border_radius != 'custom' %}border-radius: {{ radius_value }};{% endif %}
+    {% if block_settings.button_height != 'custom' %}min-height: {{ height_value }}; height: {{ height_value }}; line-height: {{ height_value }};{% endif %}
+  "
   {%- if block_settings.open_in_new_tab -%}
     target="_blank"
     rel="noopener noreferrer"
@@ -41,5 +128,45 @@
       color: var(--color-primary-hover);
       text-decoration-color: transparent;
     }
+  }
+
+  /* Border radius classes */
+  .border-radius-none {
+    border-radius: 0 !important;
+  }
+  
+  .border-radius-small {
+    border-radius: 4px !important;
+  }
+  
+  .border-radius-medium {
+    border-radius: 8px !important;
+  }
+  
+  .border-radius-large {
+    border-radius: 16px !important;
+  }
+  
+  .border-radius-pill {
+    border-radius: 9999px !important;
+  }
+  
+  /* Height classes */
+  .button-height-small {
+    min-height: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+  }
+  
+  .button-height-medium {
+    min-height: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+  
+  .button-height-large {
+    min-height: 52px !important;
+    height: 52px !important;
+    line-height: 52px !important;
   }
 {% endstylesheet %}

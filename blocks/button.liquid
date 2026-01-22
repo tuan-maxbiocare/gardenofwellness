@@ -1,4 +1,3 @@
-
 {% render 'button', link: block.settings.link %}
 
 {% schema %}
@@ -44,6 +43,109 @@
       "default": "button"
     },
     {
+      "type": "select",
+      "id": "border_radius",
+      "label": "Border radius",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "pill",
+          "label": "Pill"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "custom_border_radius",
+      "label": "Custom radius (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Button Height"
+    },
+    {
+      "type": "select",
+      "id": "button_height",
+      "label": "Height",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "custom_button_height",
+      "label": "Custom height",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 44,
+      "visible_if": "{{ block.settings.button_height == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Hover Effects"
+    },
+    {
+      "type": "color",
+      "id": "hover_color",
+      "label": "Hover text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "hover_background",
+      "label": "Hover background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "hover_border_color",
+      "label": "Hover border color",
+      "default": "#000000"
+    },
+    {
       "type": "header",
       "content": "t:content.size"
     },
@@ -71,8 +173,7 @@
       "max": 100,
       "step": 1,
       "unit": "%",
-      "default": 100,
-      "visible_if": "{{ block.settings.width == \"custom\" }}"
+      "default": 100
     },
     {
       "type": "select",
@@ -98,8 +199,7 @@
       "max": 100,
       "step": 1,
       "unit": "%",
-      "default": 100,
-      "visible_if": "{{ block.settings.width_mobile == \"custom\" }}"
+      "default": 100
     }
   ],
   "presets": [
@@ -107,7 +207,12 @@
       "name": "t:names.button",
       "category": "t:categories.basic",
       "settings": {
-        "link": "shopify://collections/all"
+        "link": "shopify://collections/all",
+        "border_radius": "medium",
+        "button_height": "medium",
+        "hover_color": "#000000",
+        "hover_background": "#000000",
+        "hover_border_color": "#000000"
       }
     }
   ]
