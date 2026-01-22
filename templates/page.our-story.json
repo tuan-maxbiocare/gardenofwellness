@@ -357,8 +357,8 @@
             "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
           },
           "blocks": {
             "text_Ykg9zC": {
@@ -457,8 +457,8 @@
             "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
           },
           "blocks": {
             "text_39cNM9": {
@@ -674,8 +674,8 @@
             "corner_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
           },
           "blocks": {}
         },
@@ -886,8 +886,8 @@
             "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
           },
           "blocks": {
             "text_AEDXKf": {
@@ -981,8 +981,8 @@
             "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
           },
           "blocks": {
             "text_YXCXqk": {
@@ -1131,8 +1131,8 @@
             "corner_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 40,
+            "padding-inline-end": 40
           },
           "blocks": {}
         },
