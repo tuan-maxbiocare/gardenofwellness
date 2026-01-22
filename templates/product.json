@@ -535,7 +535,7 @@
         "image_ceyETc": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/4-Rosehip-Oil.e575d7b7.avif",
+            "image": "shopify://shop_images/4-Rosehip-Oil.e575d7b7.png",
             "link": "",
             "image_ratio": "square",
             "width": "custom",
@@ -561,7 +561,7 @@
       ],
       "name": "t:names.marquee_section",
       "settings": {
-        "movement_direction": "normal",
+        "movement_direction": "reverse",
         "color_scheme": "scheme-4",
         "padding-block-start": 10,
         "padding-block-end": 10,
