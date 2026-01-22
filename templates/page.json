@@ -9,55 +9,7 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "blocks": {
-        "heading": {
-          "type": "text",
-          "name": "Title",
-          "settings": {
-            "text": "<h1>{{ closest.page.title }}</h1>",
-            "width": "100%",
-            "text_style": "solid",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-primary--family)",
-            "font_size": "",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "page-content": {
-          "type": "page-content",
-          "settings": {},
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "heading",
-        "page-content"
-      ],
-      "settings": {
-        "content_direction": "column",
-        "gap": 32,
-        "color_scheme": "",
-        "padding-block-start": 40,
-        "padding-block-end": 80
-      }
-    },
-    "breadcrumbs_zGDAjw": {
+    "breadcrumbs": {
       "type": "breadcrumbs",
       "name": "Breadcrumbs",
       "settings": {
@@ -80,60 +32,41 @@
         "section_class": ""
       }
     },
-    "senses_balance_grid_P8Kw7H": {
-      "type": "Senses-Balance-Grid",
-      "name": "Senses / Balance Grid",
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ page.title }}</h1>",
+            "width": "100%",
+            "text_style": "solid",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h1",
+            "wrap": "pretty"
+          }
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
       "settings": {
-        "heading": "Awaken Your Senses.| Restore Your Balance",
-        "text": "<p>The Garden of Wellness story begins in a place unlike any other: a thriving Research Park in South-West Gippsland, where herbs, bees, and bioscience come together to create something truly unique.Developed by Max Biocare, our Research Parks are living ecosystems and evidence-based innovation hubs — home to the botanicals, bees, and breakthroughs that power every Garden of Wellness product. This is where health solutions — including skincare — begin. Not in a factory or a lab, but in a fragrant, working garden. A place where provenance is real, traceable, and rooted in care.<br/><br/>.</p>",
-        "image_1": "shopify://shop_images/1c14b463b7e6adb17e59c3a02caebc2ffdf83cfb.jpg",
-        "image_2": "shopify://shop_images/8097a812dddf42e6654c33ea52359d37703ee0c1.jpg",
-        "image_3": "shopify://shop_images/e6b360621703d9398c7edfa2531e9ac5196b84f4.jpg",
-        "ratio_small": "1.3333333",
-        "ratio_tall": "0.75",
-        "heading_font": "bodoni_moda_n4",
-        "body_font": "arapey_n4",
-        "bg_color": "#ffffff",
-        "text_color": "#1d1d1d",
-        "max_width": 1200,
-        "padding_top_desktop": 100,
-        "padding_bottom_desktop": 0,
-        "padding_top_mobile": 64,
-        "padding_bottom_mobile": 48,
-        "padding_x": 16,
-        "gap_x": 16,
-        "gap_y": 16,
-        "radius": 12
-      }
-    },
-    "media_2col_text_wdR6gQ": {
-      "type": "Media-2col-text",
-      "name": "Media + Content (Clean)",
-      "settings": {
-        "heading": "Yinnar Eco Center — A Living Sanctuary of Wellness",
-        "subheading": "Nestled in the heart of South-West Gippsland, our Yinnar Research Park began as six hectares of open pasture.|Today, it’s a vibrant sanctuary where nature is in full bloom.",
-        "text": "As you step into the garden, you’re immediately wrapped in the soft, grounding scent of herbs — including hundreds of varieties of salvia, lavender and lemon myrtle. The air is perfumed with the freshness of flowering citrus, eucalyptus, and the occasional earthy undertone from the wetland soil.\n\nBees hum gently from blossom to blossom, collecting nectar under a green canopy of native shrubs and fruiting trees. In every direction, there is colour, life, and the soothing rhythm of a landscape designed to thrive in harmony.\n\nIt is more than a research site — it’s the living heart of Garden of Wellness. Water glistens in interlinked wetland channels that support frogs and wild birds. Petals stir in the breeze.\n\nThe scent clings gently to your skin, leaving a trace of serenity. It’s a place of inspiration, of regeneration, and of quiet beauty. These are the rhythms of nature — and they shape every formula we create.",
-        "show_col2_line": true,
-        "col2_offset": 88,
-        "col2_line_gap": 36,
-        "media_type": "image",
-        "image": "shopify://shop_images/364-2H6A2051.jpg",
-        "video_mp4_url": "",
-        "video_autoplay": true,
-        "video_muted": true,
-        "video_loop": true,
-        "heading_color": "#1f3d11",
-        "subheading_color": "#000000",
-        "text_color": "#817c7c",
-        "align_desktop": "center",
-        "max_width": 1100
+        "content_direction": "column",
+        "gap": 32,
+        "padding-block-start": 40,
+        "padding-block-end": 80
       }
     }
   },
   "order": [
-    "main",
-    "breadcrumbs_zGDAjw",
-    "senses_balance_grid_P8Kw7H",
-    "media_2col_text_wdR6gQ"
+    "breadcrumbs",
+    "main"
   ]
 }
