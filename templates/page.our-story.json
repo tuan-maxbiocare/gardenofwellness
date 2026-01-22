@@ -803,6 +803,49 @@
         "padding_top_mobile": 60,
         "padding_bottom_mobile": 60
       }
+    },
+    "marquee_pUz3YL": {
+      "type": "marquee",
+      "blocks": {
+        "text_9Vq36N": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<h2>New arrivals</h2>",
+            "width": "100%",
+            "text_style": "solid",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "h4",
+            "font": "var(--font-body--family)",
+            "font_size": "0.75rem",
+            "line_height": "loose",
+            "letter_spacing": "loose",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_9Vq36N"
+      ],
+      "name": "t:names.marquee_section",
+      "settings": {
+        "movement_direction": "reverse",
+        "color_scheme": "scheme-4",
+        "padding-block-start": 8,
+        "padding-block-end": 8,
+        "gap_between_elements": 24
+      }
     }
   },
   "order": [
@@ -812,6 +855,7 @@
     "section_w4QMXw",
     "image_banner_garden_qHWicC",
     "section_7LQbPn",
-    "products_bg_columns_ff3Cqq"
+    "products_bg_columns_ff3Cqq",
+    "marquee_pUz3YL"
   ]
 }
