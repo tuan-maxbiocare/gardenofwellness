@@ -96,7 +96,7 @@
           "type": "_header-menu",
           "static": true,
           "settings": {
-            "menu": "main-menu-1",
+            "menu": "main-menu",
             "color_scheme": "",
             "type_font_primary_size": "0.875rem",
             "menu_font_style": "regular",
