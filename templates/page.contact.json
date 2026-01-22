@@ -79,6 +79,29 @@
         "padding-block-end": 0
       }
     },
+    "breadcrumbs_RPTGFe": {
+      "type": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "settings": {
+        "text_alignment": "left",
+        "text_alignment_mobile": "center",
+        "full_width": false,
+        "full_width_mobile": true,
+        "full_page": false,
+        "container_width": "normal",
+        "container_padding": 10,
+        "container_padding_mobile": 10,
+        "section_paddings": 8,
+        "section_paddings_mobile": 16,
+        "color_type": "default",
+        "background_color": "#f5f5f5",
+        "text_color": "#000000",
+        "link_color": "#000000",
+        "link_hover_color": "#555555",
+        "section_id": "",
+        "section_class": ""
+      }
+    },
     "hero_form_PPHVXT": {
       "type": "hero-form",
       "name": "Contact - Hero + Form",
@@ -164,6 +187,7 @@
   },
   "order": [
     "main",
+    "breadcrumbs_RPTGFe",
     "hero_form_PPHVXT",
     "feature_card_NNyHew",
     "map_store_kzRpqy"
