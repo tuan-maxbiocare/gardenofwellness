@@ -1,5 +1,3 @@
-
-
 {% liquid
   assign order = 'logo,menu,localization,search,mobile_search,actions'
 
@@ -23,6 +21,25 @@
   elsif section.settings.enable_transparent_header_collection and template.name == 'collection'
     assign transparent = 'always'
     assign transparent_color_scheme = section.settings.collection_color_scheme
+  elsif section.settings.enable_transparent_header_page and template.name == 'page'
+    assign enable_for_this_page = false
+    assign matched_block_color = ''
+
+    if section.settings.page_transparent_mode == 'all'
+      assign enable_for_this_page = true
+    elsif section.settings.page_handles != blank
+      assign handles = section.settings.page_handles | remove: ' ' | split: ','
+      for h in handles
+        if h != '' and page.handle == h
+          assign enable_for_this_page = true
+        endif
+      endfor
+    endif
+
+    if enable_for_this_page
+      assign transparent = 'always'
+      assign transparent_color_scheme = section.settings.page_color_scheme
+    endif
   endif
 
   if section.settings.enable_sticky_header == 'always'
@@ -174,20 +191,18 @@
     assign color_shadow = '--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));'
     assign form_style = localization_font | append: localization_font_size | append: color_shadow
   %}
-  {% if show_language and show_country == false %}
+  {% if section.settings.show_language and localization.available_languages.size > 1 and localization.available_languages.size != blank %}
     <div class="dropdown-localization mobile:hidden">
       {% render 'localization-form',
-        show_country: show_country,
-        show_language: show_language,
+        show_country: section.settings.show_country,
+        show_language: section.settings.show_language,
         localization_style: 'dropdown',
         form_style: form_style,
         block_id: block.id
       %}
     </div>
-  {% elsif show_country %}
-    <dropdown-localization-component
-      class="dropdown-localization mobile:hidden"
-    >
+  {% elsif section.settings.show_country and localization.available_countries.size > 1 %}
+    <dropdown-localization-component class="dropdown-localization mobile:hidden">
       <button
         type="button"
         class="button dropdown-localization__button localization-selector link link--text"
@@ -197,7 +212,7 @@
         on:click="/toggleSelector"
         style="{{ localization_font }} {{ localization_font_size }}"
       >
-        {% if show_country %}
+        {% if section.settings.show_country %}
           {% if section.settings.country_selector_style == true %}
             {% liquid
               assign background_brightness = section.settings.color_scheme.settings.background | color_brightness
@@ -216,29 +231,19 @@
               "
             ></span>
           {% endif %}
-          <span
-            class="currency-code"
-            data-testid="localization-currency-code"
-          >
+          <span class="currency-code" data-testid="localization-currency-code">
             {{- localization.country.currency.iso_code -}}
           </span>
         {% endif %}
-        <span
-          class="visually-hidden"
-          data-testid="localization-visually-hidden"
-        >
+        <span class="visually-hidden" data-testid="localization-visually-hidden">
           {{- 'accessibility.localization_region_and_language' | t -}}
         </span>
-
-        {%- if show_country and show_language -%}
+        {% if section.settings.show_country and section.settings.show_language %}
           <span>/</span>
-        {%- endif -%}
-
-        {%- if show_language -%}
-          <span>
-            {{ localization.language.iso_code | upcase }}
-          </span>
-        {%- endif -%}
+        {% endif %}
+        {% if section.settings.show_language %}
+          <span>{{ localization.language.iso_code | upcase }}</span>
+        {% endif %}
         <span class="svg-wrapper icon-caret">
           {{- 'icon-caret.svg' | inline_asset_content -}}
         </span>
@@ -250,8 +255,8 @@
         ref="panel"
       >
         {% render 'localization-form',
-          show_country: show_country,
-          show_language: show_language,
+          show_country: section.settings.show_country,
+          show_language: section.settings.show_language,
           localization_style: 'dropdown',
           form_style: form_style,
           block_id: block.id
@@ -289,6 +294,7 @@
   {%- if request.page_type == 'index' -%}
     <h1 class="visually-hidden">{{ shop.name }}</h1>
   {%- endif -%}
+
   {% for row in rows %}
     {% liquid
       assign scheme = 'color_scheme_' | append: row
@@ -789,6 +795,18 @@
 .header[sticky='always'][data-scroll-direction="up"]:not([data-sticky-state="inactive"]) {
   transform: translateY(0);
 }
+
+  .header__logo--inverse { display: none; }
+  .header[transparent] .header__logo--default { display: none !important; }
+  .header[transparent] .header__logo--inverse { display: inline-block !important; }
+
+  /* Preserve any existing header[transparent] styles - keep original rules below if present */
+  .header[transparent] {
+    background: transparent;
+  }
+
+  .header-logo__image-container--inverse { display: var(--header-logo-inverse-display, none); }
+  .header-logo__image-container--original { display: var(--header-logo-display, block); }
 {% endstylesheet %}
 
 {% unless request.design_mode %}
@@ -1148,7 +1166,7 @@
       "id": "color_scheme_transparent",
       "label": "t:settings.inverse",
       "default": "primary",
-      "visible_if": "{{ section.settings.enable_transparent_header_home or section.settings.enable_transparent_header_product or section.settings.enable_transparent_header_collection }}"
+      "visible_if": "{{ section.settings.enable_transparent_header_home or section.settings.enable_transparent_header_product or section.settings.enable_transparent_header_collection or section.settings.enable_transparent_header_page }}"
     },
     {
       "type": "header",
@@ -1230,6 +1248,58 @@
       ],
       "default": "default",
       "visible_if": "{{ section.settings.enable_transparent_header_collection }}"
+    },
+    {
+      "type": "header",
+      "content": "page"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent_header_page",
+      "label": "transparent_background",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "page_color_scheme",
+      "label": "t:settings.color_scheme",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:options.default"
+        },
+        {
+          "value": "inverse",
+          "label": "t:options.inverse"
+        }
+      ],
+      "default": "default",
+      "visible_if": "{{ section.settings.enable_transparent_header_page }}"
+    },
+    {
+      "type": "select",
+      "id": "page_transparent_mode",
+      "label": "apply_to",
+      "options": [
+        {
+          "value": "selected",
+          "label": "Selected pages (use page handles)"
+        },
+        {
+          "value": "all",
+          "label": "All pages (template = page)"
+        }
+      ],
+      "default": "selected",
+      "visible_if": "{{ section.settings.enable_transparent_header_page }}"
+    },
+    {
+      "type": "text",
+      "id": "page_handles",
+      "label": "Page handles (comma separated)",
+      "info": "Example: our-story,about-us",
+      "default": "our-story,about-us",
+      "visible_if": "{{ section.settings.enable_transparent_header_page and section.settings.page_transparent_mode == 'selected' }}"
     }
   ],
   "presets": []
