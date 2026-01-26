@@ -1373,6 +1373,7 @@
         "shoppable_video_cAD9VF": {
           "type": "shoppable_video",
           "settings": {
+            "video": "shopify://files/videos/video_1768895576_63.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
