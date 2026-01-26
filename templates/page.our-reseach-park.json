@@ -407,6 +407,46 @@
         "padding-block-end": 12,
         "gap_between_elements": 61
       }
+    },
+    "media_split_Qd37NW": {
+      "type": "media-split",
+      "name": "Media Split (Left text + Right media)",
+      "settings": {
+        "full_width": false,
+        "container_width": 1260,
+        "gap": 60,
+        "left_max_width": 450,
+        "right_min_height": 550,
+        "radius": 2,
+        "small_image": "shopify://shop_images/pink-flowers-and-green-leaves-of-a-large-bush.jpg",
+        "heading": "MarNuka Bay Center",
+        "body": "<p>Mar-Nuka Bay site at Largsborough in Southern Gippsland provides another, more protected conservation area rich in native Manuka tea trees (Leptospermum scoparium), which we have dedicated to our honeybees.</p>",
+        "media_type": "video",
+        "main_image": "shopify://shop_images/garden-of-wellness-images-740x740-10.webp",
+        "video_file": "shopify://files/videos/video_1768895637_65.mp4",
+        "video_url": "",
+        "video_autoplay": true,
+        "video_loop": true,
+        "video_muted": true,
+        "video_controls": true,
+        "heading_size": 50,
+        "heading_size_m": 28,
+        "heading_weight": 400,
+        "heading_letter_spacing": 0,
+        "body_size": 20,
+        "body_size_m": 15,
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "muted_color": "#666666",
+        "padding_top": 108,
+        "padding_right": 0,
+        "padding_bottom": 76,
+        "padding_left": 0,
+        "padding_top_m": 32,
+        "padding_right_m": 24,
+        "padding_bottom_m": 32,
+        "padding_left_m": 16
+      }
     }
   },
   "order": [
@@ -418,6 +458,7 @@
     "split_2col_xNfNgx",
     "richy_text_UUcBED",
     "two_row_wrap_6CkD9y",
-    "marquee_VaVpYq"
+    "marquee_VaVpYq",
+    "media_split_Qd37NW"
   ]
 }
