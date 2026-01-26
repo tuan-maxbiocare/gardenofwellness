@@ -118,12 +118,36 @@
         "gap_y": 16,
         "radius": 12
       }
+    },
+    "media_col2_yTAphe": {
+      "type": "media-col2",
+      "name": "Media + Content (Clean)",
+      "settings": {
+        "heading": "Yinnar Eco Center — A Living Sanctuary of Wellness",
+        "subheading": "Nestled in the heart of South-West Gippsland, our Yinnar Research Park began as six hectares of open pasture.|Today, it’s a vibrant sanctuary where nature is in full bloom.",
+        "text": "As you step into the garden, you’re immediately wrapped in the soft, grounding scent of herbs — including hundreds of varieties of salvia, lavender and lemon myrtle. The air is perfumed with the freshness of flowering citrus, eucalyptus, and the occasional earthy undertone from the wetland soil.\n\nBees hum gently from blossom to blossom, collecting nectar under a green canopy of native shrubs and fruiting trees. In every direction, there is colour, life, and the soothing rhythm of a landscape designed to thrive in harmony.\n\nIt is more than a research site — it’s the living heart of Garden of Wellness. Water glistens in interlinked wetland channels that support frogs and wild birds. Petals stir in the breeze.\n\nThe scent clings gently to your skin, leaving a trace of serenity. It’s a place of inspiration, of regeneration, and of quiet beauty. These are the rhythms of nature — and they shape every formula we create.",
+        "show_col2_line": true,
+        "col2_offset": 88,
+        "col2_line_gap": 36,
+        "media_type": "image",
+        "image": "shopify://shop_images/4591e5920a48bd7b2df2622b842e273fecdbd2e4.jpg",
+        "video_mp4_url": "",
+        "video_autoplay": true,
+        "video_muted": true,
+        "video_loop": true,
+        "heading_color": "#1f3d11",
+        "subheading_color": "#000000",
+        "text_color": "#817c7c",
+        "align_desktop": "center",
+        "max_width": 1100
+      }
     }
   },
   "order": [
     "header_hero_PPxQri",
     "breadcrumbs",
     "main",
-    "sense_grid_U7ANqg"
+    "sense_grid_U7ANqg",
+    "media_col2_yTAphe"
   ]
 }
