@@ -1858,7 +1858,7 @@
       ],
       "name": "Media with text (custom)",
       "settings": {
-        "section_width": "full",
+        "section_width": "page",
         "first_image": "shopify://shop_images/garden-of-wellness-images-740x740-10.webp",
         "second_image": "shopify://shop_images/1c14b463b7e6adb17e59c3a02caebc2ffdf83cfb.jpg",
         "desktop_image_height": "fullscreen",
