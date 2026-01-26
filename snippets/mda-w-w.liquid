@@ -1,0 +1,56 @@
+{% comment %} Renders a media block (image/video) with wrap and admin-selected media {% endcomment %}
+{% assign b = block %}
+<div class="s2xMedia" style="--radius: {{ b.settings.radius }}px;">
+  {% capture media %}
+    {% if b.settings.media_type == 'image' %}
+      {% if b.settings.image != blank %}
+        <img
+          src="{{ b.settings.image | image_url: width: 1600 }}"
+          alt="{{ b.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ b.settings.image.width }}"
+          height="{{ b.settings.image.height }}"
+        >
+      {% else %}
+        <div class="s2xMedia__ph">Chọn ảnh cho block</div>
+      {% endif %}
+    {% else %}
+      {% if b.settings.video != blank %}
+        {{ b.settings.video | video_tag: autoplay: false, loop: true, muted: true, controls: true, playsinline: true }}
+      {% elsif b.settings.video_url != blank %}
+        {{ b.settings.video_url | video_tag: autoplay: false, loop: true, muted: true, controls: true, playsinline: true }}
+      {% else %}
+        <div class="s2xMedia__ph">Chọn video cho block</div>
+      {% endif %}
+    {% endif %}
+  {% endcapture %}
+
+  {% if b.settings.link != blank %}
+    <a class="s2xMedia__inner" href="{{ b.settings.link }}">
+      {{ media }}
+    </a>
+  {% else %}
+    <div class="s2xMedia__inner">
+      {{ media }}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .s2xMedia{
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgba(0,0,0,.03);
+  }
+  .s2xMedia__inner{ display:block; width:100%; height:100%; text-decoration:none; color:inherit; }
+  .s2xMedia img,
+  .s2xMedia video,
+  .s2xMedia iframe{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    aspect-ratio: 16 / 10;
+  }
+  .s2xMedia__ph{ padding:16px; font-size:13px; opacity:.7; }
+</style>

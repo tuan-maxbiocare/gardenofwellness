@@ -1,0 +1,406 @@
+
+<section
+  class="s2x"
+  style="
+    --gap: {{ section.settings.gap }}px;
+    --pt: {{ section.settings.padding_top }}px;
+    --pr: {{ section.settings.padding_right }}px;
+    --pb: {{ section.settings.padding_bottom }}px;
+    --pl: {{ section.settings.padding_left }}px;
+
+    --bg: {{ section.settings.section_bg_color }};
+    --text: {{ section.settings.text_color }};
+    --textBg: {{ section.settings.text_bg_color }};
+    --textBgOp: {{ section.settings.text_bg_opacity | divided_by: 100.0 }};
+    --textMax: {{ section.settings.text_max_width }}px;
+  "
+>
+  {% comment %} Collect media blocks into an array-like sequence {% endcomment %}
+  {% assign media_blocks = section.blocks | where: "type", "media" %}
+
+  <div class="s2x__wrap s2x-mobile-media-cols-{{ section.settings.mobile_media_cols }} s2x-mobile-order-{{ section.settings.mobile_order }}">
+    <!-- ROW 1 -->
+    <div class="s2x__row1">
+      <div class="s2x__cell s2x__m1">
+        {% if media_blocks.size >= 1 %}
+          {% render 'mda-w-wr', block: media_blocks[0] %}
+        {% endif %}
+      </div>
+
+      <div class="s2x__cell s2x__text" data-align="{{ section.settings.text_align }}">
+        <div class="s2x__textPanel">
+          {% if section.settings.eyebrow != blank %}
+            <div class="s2x__eyebrow">{{ section.settings.eyebrow }}</div>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <h2 class="s2x__heading">{{ section.settings.heading }}</h2>
+          {% endif %}
+
+          {% if section.settings.body != blank %}
+            <div class="s2x__body rte">{{ section.settings.body }}</div>
+          {% endif %}
+
+          {% if section.settings.show_button and section.settings.button_label != blank %}
+            <div class="s2x__actions">
+              <a class="s2x__btn" href="{{ section.settings.button_link | default: '#' }}">
+                {{ section.settings.button_label }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="s2x__cell s2x__m2">
+        {% if media_blocks.size >= 2 %}
+          {% render 'mda-w-wr', block: media_blocks[1] %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="s2x__row2">
+      <div class="s2x__col">
+        {% if media_blocks.size >= 3 %}
+          {% render 'mda-w-wr', block: media_blocks[2] %}
+        {% endif %}
+
+        {% comment %} 5th block stacks under col 1 {% endcomment %}
+        {% if media_blocks.size >= 5 %}
+          <div class="s2x__stack">
+            {% render 'mda-w-wr', block: media_blocks[4] %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="s2x__col">
+        {% if media_blocks.size >= 4 %}
+          {% render 'mda-w-wr', block: media_blocks[3] %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .s2x{
+      background: var(--bg);
+      padding: var(--pt) var(--pr) var(--pb) var(--pl);
+    }
+    .s2x__wrap{
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: var(--gap);
+    }
+
+    /* Row 1: 3 columns */
+    .s2x__row1{
+      display: grid;
+      grid-template-columns: 1fr minmax(280px, var(--textMax)) 1fr;
+      gap: var(--gap);
+      align-items: stretch;
+    }
+    
+    /* 2) Media ô trái/phải hàng 1: cho wrapper cao = 100% của cell */
+.s2x__row1 .s2x__m1,
+.s2x__row1 .s2x__m2{
+  height: 100%;
+}
+
+.s2x__row1 .s2x__m1 .s2xMedia,
+.s2x__row1 .s2x__m2 .s2xMedia{
+  height: 100%;
+}
+
+/* 3) Override aspect-ratio trong snippet để ảnh/video fill theo height */
+.s2x__row1 .s2xMedia img,
+.s2x__row1 .s2xMedia video,
+.s2x__row1 .s2xMedia iframe{
+  height: 100%;
+  width: 100%;
+  aspect-ratio: auto;   /* quan trọng: bỏ 16/10 */
+  object-fit: cover;
+  display: block;
+}
+
+.s2x__row1 .s2x__text{
+  height: 100%;
+}
+
+.s2x__row1 .s2x__textPanel{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Button luôn nằm đáy panel => đáy button ngang đáy media */
+.s2x__row1 .s2x__actions{
+  margin-top: auto;
+}
+    /* Row 2: 2 columns */
+    .s2x__row2{
+      display: grid;
+      grid-template-columns: 0.85fr 1fr;
+      gap: var(--gap);
+      align-items: stretch;
+    }
+
+    .s2x__col{
+      display: grid;
+      gap: var(--gap);
+    }
+
+    /* Text */
+    .s2x__text{ color: var(--text); }
+    .s2x__textPanel{
+      background: color-mix(in srgb, var(--textBg) calc(var(--textBgOp) * 100%), transparent);
+      padding: 22px;
+      border-radius: 14px;
+    transform: translateY(-12px); 
+    }
+    .s2x__text[data-align="left"]{ text-align:left; }
+    .s2x__text[data-align="center"]{ text-align:center; }
+    .s2x__text[data-align="right"]{ text-align:right; }
+    .s2x__eyebrow{ font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .75; margin-bottom: 10px; }
+    .s2x__heading{ margin: 0 0 12px; font-size: clamp(20px, 2.2vw, 34px); line-height: 1.15; }
+    .s2x__body{ font-size: 13.5px; line-height: 1.5; opacity: .95; }
+    .s2x__actions{ margin-top: 16px; }
+    .s2x__btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px;   padding-left: 40px;
+  padding-right: 40px; 
+      border:1px solid currentColor; color: var(--text);
+      text-decoration:none; transition: transform .15s ease;
+       border-color: color-mix(in srgb, currentColor 35%, transparent);
+    }
+    .s2x__btn:hover{ transform: translateY(-1px); }
+    /* Mobile: bỏ “dính đáy”, cho button lên gần text */
+@media (max-width: 989px){
+  .s2x__row1 .s2x__actions{
+    margin-top: 14px;  /* khoảng thở */
+  }
+
+  /* reset chiều cao panel trên mobile để không tạo khoảng trống */
+  .s2x__row1 .s2x__textPanel{
+    height: auto !important;
+    min-height: 0 !important;
+  }
+}
+@media (max-width: 989px){
+
+  /* Panel text gọn + sang hơn */
+  .s2x__textPanel{
+    padding: 15px 16px !important;      /* gọn hơn */
+    border-radius: 16px !important;
+    max-width: 34rem;                    /* giới hạn chiều rộng để text đỡ dài */
+    margin: 0 auto !important;           /* canh giữa */
+  }
+
+  /* Typography tổng thể */
+  .s2x__text{
+    text-align: center;                  /* mobile center trông sạch */
+  }
+
+  .s2x__heading{
+    margin: 0 0 10px !important;
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em;
+  }
+
+  /* Body: tăng size + line-height cho dễ đọc, hạn chế bề ngang */
+  .s2x__body{
+    font-size: 14.5px !important;
+    line-height: 1.65 !important;
+    opacity: .92 !important;
+    max-width: 30rem;
+    margin: 0 auto !important;
+  }
+
+  /* Nếu richtext có <p> thì giảm khoảng cách cho gọn */
+  .s2x__body.rte p{
+    margin: 0 0 10px !important;
+  }
+  .s2x__body.rte p:last-child{
+    margin-bottom: 0 !important;
+  }
+
+  /* Button: sang hơn + có khoảng thở */
+  .s2x__actions{
+    margin-top: 14px !important;
+  }
+  .s2x__btn{
+    width: 100% !important;              /* full-width nhìn “premium” hơn */
+    max-width: 240px;
+    margin: 0 auto !important;
+    padding: 12px 15px !important;
+    border-color: rgba(0,0,0,.22) !important;  /* viền mờ */
+  }
+}
+
+  @media (max-width: 989px) {
+  /* 1. Cố định chiều cao tổng cho vùng chứa Media */
+  /* Hàng 1 (Text) là auto, Hàng 2 (Media) cố định 600px - bạn có thể sửa số này */
+  .s2x__wrap {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; 
+    grid-template-rows: auto 600px !important; 
+    gap: var(--gap) !important;
+  }
+
+  /* 2. Text chiếm trọn hàng đầu */
+  .s2x__text {
+    grid-column: 1 / -1 !important;
+    order: -1 !important;
+  }
+  .s2x__textPanel {
+    transform: none !important;
+    height: auto !important;
+  }
+
+  /* 3. Phá bỏ cấu trúc row để các khối con nhảy vào hàng cố định */
+  .s2x__row1, .s2x__row2, .s2x__col {
+    display: contents !important;
+  }
+
+  /* 4. Thiết lập layout 2 cột bên trong hàng Media (Hàng 2) */
+  
+  /* CỘT 1 (Bên trái): Gồm m1 và m3 */
+  /* Chúng ta gom m1 và m3 vào cùng một "vùng ảo" bằng cách chỉ định cùng cột/hàng */
+  /* Nhưng vì bạn dùng display: contents, ta sẽ can thiệp vào từng khối */
+
+  /* m1 (Trái trên) & m3 (Trái dưới) - Chia đều 50/50 */
+  .s2x__m1, 
+  .s2x__row2 .s2x__col:first-child > *:first-child {
+    grid-column: 1 !important;
+    grid-row: 2 / 3 !important; /* Ở trong hàng media cố định */
+    height: calc(50% - (var(--gap) / 2)) !important;
+    align-self: start !important;
+  }
+  .s2x__row2 .s2x__col:first-child > *:first-child {
+    align-self: end !important;
+  }
+
+  /* CỘT 2 (Bên phải): Gồm m2 và m4 */
+  /* m2 (Phải trên - DÀI HƠN) & m4 (Phải dưới - NGẮN HƠN) */
+  .s2x__m2, 
+  .s2x__row2 .s2x__col:last-child > *:first-child {
+    grid-column: 2 !important;
+    grid-row: 2 / 3 !important;
+    display: block !important;
+  }
+
+  /* m2 (Ảnh hàng 1 cột 2): Dài hơn (chiếm 65%) */
+  .s2x__m2 {
+    height: calc(65% - (var(--gap) / 2)) !important; 
+    align-self: start !important;
+  }
+
+  /* m4 (Ảnh hàng 2 cột 2): Ngắn hơn (chiếm 35%) */
+  .s2x__row2 .s2x__col:last-child > *:first-child {
+    height: calc(35% - (var(--gap) / 2)) !important;
+    align-self: end !important;
+  }
+
+  /* 5. Reset các thuộc tính Media để fill đầy khung đã cố định */
+  .s2xMedia {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto !important;
+  }
+
+  .s2xMedia__inner, 
+  .s2xMedia img, 
+  .s2xMedia video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}
+  </style>
+
+  {% schema %}
+  {
+    "name": "Section 2.0 - 2 Rows Wrap",
+    "settings": [
+      { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our ingredients" },
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Text in the center, media around" },
+      { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Hàng 1 có 2 media hai bên và text ở giữa. Hàng 2 tự chia đôi media.</p>" },
+
+      { "type": "select", "id": "text_align", "label": "Text align", "default": "center",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+
+      { "type": "color", "id": "section_bg_color", "label": "Section background", "default": "#ffffff" },
+      { "type": "color", "id": "text_color", "label": "Text color", "default": "#111111" },
+      { "type": "color", "id": "text_bg_color", "label": "Text panel background", "default": "#ffffff" },
+      { "type": "range", "id": "text_bg_opacity", "label": "Text panel background opacity", "min": 0, "max": 100, "step": 5, "default": 85 },
+
+      { "type": "range", "id": "gap", "label": "Gap between blocks (px)", "min": 0, "max": 60, "step": 2, "default": 16 },
+
+      { "type": "range", "id": "padding_top", "label": "Padding top (px)", "min": 0, "max": 120, "step": 4, "default": 40 },
+      { "type": "range", "id": "padding_right", "label": "Padding right (px)", "min": 0, "max": 120, "step": 4, "default": 20 },
+      { "type": "range", "id": "padding_bottom", "label": "Padding bottom (px)", "min": 0, "max": 120, "step": 4, "default": 40 },
+      { "type": "range", "id": "padding_left", "label": "Padding left (px)", "min": 0, "max": 120, "step": 4, "default": 20 },
+
+      { "type": "range", "id": "text_max_width", "label": "Text column max width (px)", "min": 280, "max": 700, "step": 10, "default": 520 },
+
+      { "type": "header", "content": "Button" },
+      { "type": "checkbox", "id": "show_button", "label": "Show button", "default": true },
+      { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn more" },
+      { "type": "url", "id": "button_link", "label": "Button link" },
+
+      { "type": "header", "content": "Mobile layout" },
+      { "type": "select", "id": "mobile_media_cols", "label": "Media columns on mobile (row 2)", "default": "1",
+        "options": [
+          { "value": "1", "label": "1 column" },
+          { "value": "2", "label": "2 columns" }
+        ]
+      },
+      { "type": "select", "id": "mobile_order", "label": "Order on mobile", "default": "text_first",
+        "options": [
+          { "value": "text_first", "label": "Text first" },
+          { "value": "media_first", "label": "Media first" }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "media",
+        "name": "Media",
+        "settings": [
+          { "type": "select", "id": "media_type", "label": "Media type", "default": "image",
+            "options": [
+              { "value": "image", "label": "Image" },
+              { "value": "video", "label": "Video" }
+            ]
+          },
+          { "type": "image_picker", "id": "image", "label": "Image" },
+          { "type": "video", "id": "video", "label": "Video (uploaded)" },
+          { "type": "video_url", "id": "video_url", "label": "Video URL (YouTube/Vimeo)", "accept": ["youtube", "vimeo"] },
+
+          { "type": "range", "id": "radius", "label": "Border radius (px)", "min": 0, "max": 40, "step": 2, "default": 14 },
+          { "type": "url", "id": "link", "label": "Optional link (wrap media)" }
+        ]
+      }
+    ],
+    "max_blocks": 5,
+    "presets": [
+      {
+        "name": "Section 2.0 - 2 Rows Wrap",
+        "blocks": [
+          { "type": "media" },
+          { "type": "media" },
+          { "type": "media" },
+          { "type": "media" }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
+</section>
