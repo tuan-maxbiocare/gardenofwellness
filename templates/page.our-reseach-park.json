@@ -144,7 +144,7 @@
     },
     "split_2col_xNfNgx": {
       "type": "split-2col",
-      "name": "4 Media Columns (No JS)",
+      "name": "4 Media Columns ",
       "settings": {
         "min_height_mobile": 360,
         "gap": 0,
@@ -172,6 +172,39 @@
         "overlay_to": "rgba(0,0,0,0)",
         "gradient_opacity": 0.6
       }
+    },
+    "richy_text_UUcBED": {
+      "type": "richy-text",
+      "name": "Rich Text Pro",
+      "settings": {
+        "heading": "Where Nature Meets Science",
+        "heading_tag": "h2",
+        "subheading": "<p>From Seeds — thru Science — to Shelf</p>",
+        "align": "center",
+        "max_width": 900,
+        "side_padding": 16,
+        "gap": 16,
+        "readable_lines": false,
+        "heading_color": "#1d1d1f",
+        "subheading_color": "#3a3a3c",
+        "bg_color": "#ffffff",
+        "bg_color_2": "#ffffff",
+        "bg_opacity": 100,
+        "heading_size_mobile": 30,
+        "heading_size_desktop": 54,
+        "heading_weight": 500,
+        "heading_line_height": 115,
+        "heading_letter_spacing": 0,
+        "subheading_size_mobile": 16,
+        "subheading_size_desktop": 18,
+        "subheading_weight": 400,
+        "subheading_line_height": 160,
+        "subheading_letter_spacing": 0,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 28,
+        "padding_bottom_mobile": 28
+      }
     }
   },
   "order": [
@@ -180,6 +213,7 @@
     "main",
     "sense_grid_U7ANqg",
     "media_col2_yTAphe",
-    "split_2col_xNfNgx"
+    "split_2col_xNfNgx",
+    "richy_text_UUcBED"
   ]
 }
