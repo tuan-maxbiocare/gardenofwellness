@@ -1,10 +1,3 @@
-{% comment %}
-  Section: Video Hero (OS 2.0)
-  - Video nền (admin chọn)
-  - Text overlay + CTA
-  - Blocks: Product (để editor có nút Add product)
-{% endcomment %}
-
 {%- liquid
   assign id = section.id
   assign overlay_opacity = section.settings.overlay_opacity | default: 35
@@ -14,11 +7,17 @@
   assign cta_link = section.settings.cta_link
   assign show_scroll_top = section.settings.show_scroll_top
   assign scroll_top_offset = section.settings.scroll_top_offset | default: 200
+
+  comment
+    NEW: section width (radio buttons)
+    default keeps current UI: page-width
+  endcomment
+  assign section_width = section.settings.section_width | default: 'page'
 -%}
 
 <section
   id="vh-{{ id }}"
-  class="vh"
+  class="vh {% if section_width == 'full' %}vh--full{% endif %}"
   style="
     --vh-overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};
     --vh-min-height: {{ section.settings.min_height_desktop }}px;
@@ -64,7 +63,7 @@
     <div class="vh__overlay"></div>
   </div>
 
-  <div class="vh__content page-width">
+  <div class="vh__content {% if section_width == 'page' %}page-width{% else %}vh__content--full{% endif %}">
     <div class="vh__inner">
       {%- if kicker != blank -%}
         <div class="vh__kicker">{{ kicker }}</div>
@@ -168,6 +167,13 @@
       padding: clamp(28px, 6vw, 84px) 0;
     }
 
+    /* NEW: full width content wrapper (giữ layout y hệt, chỉ bỏ giới hạn page-width) */
+    #vh-{{ id }} .vh__content--full{
+      max-width: none;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
     #vh-{{ id }} .vh__inner{
       max-width: {{ section.settings.content_max_width }}px;
       margin: 0 auto;
@@ -183,7 +189,7 @@
     }
 
     #vh-{{ id }} .vh__heading{
-        font-size: clamp(24px, 4.0vw, 55px);
+      font-size: clamp(24px, 4.0vw, 55px);
       line-height: 1.05;
       font-weight: 700;
       margin: 0 0 16px 0;
@@ -308,10 +314,9 @@
       }
     }
     @media (max-width: 749px){
-  #vh-{{ id }} .vh__content{ padding: 22px 0; }
-  #vh-{{ id }}.vh{ padding-top: 10px; padding-bottom: 10px; }
-}
-
+      #vh-{{ id }} .vh__content{ padding: 22px 0; }
+      #vh-{{ id }}.vh{ padding-top: 10px; padding-bottom: 10px; }
+    }
   </style>
 
   {%- if show_scroll_top -%}
@@ -343,6 +348,22 @@
   "tag": "section",
   "class": "section-video-hero",
   "settings": [
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
     {
       "type": "header",
       "content": "Video source"
@@ -377,10 +398,12 @@
       "step": 5,
       "default": 35
     },
+
     {
       "type": "header",
       "content": "Content"
     },
+
     {
       "type": "text",
       "id": "kicker",
@@ -454,6 +477,7 @@
       "step": 20,
       "default": 520
     },
+
     {
       "type": "header",
       "content": "Products (optional)"
@@ -474,15 +498,16 @@
       "default": 3
     },
     {
-  "type": "select",
-  "id": "products_columns_mobile",
-  "label": "Products columns mobile",
-  "default": "1",
-  "options": [
-    { "value": "1", "label": "1" },
-    { "value": "2", "label": "2" }
-  ]
-},
+      "type": "select",
+      "id": "products_columns_mobile",
+      "label": "Products columns mobile",
+      "default": "1",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ]
+    },
+
     {
       "type": "header",
       "content": "Scroll top button"
