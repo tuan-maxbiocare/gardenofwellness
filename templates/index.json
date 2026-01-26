@@ -836,6 +836,9 @@
         "movement_direction": "normal",
         "color_scheme": "scheme-4",
         "padding-block-start": 43,
+        "border_mode": "none",
+        "border_color": "#000000",
+        "border_thickness": 1,
         "padding-block-end": 43,
         "gap_between_elements": 43
       }
@@ -1674,7 +1677,6 @@
         "image_GfPjnN": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/4-Rosehip-Oil.e575d7b7.avif",
             "image_link": "",
             "open_image_new_window": false,
             "image_style": "square",
