@@ -205,6 +205,71 @@
         "padding_top_mobile": 28,
         "padding_bottom_mobile": 28
       }
+    },
+    "two_row_wrap_6CkD9y": {
+      "type": "two-row-wrap",
+      "blocks": {
+        "media_Jh7CTh": {
+          "type": "media",
+          "settings": {
+            "media_type": "image",
+            "radius": 14,
+            "link": ""
+          }
+        },
+        "media_tV4tqj": {
+          "type": "media",
+          "settings": {
+            "media_type": "image",
+            "radius": 14,
+            "link": ""
+          }
+        },
+        "media_Tk48gx": {
+          "type": "media",
+          "settings": {
+            "media_type": "image",
+            "radius": 14,
+            "link": ""
+          }
+        },
+        "media_yatUaQ": {
+          "type": "media",
+          "settings": {
+            "media_type": "image",
+            "radius": 14,
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "media_Jh7CTh",
+        "media_tV4tqj",
+        "media_Tk48gx",
+        "media_yatUaQ"
+      ],
+      "name": "Section 2.0 - 2 Rows Wrap",
+      "settings": {
+        "eyebrow": "Our ingredients",
+        "heading": "Text in the center, media around",
+        "body": "<p>Hàng 1 có 2 media hai bên và text ở giữa. Hàng 2 tự chia đôi media.</p>",
+        "text_align": "center",
+        "section_bg_color": "#ffffff",
+        "text_color": "#111111",
+        "text_bg_color": "#ffffff",
+        "text_bg_opacity": 85,
+        "gap": 16,
+        "padding_top": 40,
+        "padding_right": 20,
+        "padding_bottom": 40,
+        "padding_left": 20,
+        "text_max_width": 520,
+        "show_button": true,
+        "button_label": "Learn more",
+        "button_link": "",
+        "mobile_media_cols": "1",
+        "mobile_order": "text_first"
+      }
     }
   },
   "order": [
@@ -214,6 +279,7 @@
     "sense_grid_U7ANqg",
     "media_col2_yTAphe",
     "split_2col_xNfNgx",
-    "richy_text_UUcBED"
+    "richy_text_UUcBED",
+    "two_row_wrap_6CkD9y"
   ]
 }
