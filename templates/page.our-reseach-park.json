@@ -213,7 +213,8 @@
           "type": "media",
           "settings": {
             "media_type": "image",
-            "radius": 14,
+            "image": "shopify://shop_images/a6a83f09de61dfac85740ff9815b270b46cab28f.jpg",
+            "radius": 2,
             "link": ""
           }
         },
@@ -221,7 +222,8 @@
           "type": "media",
           "settings": {
             "media_type": "image",
-            "radius": 14,
+            "image": "shopify://shop_images/garden-of-wellness-images-761x1080-1.webp",
+            "radius": 2,
             "link": ""
           }
         },
@@ -229,7 +231,8 @@
           "type": "media",
           "settings": {
             "media_type": "image",
-            "radius": 14,
+            "image": "shopify://shop_images/5b5c207dce369b4e600ffbbcf1440733.jpg",
+            "radius": 2,
             "link": ""
           }
         },
@@ -237,7 +240,8 @@
           "type": "media",
           "settings": {
             "media_type": "image",
-            "radius": 14,
+            "image": "shopify://shop_images/d5140364155066e9236f097043e21eae13799232.jpg",
+            "radius": 2,
             "link": ""
           }
         }
@@ -250,24 +254,24 @@
       ],
       "name": "Section 2.0 - 2 Rows Wrap",
       "settings": {
-        "eyebrow": "Our ingredients",
-        "heading": "Text in the center, media around",
-        "body": "<p>Hàng 1 có 2 media hai bên và text ở giữa. Hàng 2 tự chia đôi media.</p>",
+        "eyebrow": "",
+        "heading": "",
+        "body": "<p>As you step into the garden, you’re immediately wrapped in the soft, grounding scent of herbs — including hundreds of varieties of salvia, lavender and lemon myrtle. The air is perfumed with the freshness of flowering citrus, eucalyptus, and the occasional earthy undertone from the wetland soil. Bees hum gently from blossom to blossom, collecting nectar under a green canopy of native shrubs and fruiting trees. In every direction, there is colour, life, and the soothing rhythm of a landscape designed to thrive in harmony.</p><p>It is more than a research site — it’s the living heart of Garden of Wellness. Water glistens in interlinked wetland channels that support frogs and wild birds. Petals stir in the breeze. The scent clings gently to your skin, leaving a trace of serenity. It’s a place of inspiration, of regeneration, and of quiet beauty. These are the rhythms of nature — and they shape every formula we create.</p>",
         "text_align": "center",
         "section_bg_color": "#ffffff",
         "text_color": "#111111",
         "text_bg_color": "#ffffff",
-        "text_bg_opacity": 85,
-        "gap": 16,
-        "padding_top": 40,
+        "text_bg_opacity": 35,
+        "gap": 10,
+        "padding_top": 4,
         "padding_right": 20,
         "padding_bottom": 40,
         "padding_left": 20,
-        "text_max_width": 520,
+        "text_max_width": 450,
         "show_button": true,
         "button_label": "Learn more",
         "button_link": "",
-        "mobile_media_cols": "1",
+        "mobile_media_cols": "2",
         "mobile_order": "text_first"
       }
     }
