@@ -1807,6 +1807,7 @@
       ],
       "name": "Video hero",
       "settings": {
+        "video": "shopify://files/videos/video_1768890677_4.mp4",
         "video_mp4_url": "",
         "overlay_opacity": 35,
         "kicker": "EURUS STORY",
