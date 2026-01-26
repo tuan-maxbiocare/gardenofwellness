@@ -214,6 +214,7 @@
           "settings": {
             "media_type": "image",
             "image": "shopify://shop_images/a6a83f09de61dfac85740ff9815b270b46cab28f.jpg",
+            "video_url": "",
             "radius": 2,
             "link": ""
           }
@@ -223,6 +224,7 @@
           "settings": {
             "media_type": "image",
             "image": "shopify://shop_images/garden-of-wellness-images-761x1080-1.webp",
+            "video_url": "",
             "radius": 2,
             "link": ""
           }
@@ -232,6 +234,7 @@
           "settings": {
             "media_type": "image",
             "image": "shopify://shop_images/5b5c207dce369b4e600ffbbcf1440733.jpg",
+            "video_url": "",
             "radius": 2,
             "link": ""
           }
@@ -241,6 +244,7 @@
           "settings": {
             "media_type": "image",
             "image": "shopify://shop_images/d5140364155066e9236f097043e21eae13799232.jpg",
+            "video_url": "",
             "radius": 2,
             "link": ""
           }
@@ -282,12 +286,12 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+            "text": "<p><em>naturally</em></p>",
             "width": "fit-content",
             "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
+            "type_preset": "h3",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -309,12 +313,12 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+            "text": "<p><em>restore</em></p>",
             "width": "fit-content",
             "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
+            "type_preset": "h3",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -336,12 +340,12 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+            "text": "<p><em>soothe</em></p>",
             "width": "fit-content",
             "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
+            "type_preset": "h3",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -362,12 +366,12 @@
         "text_bbzDxc": {
           "type": "text",
           "settings": {
-            "text": "",
+            "text": "<p><em>nourish</em></p>",
             "width": "fit-content",
             "text_style": "solid",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
+            "type_preset": "h3",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -396,9 +400,12 @@
       "settings": {
         "movement_direction": "normal",
         "color_scheme": "",
-        "padding-block-start": 24,
-        "padding-block-end": 24,
-        "gap_between_elements": 24
+        "padding-block-start": 12,
+        "border_mode": "both",
+        "border_color": "#8b8a8a",
+        "border_thickness": 1,
+        "padding-block-end": 12,
+        "gap_between_elements": 61
       }
     }
   },
