@@ -9,6 +9,20 @@
  */
 {
   "sections": {
+    "header_hero_PPxQri": {
+      "type": "header-hero",
+      "name": "Header Hero",
+      "settings": {
+        "image": "shopify://shop_images/Screenshot_2026-01-12_170526.png",
+        "kicker": "Garden of Wellness",
+        "heading": "ABOUT GARDEN OF WELLNESS",
+        "subheading": "Where Nature Inspires Science and Wellness Blooms",
+        "button_label": "Explore the range",
+        "button_link": "",
+        "min_height": 80,
+        "overlay_opacity": 25
+      }
+    },
     "breadcrumbs": {
       "type": "breadcrumbs",
       "settings": {
@@ -29,20 +43,6 @@
         "link_hover_color": "#555555",
         "section_id": "",
         "section_class": ""
-      }
-    },
-    "header_hero_PPxQri": {
-      "type": "header-hero",
-      "name": "Header Hero",
-      "settings": {
-        "image": "shopify://shop_images/Screenshot_2026-01-12_170526.png",
-        "kicker": "Garden of Wellness",
-        "heading": "ABOUT GARDEN OF WELLNESS",
-        "subheading": "Where Nature Inspires Science and Wellness Blooms",
-        "button_label": "Explore the range",
-        "button_link": "",
-        "min_height": 80,
-        "overlay_opacity": 25
       }
     },
     "main": {
@@ -84,6 +84,7 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
@@ -91,11 +92,38 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "sense_grid_U7ANqg": {
+      "type": "sense-grid",
+      "name": "Senses / Balance Grid",
+      "settings": {
+        "heading": "Awaken Your Senses.| Restore Your Balance",
+        "text": "<p>The Garden of Wellness story begins in a place unlike any other: a thriving Research Park in South-West Gippsland, where herbs, bees, and bioscience come together to create something truly unique.Developed by Max Biocare, our Research Parks are living ecosystems and evidence-based innovation hubs — home to the botanicals, bees, and breakthroughs that power every Garden of Wellness product. This is where health solutions — including skincare — begin. Not in a factory or a lab, but in a fragrant, working garden. A place where provenance is real, traceable, and rooted in care.<br/><br/></p>",
+        "image_1": "shopify://shop_images/73176bbdff84847dcf33b5133bcf9d6d04aa1104.jpg",
+        "image_2": "shopify://shop_images/1c14b463b7e6adb17e59c3a02caebc2ffdf83cfb.jpg",
+        "image_3": "shopify://shop_images/274-2H6A2689.jpg",
+        "ratio_small": "1.3333333",
+        "ratio_tall": "0.75",
+        "heading_font": "bodoni_moda_n4",
+        "body_font": "arapey_n4",
+        "bg_color": "#ffffff",
+        "text_color": "#1d1d1d",
+        "max_width": 1200,
+        "padding_top_desktop": 64,
+        "padding_bottom_desktop": 0,
+        "padding_top_mobile": 64,
+        "padding_bottom_mobile": 48,
+        "padding_x": 16,
+        "gap_x": 16,
+        "gap_y": 16,
+        "radius": 12
+      }
     }
   },
   "order": [
     "header_hero_PPxQri",
     "breadcrumbs",
-    "main"
+    "main",
+    "sense_grid_U7ANqg"
   ]
 }
