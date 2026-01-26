@@ -1,0 +1,524 @@
+
+<section
+  class="sbg section-{{ section.id }}"
+  style="
+    --sbg-bg: {{ section.settings.bg_color }};
+    --sbg-text: {{ section.settings.text_color }};
+    --sbg-max: {{ section.settings.max_width }}px;
+    --sbg-gap: {{ section.settings.gap }}px;
+    --sbg-radius: {{ section.settings.radius }}px;
+    --sbg-gap-x: {{ section.settings.gap_x }}px;
+--sbg-gap-y: {{ section.settings.gap_y }}px;
+--sbg-pad-top-d: {{ section.settings.padding_top_desktop }}px;
+--sbg-pad-bottom-d: {{ section.settings.padding_bottom_desktop }}px;
+--sbg-pad-top-m: {{ section.settings.padding_top_mobile }}px;
+--sbg-pad-bottom-m: {{ section.settings.padding_bottom_mobile }}px;
+--sbg-clamp-lines: {{ section.settings.clamp_lines }};
+--sbg-left-ratio: {{ section.settings.ratio_small }};  
+--sbg-right-ratio: {{ section.settings.ratio_tall }};
+--sbg-left-r: {{ section.settings.ratio_small }};
+--sbg-right-r: {{ section.settings.ratio_tall }};
+
+
+  "
+>
+  <div class="sbg__wrap">
+    <div class="sbg__top">
+      <div class="sbg__heading">
+        {% if section.settings.heading != blank %}
+          {% assign heading_text = section.settings.heading | strip %}
+{%- assign heading_desktop = heading_text | replace: '|', '<br>' -%}
+{%- assign heading_raw = section.settings.heading | strip | strip_newlines -%}
+{%- assign heading_clean = heading_raw
+  | replace: '<br>', ' '
+  | replace: '<br/>', ' '
+  | replace: '<br />', ' '
+  | replace: '  ', ' '
+  | strip
+-%}
+
+{%- assign line1 = '' -%}
+{%- assign line2 = '' -%}
+
+{%- comment -%} 1) Nếu có | thì tách theo | {%- endcomment -%}
+{%- if heading_clean contains '|' -%}
+  {%- assign parts = heading_clean | split: '|' -%}
+  {%- assign line1 = parts[0] | strip -%}
+  {%- assign line2 = parts[1] | strip -%}
+
+{%- comment -%} 2) Nếu có dấu . thì tách theo câu đầu {%- endcomment -%}
+{%- elsif heading_clean contains '.' -%}
+  {%- assign parts = heading_clean | split: '.' -%}
+  {%- assign line1 = parts[0] | strip | append: '.' -%}
+  {%- assign line2 = parts[1] | strip -%}
+
+{%- comment -%} 3) Không có | và . => tách theo số từ (cân bằng) {%- endcomment -%}
+{%- else -%}
+  {%- assign words = heading_clean | split: ' ' -%}
+  {%- assign half = words.size | divided_by: 2 -%}
+
+  {%- capture l1 -%}
+    {%- for w in words -%}
+      {%- if forloop.index0 < half -%}{{ w }} {% endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- capture l2 -%}
+    {%- for w in words -%}
+      {%- if forloop.index0 >= half -%}{{ w }} {% endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- assign line1 = l1 | strip -%}
+  {%- assign line2 = l2 | strip -%}
+{%- endif -%}
+
+<h2 class="sbg__title">
+  <!-- Desktop -->
+ <span class="sbg__title-desktop">
+  {{ heading_desktop }}
+</span>
+
+  <!-- Mobile: title dọc 2 dòng -->
+  <span class="sbg__title-vertical" aria-hidden="true">
+    <span class="sbg__vline sbg__vline--1">{{ line1 }}</span>
+    <span class="sbg__vline sbg__vline--2">{{ line2 | truncate: 36, '…' }}</span>
+  </span>
+</h2>
+        {% endif %}
+      </div>
+
+      <div class="sbg__content">
+        {% if section.settings.text != blank %}
+          <div class="sbg__text rte">
+  <input class="sbg__toggle" id="sbg-toggle-{{ section.id }}" type="checkbox" hidden>
+
+  <div class="sbg__clamp">
+    {{ section.settings.text }}
+  </div>
+
+  {% if section.settings.enable_read_more %}
+    <label class="sbg__more" for="sbg-toggle-{{ section.id }}">
+      <span class="more-open">{{ section.settings.read_more_label }}</span>
+      <span class="more-close">{{ section.settings.collapse_label }}</span>
+    </label>
+  {% endif %}
+</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="sbg__grid">
+      <div class="sbg__cell sbg__cell--lt">
+        {% render 'sbg-media',
+          image: section.settings.image_1,
+          ratio: section.settings.ratio_small,
+          radius: section.settings.radius
+        %}
+      </div>
+
+      <div class="sbg__cell sbg__cell--lb">
+        {% render 'sbg-media',
+          image: section.settings.image_2,
+          ratio: section.settings.ratio_small,
+          radius: section.settings.radius
+        %}
+      </div>
+
+      <div class="sbg__cell sbg__cell--r">
+        {% render 'sbg-media',
+          image: section.settings.image_3,
+          ratio: section.settings.ratio_tall,
+          radius: section.settings.radius
+        %}
+      </div>
+    </div>
+  </div>
+
+  <style>
+  /* =========================
+     Base / Desktop (GIỮ NGUYÊN)
+  ========================== */
+  .section-{{ section.id }}{
+    background: var(--sbg-bg);
+    color: var(--sbg-text);
+  }
+
+  .section-{{ section.id }} .sbg__wrap{
+    max-width: var(--sbg-max);
+    margin: 0 auto;
+    padding-top: var(--sbg-pad-top-d);
+padding-bottom: var(--sbg-pad-bottom-d);
+padding-left: var(--sbg-pad-x-d);
+padding-right: var(--sbg-pad-x-d);
+    box-sizing: border-box;
+    overflow: hidden; /* chặn tràn khỏi padding */
+  }
+
+  .section-{{ section.id }} .sbg__grid,
+  .section-{{ section.id }} .sbg__cell{
+    min-width: 0;
+  }
+
+  /* TOP (desktop) */
+  .section-{{ section.id }} .sbg__top{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(6px, 1.2vw, 14px);
+    margin-bottom: clamp(12px, 2vw, 20px);
+  }
+
+  .section-{{ section.id }} .sbg__heading{ flex: 1 1 46%; }
+  .section-{{ section.id }} .sbg__content{ flex: 1 1 54%; }
+
+  /* Heading */
+  .section-{{ section.id }} .sbg__title{
+    margin: 0;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    font-size: clamp(30px, 4.2vw, 56px);
+    font-family: {{ section.settings.heading_font.family | json }},
+                 {{ section.settings.heading_font.fallback_families | json }};
+    font-style: {{ section.settings.heading_font.style }};
+  }
+
+  /* Desktop chỉ hiển thị bản thường */
+  .section-{{ section.id }} .sbg__title-vertical{ display: none; }
+
+  /* Text */
+  .section-{{ section.id }} .sbg__text{
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: none;
+    width: 100%;
+    font-family: {{ section.settings.body_font.family | json }},
+                 {{ section.settings.body_font.fallback_families | json }};
+    font-style: {{ section.settings.body_font.style }};
+    font-weight: 500;
+    opacity: 0.95;
+  }
+
+  /* IMAGE GRID (desktop) */
+  .section-{{ section.id }} .sbg__grid{
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-rows: var(--sbg-left-row-h) var(--sbg-left-row-h);
+    column-gap: var(--sbg-gap-x);
+    row-gap: var(--sbg-gap-y);
+    align-items: stretch;
+  }
+
+  .section-{{ section.id }} .sbg__cell--lt{ grid-column: 1; grid-row: 1; }
+  .section-{{ section.id }} .sbg__cell--lb{ grid-column: 1; grid-row: 2; }
+  .section-{{ section.id }} .sbg__cell--r { grid-column: 2; grid-row: 1 / span 2; }
+
+  .section-{{ section.id }} .sbg__wrap{
+  --sbg-fr-left: 1.15;
+  --sbg-fr-right: 0.85;
+  --sbg-fr-sum: calc(var(--sbg-fr-left) + var(--sbg-fr-right));
+
+  /* width thật của cột trái theo fr */
+  --sbg-left-col-w: calc((100% - var(--sbg-gap-x)) * (var(--sbg-fr-left) / var(--sbg-fr-sum)));
+
+  /* height mỗi row trái theo ratio */
+  --sbg-left-row-h: calc(var(--sbg-left-col-w) / var(--sbg-left-r));
+}
+
+  /* Left images desktop: giữ chữ nhật + không quá lùn */
+  .section-{{ section.id }} .sbg__cell--lt .sbg-media,
+  .section-{{ section.id }} .sbg__cell--lb .sbg-media{
+    min-height: 0;
+  }
+
+  /* RTE spacing */
+  .section-{{ section.id }} .rte p{ margin: 0; }
+  .section-{{ section.id }} .rte p + p{ margin-top: 10px; }
+/* ===== DESKTOP FIX: stop overlap left images (do NOT touch mobile) ===== */
+.section-{{ section.id }} .sbg__cell{
+  overflow: hidden;
+}
+
+.section-{{ section.id }} .sbg__cell .sbg-media{
+  height: 100%;
+}
+
+/* remove the desktop min-height that causes overflow */
+.section-{{ section.id }} .sbg__cell--lt .sbg-media,
+.section-{{ section.id }} .sbg__cell--lb .sbg-media{
+  min-height: 0 !important;
+}
+
+
+  /* =========================
+     Mobile (CHỈ CHỈNH MOBILE)
+  ========================== */
+  @media (max-width: 749px){
+
+    /* ===== TOP kiểu D: title dọc bên trái + text bên phải ===== */
+    .section-{{ section.id }} .sbg__top{
+      display: grid;
+      grid-template-columns: 44px 1fr; /* cột title dọc + cột text */
+      column-gap: 16px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    /* mobile dùng title dọc, ẩn title desktop */
+    .section-{{ section.id }} .sbg__title-desktop{ display: none; }
+    .section-{{ section.id }} .sbg__title-vertical{ display: inline-flex; }
+
+    /* QUAN TRỌNG: không xoay container */
+    .section-{{ section.id }} .sbg__heading{
+      writing-mode: initial;
+      transform: none;
+      padding-top: 2px;
+      opacity: .95;
+    }
+
+    /* chỉ xoay đúng phần title dọc */
+    .section-{{ section.id }} .sbg__title-vertical{
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+
+      display: inline-flex;
+      flex-direction: column;
+      gap: 10px;
+
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .section-{{ section.id }} .sbg__vline{
+      display: block;
+      white-space: nowrap; /* mỗi dòng giữ nguyên */
+    }
+
+    /* text bên phải có line ngăn */
+    .section-{{ section.id }} .sbg__content{
+      border-left: 1px solid rgba(0,0,0,.12);
+      padding-left: 14px;
+    }
+
+    /* clamp text + read more */
+    .section-{{ section.id }} .sbg__clamp{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: var(--sbg-clamp-lines, 8);
+    }
+    .section-{{ section.id }} .sbg__toggle:checked ~ .sbg__clamp{
+      -webkit-line-clamp: initial;
+      overflow: visible;
+      display: block;
+    }
+
+    .section-{{ section.id }} .sbg__more{
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      text-decoration: underline;
+      user-select: none;
+    }
+    .section-{{ section.id }} .sbg__toggle:checked ~ .sbg__more .more-open{ display:none; }
+    .section-{{ section.id }} .sbg__toggle:checked ~ .sbg__more .more-close{ display:inline; }
+    .section-{{ section.id }} .more-close{ display:none; }
+
+    /* ===== IMAGE GRID mobile: lt (rect) -> r (square) -> lb (rect) ===== */
+    .section-{{ section.id }} .sbg__grid{
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+        "lt"
+        "r"
+        "lb";
+      column-gap: 0;
+      row-gap: 12px;
+    }
+
+     /* thứ tự: lt -> r -> lb */
+  .section-{{ section.id }} .sbg__cell--lt{ order: 1; }
+  .section-{{ section.id }} .sbg__cell--r { order: 2; }
+  .section-{{ section.id }} .sbg__cell--lb{ order: 3; }
+
+  /* ratio */
+  .section-{{ section.id }} .sbg__cell--r .sbg-media{
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+  }
+  .section-{{ section.id }} .sbg__cell--lt .sbg-media,
+  .section-{{ section.id }} .sbg__cell--lb .sbg-media{
+    min-height: 0;
+  }
+  }
+  @media (max-width: 749px){
+  .section-{{ section.id }} .sbg__grid{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+.section-{{ section.id }} .sbg__wrap{
+  padding-top: var(--sbg-pad-top-m);
+  padding-bottom: var(--sbg-pad-bottom-m);
+  padding-left: var(--sbg-pad-x-m);
+  padding-right: var(--sbg-pad-x-m);
+}
+
+
+}
+
+
+</style>
+
+</section>
+
+{% schema %}
+{
+  "name": "Senses / Balance Grid",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Awaken Your Senses.\nRestore Your Balance"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>The Garden of Wellness story begins in a place unlike any other...</p>"
+    },
+  
+    { "type": "image_picker", "id": "image_1", "label": "Left image (top)" },
+    { "type": "image_picker", "id": "image_2", "label": "Left image (bottom)" },
+    { "type": "image_picker", "id": "image_3", "label": "Right image (tall)" },
+
+    {
+      "type": "select",
+  "id": "ratio_small",
+  "label": "Small image ratio (left)",
+  "default": "1.7777778",
+  "options": [
+    { "value": "1.7777778", "label": "16:9" },
+    { "value": "1.3333333", "label": "4:3" },
+    { "value": "1", "label": "1:1" }
+  ]
+    },
+    {
+"type": "select",
+  "id": "ratio_tall",
+  "label": "Tall image ratio (right)",
+  "default": "0.75",
+  "options": [
+    { "value": "0.75", "label": "3:4" },
+    { "value": "0.6666667", "label": "2:3" },
+    { "value": "0.5625", "label": "9:16" }
+  ]
+    },
+
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "times_new_roman_n4" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "arial_n4" },
+
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1d1d1d" },
+
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 960,
+      "max": 1600,
+      "step": 20,
+      "default": 1200
+    },
+    {
+  "type": "header",
+  "content": "Padding Desktop"
+},
+{
+  "type": "range",
+  "id": "padding_top_desktop",
+  "label": "Padding top desktop (px)",
+  "min": 0,
+  "max": 160,
+  "step": 4,
+  "default": 48
+},
+{
+  "type": "range",
+  "id": "padding_bottom_desktop",
+  "label": "Padding bottom desktop (px)",
+  "min": 0,
+  "max": 160,
+  "step": 4,
+  "default": 40
+},
+{
+  "type": "header",
+  "content": "Padding Mobile"
+},
+{
+  "type": "range",
+  "id": "padding_top_mobile",
+  "label": "Padding top mobile (px)",
+  "min": 0,
+  "max": 120,
+  "step": 4,
+  "default": 24
+},
+{
+  "type": "range",
+  "id": "padding_bottom_mobile",
+  "label": "Padding bottom mobile (px)",
+  "min": 0,
+  "max": 120,
+  "step": 4,
+  "default": 24
+},
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding horizontal (px)",
+      "min": 12,
+      "max": 80,
+      "step": 4,
+      "default": 24
+    },
+    {
+  "type": "range",
+  "id": "gap_x",
+  "label": "Grid gap horizontal (px)",
+  "min": 0,
+  "max": 40,
+  "step": 2,
+  "default": 18
+},
+{
+  "type": "range",
+  "id": "gap_y",
+  "label": "Grid gap vertical min (px)",
+  "min": 0,
+  "max": 40,
+  "step": 2,
+  "default": 10
+},
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Image radius (px)",
+      "min": 0,
+      "max": 28,
+      "step": 2,
+      "default": 0
+    }
+  ],
+  "presets": [
+    { "name": "Senses / Balance Grid" }
+  ]
+}
+{% endschema %}
