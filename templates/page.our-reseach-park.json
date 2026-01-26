@@ -512,6 +512,90 @@
         "padding_top_mobile": 28,
         "padding_bottom_mobile": 28
       }
+    },
+    "flex_block_TMHzUB": {
+      "type": "flex-block",
+      "blocks": {
+        "media_gyCpQc": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/garden-of-wellness-images-1080x497-2.webp",
+            "col_span": 1,
+            "height_desktop": 320,
+            "height_mobile": 250,
+            "padding": 0
+          }
+        },
+        "media_Mh8GD7": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/9e027c0ba94136d89968949a36b151f522502831.jpg",
+            "col_span": 1,
+            "height_desktop": 440,
+            "height_mobile": 250,
+            "padding": 0
+          }
+        },
+        "media_LMLhpA": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/73176bbdff84847dcf33b5133bcf9d6d04aa1104.jpg",
+            "col_span": 1,
+            "height_desktop": 380,
+            "height_mobile": 250,
+            "padding": 0
+          }
+        },
+        "media_CwPyAa": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/garden-of-wellness-images-496x496-12.webp",
+            "col_span": 1,
+            "height_desktop": 380,
+            "height_mobile": 250,
+            "padding": 0
+          }
+        },
+        "text_cgqdej": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Every species is chosen not just for its skincare benefits, but for its ability to thrive with minimal intervention. We use organic and biodynamic principles, plant pollinator-friendly species, and maintain our bee colonies with care and purpose. Our wetlands support native wildlife. Our energy and water use is managed with long-term sustainability in mind.  </p><p> Even our water — the Aquadene<strong>™</strong> — is sustainably sourced from a rain-fed aquifer beneath Yinnar, filtered through ancient geological formations and replenished naturally.</p>",
+            "text_color": "#000000",
+            "text_bg": "transparent",
+            "text_align": "left",
+            "text_size": 16,
+            "text_weight": "400",
+            "col_span": 1,
+            "height_desktop": 300,
+            "height_mobile": 250,
+            "padding": 20
+          }
+        },
+        "media_6WC7hY": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/d624c1398e194f05f6339caec439797f161deb81_17b956aa-222f-4b0e-bea3-25e03611e005.jpg",
+            "col_span": 1,
+            "height_desktop": 410,
+            "height_mobile": 250,
+            "padding": 0
+          }
+        }
+      },
+      "block_order": [
+        "media_gyCpQc",
+        "media_Mh8GD7",
+        "media_LMLhpA",
+        "media_CwPyAa",
+        "text_cgqdej",
+        "media_6WC7hY"
+      ],
+      "name": "Luxury Grid Fixed Height",
+      "settings": {
+        "section_height_desktop": 700,
+        "section_height_mobile": 900,
+        "bg_color": "#ffffff"
+      }
     }
   },
   "order": [
@@ -526,6 +610,7 @@
     "marquee_VaVpYq",
     "media_split_Qd37NW",
     "luxury_two_column_JUCPcc",
-    "richy_text_yPJwfp"
+    "richy_text_yPJwfp",
+    "flex_block_TMHzUB"
   ]
 }
