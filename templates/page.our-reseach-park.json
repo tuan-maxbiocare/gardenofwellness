@@ -447,6 +447,38 @@
         "padding_bottom_m": 32,
         "padding_left_m": 16
       }
+    },
+    "luxury_two_column_JUCPcc": {
+      "type": "luxury-two-column",
+      "blocks": {
+        "column_mLMpGF": {
+          "type": "column",
+          "settings": {
+            "text": "<p>Our commitment to nature and innovation extends beyond Yinnar. In nearby Langsborough, our second site — <strong>Mar-Nuka Bay Center</strong> — serves as a protected conservation area rich in biodiversity. Surrounded by native forests and coastal landscapes, it’s home to flourishing populations of manuka tea trees (Leptospermum scoparium) and banksia — natural foraging grounds for our bees. </p>",
+            "alignment": "left"
+          }
+        },
+        "column_H4NKFB": {
+          "type": "column",
+          "settings": {
+            "text": "<p>Here, we support thriving bee colonies in an untouched, nutrient-dense environment, contributing to the unique composition of our <strong>MBc Herbal Honey</strong>. With access to diverse, nectar-rich flora and some of the highest biodiversity scores in Victoria, Mar-Nuka Bay plays a crucial role in delivering ingredients that are as pure as they are potent — and entirely traceable. Together, our Yinnar and Mar-Nuka Bay sites form a unified ecosystem — one that powers every Garden of Wellness product with real integrity and innovation.<br/><br/></p>",
+            "alignment": "left"
+          }
+        }
+      },
+      "block_order": [
+        "column_mLMpGF",
+        "column_H4NKFB"
+      ],
+      "name": "Two Columns Text",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#1f2937",
+        "bold_color": "#000000",
+        "padding_top": 44,
+        "padding_bottom": 20,
+        "content_width": 1250
+      }
     }
   },
   "order": [
@@ -459,6 +491,7 @@
     "richy_text_UUcBED",
     "two_row_wrap_6CkD9y",
     "marquee_VaVpYq",
-    "media_split_Qd37NW"
+    "media_split_Qd37NW",
+    "luxury_two_column_JUCPcc"
   ]
 }
