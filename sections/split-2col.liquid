@@ -1,0 +1,328 @@
+
+<section
+  class="sp-4m"
+  style="
+    --sp-gap: {{ section.settings.gap }}px;
+    --sp-radius: {{ section.settings.radius }}px;
+    --sp-min-h: {{ section.settings.min_height }}px;
+    --sp-min-h-m: {{ section.settings.min_height_mobile }}px;
+
+    --sp-text-color: {{ section.settings.text_color }};
+    --sp-overlay-from: {{ section.settings.overlay_from }};
+    --sp-overlay-to: {{ section.settings.overlay_to }};
+    --sp-grad-op: {{ section.settings.gradient_opacity }};
+  "
+>
+  <div class="sp-4m__wrap">
+    <div class="sp-4m__grid">
+
+      <!-- LEFT BIG -->
+      <div class="sp-card sp-big sp-left">
+        <div class="sp-media">
+          {% render '2col-mda',
+            kind: section.settings.left_kind,
+            image: section.settings.left_image,
+            video: section.settings.left_video,
+            fallback_color: section.settings.left_fallback_color
+          %}
+        </div>
+
+        {% if section.settings.text != blank %}
+          <div class="sp-overlay {% case section.settings.text_position %}
+            {% when 'bottom_left' %} sp-pos-bl
+            {% when 'bottom_center' %} sp-pos-bc
+            {% when 'center_left' %} sp-pos-cl
+            {% when 'center' %} sp-pos-cc
+            {% when 'top_left' %} sp-pos-tl
+            {% when 'top_center' %} sp-pos-tc
+            {% else %} sp-pos-bl
+          {% endcase %}">
+            {% if section.settings.enable_gradient %}
+              <div class="sp-gradient"></div>
+            {% endif %}
+
+            <div class="sp-text" style="
+              max-width: {{ section.settings.text_max_width }}%;
+              padding: {{ section.settings.text_padding }}px;
+              text-align: {{ section.settings.text_align }};
+            ">
+              {{ section.settings.text }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- MIDDLE (2 SMALL STACKED) -->
+      <div class="sp-mid">
+        <div class="sp-card sp-small sp-mid-top">
+          <div class="sp-media">
+            {% render '2col-mda',
+              kind: section.settings.mid_top_kind,
+              image: section.settings.mid_top_image,
+              video: section.settings.mid_top_video,
+              fallback_color: section.settings.mid_top_fallback_color
+            %}
+          </div>
+        </div>
+
+        <div class="sp-card sp-small sp-mid-bottom">
+          <div class="sp-media">
+            {% render '2col-mda',
+              kind: section.settings.mid_bottom_kind,
+              image: section.settings.mid_bottom_image,
+              video: section.settings.mid_bottom_video,
+              fallback_color: section.settings.mid_bottom_fallback_color
+            %}
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT BIG -->
+      <div class="sp-card sp-big sp-right">
+        <div class="sp-media">
+          {% render '2col-mda',
+            kind: section.settings.right_kind,
+            image: section.settings.right_image,
+            video: section.settings.right_video,
+            fallback_color: section.settings.right_fallback_color
+          %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% style %}
+  .sp-4m__wrap{
+    margin: 0 auto;
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* ===== DESKTOP (GIỮ 3 CỘT NHƯ BẠN ĐANG DÙNG) ===== */
+  .sp-4m__grid{
+    display: grid;
+    grid-template-columns: 1.35fr 0.65fr 0.65fr; /* trái lớn | giữa nhỏ | phải lớn */
+    gap: var(--sp-gap);
+    min-height: 650px; /* DESKTOP HEIGHT */
+    align-items: stretch;
+  }
+
+  .sp-card{
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--sp-radius);
+    background: #eee;
+    min-height: 0;
+  }
+
+  .sp-big{ min-height: 650px; } /* DESKTOP HEIGHT */
+
+  .sp-mid{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--sp-gap);
+    min-height: 650px; /* DESKTOP HEIGHT */
+  }
+
+  .sp-media,
+  .sp-media img,
+  .sp-media video{
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .sp-media img{ object-fit: cover; }
+  .sp-media video{ object-fit: cover; }
+
+  /* Overlay */
+  .sp-overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    pointer-events:none;
+    padding: 0;
+  }
+  .sp-gradient{
+    position:absolute;
+    inset:0;
+    background: linear-gradient(to top, var(--sp-overlay-from), var(--sp-overlay-to));
+    opacity: var(--sp-grad-op);
+  }
+
+  /* ===== TEXT (DESKTOP GIỮ NHƯ BẠN) ===== */
+  .sp-text{
+    color: var(--sp-text-color);
+    width: 100%;
+    max-width: none !important;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ÉP FONT + SIZE (DESKTOP) */
+  .sp-text,
+  .sp-text *{
+    font-family: "Cormorant Garamond", serif !important;
+    font-style: italic !important;
+    font-weight: 600 !important;
+
+    font-size: clamp(42px, 3.2vw, 50px) !important;
+    line-height: 1.12 !important;
+  }
+
+  /* Chỉ 2 dòng */
+  .sp-text{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .sp-text p{
+    margin: 0 !important;
+  }
+
+  /* Text positions */
+  .sp-pos-bl { align-items:flex-end; justify-content:flex-start; }
+  .sp-pos-bc { align-items:flex-end; justify-content:center; }
+  .sp-pos-cl { align-items:center; justify-content:flex-start; }
+  .sp-pos-cc { align-items:center; justify-content:center; }
+  .sp-pos-tl { align-items:flex-start; justify-content:flex-start; }
+  .sp-pos-tc { align-items:flex-start; justify-content:center; }
+
+  /* =========================================================
+     MOBILE (GIỮ GIAO DIỆN BẠN ĐÃ CHỐT)
+     - Row 1: left full
+     - Row 2: mid (2 ảnh nhỏ dọc) bên trái + right ảnh dài bên phải
+     - Height mobile = 360
+     ========================================================= */
+  @media (max-width: 749px){
+
+    /* Grid layout mobile */
+    .sp-left  { grid-area: left; }
+    .sp-mid   { grid-area: mid; }
+    .sp-right { grid-area: right; }
+
+    .sp-4m__grid{
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "left left"
+        "mid  right";
+      align-items: stretch;
+
+      /* grid cao theo hàng */
+      min-height: auto;
+      grid-auto-rows: minmax(360px, auto);
+      row-gap: var(--sp-gap);
+    }
+
+    /* Height mobile */
+    .sp-left{ min-height: 360px; }
+    .sp-mid,
+    .sp-right{ min-height: 360px; }
+
+    /* mid giữ 2 ảnh nhỏ xếp DỌC */
+    .sp-mid{
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: var(--sp-gap);
+    }
+
+    .sp-right{ height: 100%; }
+
+    /* Text mobile thu lại */
+    .sp-text,
+    .sp-text *{
+      font-size: clamp(18px, 6vw, 34px) !important;
+      line-height: 1.1 !important;
+    }
+
+    .sp-text{
+      max-width: 100% !important;
+    }
+  }
+{% endstyle %}
+
+
+{% schema %}
+{
+  "name": "4 Media Columns (No JS)",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "min_height_mobile", "label": "Min height mobile (px)", "min": 240, "max": 700, "step": 10, "default": 360 },
+    { "type": "range", "id": "gap", "label": "Gap (px)", "min": 0, "max": 40, "step": 2, "default": 16 },
+    { "type": "range", "id": "radius", "label": "Border radius (px)", "min": 0, "max": 40, "step": 2, "default": 0 },
+  
+
+    { "type": "header", "content": "Left (big)" },
+    { "type": "select", "id": "left_kind", "label": "Left type", "default": "image", "options": [
+      { "value": "image", "label": "Image" }, { "value": "video", "label": "Video" }
+    ]},
+    { "type": "image_picker", "id": "left_image", "label": "Left image" },
+    { "type": "video", "id": "left_video", "label": "Left video (Shopify hosted)" },
+    { "type": "color", "id": "left_fallback_color", "label": "Left fallback color", "default": "#d9d9d9" },
+
+    { "type": "header", "content": "Middle top (small)" },
+    { "type": "select", "id": "mid_top_kind", "label": "Middle top type", "default": "image", "options": [
+      { "value": "image", "label": "Image" }, { "value": "video", "label": "Video" }
+    ]},
+    { "type": "image_picker", "id": "mid_top_image", "label": "Middle top image" },
+    { "type": "video", "id": "mid_top_video", "label": "Middle top video (Shopify hosted)" },
+    { "type": "color", "id": "mid_top_fallback_color", "label": "Middle top fallback color", "default": "#cccccc" },
+
+    { "type": "header", "content": "Middle bottom (small)" },
+    { "type": "select", "id": "mid_bottom_kind", "label": "Middle bottom type", "default": "image", "options": [
+      { "value": "image", "label": "Image" }, { "value": "video", "label": "Video" }
+    ]},
+    { "type": "image_picker", "id": "mid_bottom_image", "label": "Middle bottom image" },
+    { "type": "video", "id": "mid_bottom_video", "label": "Middle bottom video (Shopify hosted)" },
+    { "type": "color", "id": "mid_bottom_fallback_color", "label": "Middle bottom fallback color", "default": "#eeeeee" },
+
+    { "type": "header", "content": "Right (big)" },
+    { "type": "select", "id": "right_kind", "label": "Right type", "default": "image", "options": [
+      { "value": "image", "label": "Image" }, { "value": "video", "label": "Video" }
+    ]},
+    { "type": "image_picker", "id": "right_image", "label": "Right image" },
+    { "type": "video", "id": "right_video", "label": "Right video (Shopify hosted)" },
+    { "type": "color", "id": "right_fallback_color", "label": "Right fallback color", "default": "#d9d9d9" },
+
+    { "type": "header", "content": "Text & Overlay (left only)" },
+    { "type": "richtext", "id": "text", "label": "Overlay text", "default": "<p>This is where Garden of Wellness was born.</p>" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#ffffff" },
+    { "type": "select", "id": "text_position", "label": "Text position", "default": "bottom_left", "options": [
+      { "value": "bottom_left", "label": "Bottom left" },
+      { "value": "bottom_center", "label": "Bottom center" },
+      { "value": "center_left", "label": "Center left" },
+      { "value": "center", "label": "Center" },
+      { "value": "top_left", "label": "Top left" },
+      { "value": "top_center", "label": "Top center" }
+    ]},
+    { "type": "select", "id": "text_align", "label": "Text align", "default": "left", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "right", "label": "Right" }
+    ]},
+    { "type": "range", "id": "text_padding", "label": "Text padding (px)", "min": 0, "max": 60, "step": 2, "default": 28 },
+    { "type": "range", "id": "text_max_width", "label": "Text max width (%)", "min": 30, "max": 100, "step": 5, "default": 70 },
+
+    { "type": "checkbox", "id": "enable_gradient", "label": "Enable gradient overlay", "default": true },
+    { "type": "color", "id": "overlay_from", "label": "Gradient from", "default": "#000000" },
+    { "type": "color", "id": "overlay_to", "label": "Gradient to (transparent recommended)", "default": "rgba(0,0,0,0)" },
+
+    {
+      "type": "range",
+      "id": "gradient_opacity",
+      "label": "Gradient opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.6
+    }
+  ],
+  "presets": [
+    { "name": "4 Media Columns (No JS)" }
+  ]
+}
+{% endschema %}
