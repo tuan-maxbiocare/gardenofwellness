@@ -141,6 +141,37 @@
         "align_desktop": "center",
         "max_width": 1100
       }
+    },
+    "split_2col_xNfNgx": {
+      "type": "split-2col",
+      "name": "4 Media Columns (No JS)",
+      "settings": {
+        "min_height_mobile": 360,
+        "gap": 0,
+        "radius": 0,
+        "left_kind": "image",
+        "left_image": "shopify://shop_images/fb061717924ab59520bdc09bff40532069b07611.jpg",
+        "left_fallback_color": "#d9d9d9",
+        "mid_top_kind": "image",
+        "mid_top_image": "shopify://shop_images/ac0cf4557436642a909b1600a141963b02f1e2a0.jpg",
+        "mid_top_fallback_color": "#cccccc",
+        "mid_bottom_kind": "image",
+        "mid_bottom_image": "shopify://shop_images/8097a812dddf42e6654c33ea52359d37703ee0c1.jpg",
+        "mid_bottom_fallback_color": "#eeeeee",
+        "right_kind": "image",
+        "right_image": "shopify://shop_images/garden-of-wellness-images-483x483-13.webp",
+        "right_fallback_color": "#d9d9d9",
+        "text": "<p>This is where Garden of Wellness was born.</p>",
+        "text_color": "#adbc3d",
+        "text_position": "bottom_left",
+        "text_align": "center",
+        "text_padding": 28,
+        "text_max_width": 75,
+        "enable_gradient": true,
+        "overlay_from": "#313131",
+        "overlay_to": "rgba(0,0,0,0)",
+        "gradient_opacity": 0.6
+      }
     }
   },
   "order": [
@@ -148,6 +179,7 @@
     "breadcrumbs",
     "main",
     "sense_grid_U7ANqg",
-    "media_col2_yTAphe"
+    "media_col2_yTAphe",
+    "split_2col_xNfNgx"
   ]
 }
