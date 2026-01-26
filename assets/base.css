@@ -4037,3 +4037,23 @@ text-component {
     font-size: max(1rem, 100%);
   }
 }
+/* Scroll reveal: fade up */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms ease, transform 700ms ease;
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tôn trọng người dùng bật reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
+    transform: none;
+  }
+}
