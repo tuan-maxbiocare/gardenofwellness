@@ -31,6 +31,20 @@
         "section_class": ""
       }
     },
+    "header_hero_PPxQri": {
+      "type": "header-hero",
+      "name": "Header Hero",
+      "settings": {
+        "image": "shopify://shop_images/Screenshot_2026-01-12_170526.png",
+        "kicker": "Garden of Wellness",
+        "heading": "ABOUT GARDEN OF WELLNESS",
+        "subheading": "Where Nature Inspires Science and Wellness Blooms",
+        "button_label": "Explore the range",
+        "button_link": "",
+        "min_height": 80,
+        "overlay_opacity": 25
+      }
+    },
     "main": {
       "type": "main-page",
       "blocks": {
@@ -80,6 +94,7 @@
     }
   },
   "order": [
+    "header_hero_PPxQri",
     "breadcrumbs",
     "main"
   ]
