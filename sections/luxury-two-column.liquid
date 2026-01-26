@@ -1,0 +1,161 @@
+{% schema %}
+{
+  "name": "Luxury Two Columns Text",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "bold_color",
+      "label": "Bold text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content max width (px)",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Text column",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Content",
+          "default": "<p>Your luxury text here</p>"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Text alignment",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        }
+      ]
+    }
+  ],
+  "max_blocks": 2,
+  "presets": [
+    {
+      "name": "Luxury – Two Columns Text",
+      "blocks": [
+        { "type": "column" },
+        { "type": "column" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<section
+  class="luxury-two-columns"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div
+    class="luxury-two-columns__inner"
+    style="max-width: {{ section.settings.content_width }}px;"
+  >
+    {% for block in section.blocks %}
+      <div
+        class="luxury-two-columns__col"
+        style="text-align: {{ block.settings.alignment }};"
+      >
+        {{ block.settings.text }}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+.luxury-two-columns__inner {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 64px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.luxury-two-columns__col {
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: {{ section.settings.text_color }};
+  letter-spacing: 0.01em;
+}
+
+.luxury-two-columns__col strong,
+.luxury-two-columns__col b {
+  color: {{ section.settings.bold_color }};
+  font-weight: 600;
+}
+
+.luxury-two-columns__col p {
+  margin-bottom: 1.2em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .luxury-two-columns__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+#rtp-{{ section.id }} .rtp__button-wrap {
+  display: flex;
+  justify-content: center; /* tự theo align chung */
+}
+
+#rtp-{{ section.id }} .rtp__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  min-height: 48px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+</style>
