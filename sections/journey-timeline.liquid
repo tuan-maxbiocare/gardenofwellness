@@ -1,9 +1,9 @@
-{% comment %}
-  Section: Journey Timeline (Text + Image + Timeline Slider)
-{% endcomment %}
+{%- liquid
+  assign section_width = section.settings.section_width | default: 'page'
+-%}
 
 <section class="journey" id="journey-{{ section.id }}">
-  <div class="journey__container page-width">
+  <div class="journey__container {% if section_width == 'page' %}page-width{% endif %}">
     {% if section.settings.heading != blank %}
       {% assign heading_text = section.settings.heading | strip %}
       {% assign words = heading_text | split: ' ' %}
@@ -101,6 +101,7 @@
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
   }
 
+  /* Base container (giữ nguyên giao diện hiện tại) */
   #journey-{{ section.id }} .journey__container{
     width: 100%;
     max-width: 1280px;
@@ -108,6 +109,11 @@
     padding-left: 24px;
     padding-right: 24px;
     box-sizing: border-box;
+  }
+
+  /* NEW: Full width mode (bỏ giới hạn max-width) */
+  #journey-{{ section.id }} .journey__container:not(.page-width){
+    max-width: none;
   }
 
   /* =========================
@@ -475,9 +481,6 @@
       padding-top: 0;
       justify-content: center;
     }
-
-    /* Mobile timeline styles remain the same */
-    /* ... các style mobile timeline giữ nguyên ... */
   }
 
   /* =====================================================
@@ -613,55 +616,43 @@
 
     // ===== TEXT ANIMATION - OPTIMIZED =====
     function triggerTextAnimation() {
-      // Clear any existing timeout
-      if (animationTimeout) {
-        clearTimeout(animationTimeout);
-      }
+      if (animationTimeout) clearTimeout(animationTimeout);
 
-      // Remove active class from all slides
       Array.from(slides.children).forEach(s => {
         s.classList.remove("is-active");
         s.querySelector('.journey__content').style.transition = 'none';
       });
 
-      // Get active slide
       const activeSlide = slides.children[visualIndex];
       if (!activeSlide) return;
 
-      // Force reflow and add active class with delay
       void activeSlide.offsetWidth;
-      
-      // Reset content position
+
       const content = activeSlide.querySelector('.journey__content');
       content.style.transition = 'none';
       content.style.opacity = '0';
       content.style.transform = 'translateY(20px)';
-      
-      // Force reflow again
+
       void content.offsetWidth;
-      
-      // Enable transition and trigger animation
+
       content.style.transition = 'opacity 600ms ease-out, transform 600ms ease-out';
       content.style.transitionDelay = '100ms';
-      
-      // Add active class to slide
+
       activeSlide.classList.add("is-active");
-      
-      // Set timeout to ensure animation completes
+
       animationTimeout = setTimeout(() => {
         content.style.opacity = '1';
         content.style.transform = 'translateY(0)';
       }, 50);
     }
 
-    // ===== NAVIGATION FUNCTIONS =====
     function goToReal(i) {
       if (isAnimating) return;
       isAnimating = true;
 
       index = i;
-      visualIndex = i + 1; // +1 for the clone
-      
+      visualIndex = i + 1;
+
       setTransform(true);
       setActiveTick(index);
       triggerTextAnimation();
@@ -676,12 +667,8 @@
       visualIndex += 1;
       setTransform(true);
 
-      if (index === total - 1) {
-        index = 0;
-      } else {
-        index += 1;
-      }
-      
+      index = (index === total - 1) ? 0 : index + 1;
+
       setActiveTick(index);
       triggerTextAnimation();
     }
@@ -693,19 +680,13 @@
       visualIndex -= 1;
       setTransform(true);
 
-      if (index === 0) {
-        index = total - 1;
-      } else {
-        index -= 1;
-      }
-      
+      index = (index === 0) ? total - 1 : index - 1;
+
       setActiveTick(index);
       triggerTextAnimation();
     }
 
-    // ===== EVENT LISTENERS =====
     slides.addEventListener("transitionend", () => {
-      // Handle clone transitions
       if (slides.children[visualIndex]?.dataset.clone === "first") {
         visualIndex = 1;
         setTransform(false);
@@ -730,7 +711,6 @@
     prevBtn?.addEventListener("click", goPrev);
     nextBtn?.addEventListener("click", goNext);
 
-    // ===== SWIPE SUPPORT =====
     let startX = null;
     slides.addEventListener("touchstart", (e) => startX = e.touches[0].clientX, {passive:true});
     slides.addEventListener("touchend", (e) => {
@@ -743,11 +723,9 @@
       startX = null;
     }, {passive:true});
 
-    // ===== INITIAL SETUP =====
     setActiveTick(0);
     setTransform(false);
-    
-    // Set initial slide as active
+
     const initialSlide = slides.children[visualIndex];
     if (initialSlide) {
       initialSlide.classList.add("is-active");
@@ -755,7 +733,7 @@
       content.style.opacity = '1';
       content.style.transform = 'translateY(0)';
     }
-    
+
     requestAnimationFrame(centerActiveTick);
   })();
 </script>
@@ -764,6 +742,22 @@
 {
   "name": "Journey timeline",
   "settings": [
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
     {
       "type": "text",
       "id": "heading",
