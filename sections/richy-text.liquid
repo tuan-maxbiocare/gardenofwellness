@@ -1,0 +1,287 @@
+
+<section id="rtp-{{ section.id }}" class="rtp">
+  <div class="rtp__bg" aria-hidden="true"></div>
+
+  <div class="rtp__inner">
+    {% if section.settings.heading != blank %}
+      <div class="rtp__heading-wrap">
+        <{{ section.settings.heading_tag }} class="rtp__heading">
+          {{ section.settings.heading | escape }}
+        </{{ section.settings.heading_tag }}>
+      </div>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <div class="rtp__subheading-wrap">
+        <div class="rtp__subheading rte">
+          {{ section.settings.subheading }}
+        </div>
+      </div>
+    {% endif %}
+    {% for block in section.blocks %}
+  {% if block.type == 'button' %}
+    <a class="rtp__button" href="{{ block.settings.link }}">
+  {{ block.settings.label }}
+</a>
+  {% endif %}
+{% endfor %}
+  </div>
+
+
+  <style>
+    /* ========= Scoped variables (per-section) ========= */
+    #rtp-{{ section.id }}{
+      --rtp-align: {{ section.settings.align }};
+      --rtp-maxw: {{ section.settings.max_width }}px;
+
+      --rtp-pad-t: {{ section.settings.padding_top }}px;
+      --rtp-pad-b: {{ section.settings.padding_bottom }}px;
+      --rtp-pad-t-m: {{ section.settings.padding_top_mobile }}px;
+      --rtp-pad-b-m: {{ section.settings.padding_bottom_mobile }}px;
+
+      --rtp-side-pad: {{ section.settings.side_padding }}px;
+      --rtp-gap: {{ section.settings.gap }}px;
+
+      --rtp-bg: {{ section.settings.bg_color }};
+      --rtp-bg2: {{ section.settings.bg_color_2 }};
+      --rtp-bg-opacity: {{ section.settings.bg_opacity | divided_by: 100.0 }};
+
+      --rtp-h-color: {{ section.settings.heading_color }};
+      --rtp-s-color: {{ section.settings.subheading_color }};
+
+      --rtp-h-weight: {{ section.settings.heading_weight }};
+      --rtp-s-weight: {{ section.settings.subheading_weight }};
+
+      /* integers in schema -> decimals in CSS */
+      --rtp-h-lh: {{ section.settings.heading_line_height | divided_by: 100.0 }};
+      --rtp-s-lh: {{ section.settings.subheading_line_height | divided_by: 100.0 }};
+
+      --rtp-h-ls: {{ section.settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+      --rtp-s-ls: {{ section.settings.subheading_letter_spacing | divided_by: 1000.0 }}em;
+
+      --rtp-h-m: {{ section.settings.heading_size_mobile }}px;
+      --rtp-h-d: {{ section.settings.heading_size_desktop }}px;
+      --rtp-s-m: {{ section.settings.subheading_size_mobile }}px;
+      --rtp-s-d: {{ section.settings.subheading_size_desktop }}px;
+
+      /* Kill theme preview/min-height effects */
+      min-height: 0 !important;
+      height: auto !important;
+      --section-preview-height: auto;
+      --section-min-height: 0px;
+    }
+
+    /* ========= Layout ========= */
+    #rtp-{{ section.id }}{
+      position: relative;
+      overflow: hidden;
+      text-align: var(--rtp-align);
+      padding-top: var(--rtp-pad-t);
+      padding-bottom: var(--rtp-pad-b);
+    }
+
+    @media (max-width: 749px){
+      #rtp-{{ section.id }}{
+        padding-top: var(--rtp-pad-t-m);
+        padding-bottom: var(--rtp-pad-b-m);
+      }
+    }
+
+    #rtp-{{ section.id }} .rtp__bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--rtp-bg) calc(var(--rtp-bg-opacity) * 100%), transparent),
+          color-mix(in srgb, var(--rtp-bg2) calc(var(--rtp-bg-opacity) * 100%), transparent)
+        );
+      pointer-events:none;
+      z-index:0;
+    }
+
+    #rtp-{{ section.id }} .rtp__inner{
+      position: relative;
+      z-index:1;
+      width: min(100%, var(--rtp-maxw));
+      margin: 0 auto;
+      padding-left: var(--rtp-side-pad);
+      padding-right: var(--rtp-side-pad);
+      display:flex;
+      flex-direction:column;
+      gap: var(--rtp-gap);
+      min-height: 0 !important;
+      align-items: var(--rtp-align);
+    }
+
+    {% if section.settings.readable_lines %}
+      #rtp-{{ section.id }} .rtp__heading-wrap,
+      #rtp-{{ section.id }} .rtp__subheading-wrap{
+        max-width: 60ch;
+        margin-left: {% if section.settings.align == 'left' %}0{% else %}auto{% endif %};
+        margin-right:{% if section.settings.align == 'right' %}0{% else %}auto{% endif %};
+      }
+    {% endif %}
+
+    /* ========= Heading ========= */
+   #rtp-{{ section.id }} .rtp__heading-wrap .rtp__heading{
+  margin:0;
+  color: var(--rtp-h-color) !important;
+  font-weight: var(--rtp-h-weight) !important;
+  line-height: var(--rtp-h-lh) !important;
+  letter-spacing: var(--rtp-h-ls) !important;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+
+  /* FLUID: in thẳng giá trị setting */
+  font-size: clamp(
+    {{ section.settings.heading_size_mobile }}px,
+    calc({{ section.settings.heading_size_mobile }}px + ({{ section.settings.heading_size_desktop }} - {{ section.settings.heading_size_mobile }}) * ((100vw - 360px) / (992 - 360))),
+    {{ section.settings.heading_size_desktop }}px
+  ) !important;
+}
+
+
+   #rtp-{{ section.id }} .rtp__subheading-wrap .rtp__subheading{
+  font-size: clamp(
+    {{ section.settings.subheading_size_mobile }}px,
+    calc({{ section.settings.subheading_size_mobile }}px + ({{ section.settings.subheading_size_desktop }} - {{ section.settings.subheading_size_mobile }}) * ((100vw - 360px) / (992 - 360))),
+    {{ section.settings.subheading_size_desktop }}px
+  ) !important;
+}
+
+@media (min-width: 750px){
+  #rtp-{{ section.id }} .rtp__subheading-wrap .rtp__subheading{
+    font-size: {{ section.settings.subheading_size_desktop }}px !important;
+  }
+}
+/* ===== RTP Button ===== */
+#rtp-{{ section.id }} .rtp__button-wrap {
+  text-align: center;
+}
+
+#rtp-{{ section.id }} .rtp__button{
+  width:auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px 20px;
+  min-height: 48px;
+
+  background: transparent;
+  color: #000;
+
+  border: 1.5px solid #000; /* VIỀN ĐEN */
+  border-radius: 0;
+
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition:
+    background .25s ease,
+    color .25s ease,
+    transform .25s ease;
+}
+
+/* Hover – đảo màu nhẹ */
+#rtp-{{ section.id }} .rtp__button--outline:hover {
+  background: #000;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Active */
+#rtp-{{ section.id }} .rtp__button--outline:active {
+  transform: translateY(0);
+}
+
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Rich Text Pro ",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Where Nature Meets Science" },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ]
+    },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>From Seeds — thru Science — to Shelf</p>" },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "range", "id": "max_width", "label": "Content max width (px)", "min": 320, "max": 1400, "step": 20, "default": 900 },
+    { "type": "range", "id": "side_padding", "label": "Side padding (px)", "min": 0, "max": 60, "step": 2, "default": 16 },
+    { "type": "range", "id": "gap", "label": "Gap between heading & subheading (px)", "min": 0, "max": 60, "step": 2, "default": 16 },
+    { "type": "checkbox", "id": "readable_lines", "label": "Limit line length (60ch)", "default": false },
+
+    { "type": "header", "content": "Colors / Background" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#1d1d1f" },
+    { "type": "color", "id": "subheading_color", "label": "Subheading color", "default": "#3a3a3c" },
+    { "type": "color", "id": "bg_color", "label": "Background color 1", "default": "#ffffff" },
+    { "type": "color", "id": "bg_color_2", "label": "Background color 2", "default": "#ffffff" },
+    { "type": "range", "id": "bg_opacity", "label": "Background opacity (%)", "min": 0, "max": 100, "step": 5, "default": 100 },
+
+    { "type": "header", "content": "Typography (fluid responsive)" },
+
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size (mobile px)", "min": 16, "max": 60, "step": 1, "default": 30 },
+    { "type": "range", "id": "heading_size_desktop", "label": "Heading size (desktop px)", "min": 20, "max": 120, "step": 2, "default": 54 },
+    { "type": "range", "id": "heading_weight", "label": "Heading weight", "min": 300, "max": 900, "step": 100, "default": 600 },
+    { "type": "range", "id": "heading_line_height", "label": "Heading line-height (x100)", "min": 100, "max": 180, "step": 5, "default": 115 },
+    { "type": "range", "id": "heading_letter_spacing", "label": "Heading letter-spacing (x1000 em)", "min": -50, "max": 200, "step": 10, "default": 0 },
+
+    { "type": "range", "id": "subheading_size_mobile", "label": "Subheading size (mobile px)", "min": 12, "max": 32, "step": 1, "default": 16 },
+    { "type": "range", "id": "subheading_size_desktop", "label": "Subheading size (desktop px)", "min": 12, "max": 48, "step": 1, "default": 18 },
+    { "type": "range", "id": "subheading_weight", "label": "Subheading weight", "min": 300, "max": 900, "step": 100, "default": 400 },
+    { "type": "range", "id": "subheading_line_height", "label": "Subheading line-height (x100)", "min": 100, "max": 220, "step": 5, "default": 160 },
+    { "type": "range", "id": "subheading_letter_spacing", "label": "Subheading letter-spacing (x1000 em)", "min": -50, "max": 200, "step": 10, "default": 0 },
+
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Padding top (desktop px)", "min": 0, "max": 140, "step": 4, "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom (desktop px)", "min": 0, "max": 140, "step": 4, "default": 48 },
+    { "type": "range", "id": "padding_top_mobile", "label": "Padding top (mobile px)", "min": 0, "max": 120, "step": 4, "default": 28 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding bottom (mobile px)", "min": 0, "max": 120, "step": 4, "default": 28 }
+  ],
+   "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Button text" },
+        { "type": "url", "id": "link", "label": "Button link" }
+      ]
+    }
+  ],
+
+  "presets": [
+    { "name": "Rich Text Pro" }
+  ]
+}
+{% endschema %}
