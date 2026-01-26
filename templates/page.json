@@ -103,8 +103,8 @@
           "static": true,
           "settings": {
             "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "space-between",
-            "gap": 24
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 30
           },
           "blocks": {
             "text_ghBK9L": {
