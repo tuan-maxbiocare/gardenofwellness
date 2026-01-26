@@ -1,0 +1,468 @@
+
+
+<section id="t2-{{ section.id }}" class="t2">
+  {%- liquid
+    assign has_image = false
+    if section.settings.image != blank
+      assign has_image = true
+    endif
+
+    assign has_video = false
+    if section.settings.video_mp4_url != blank
+      assign has_video = true
+    endif
+
+    assign media_type = section.settings.media_type
+    if media_type == 'video' and has_video == false and has_image
+      assign media_type = 'image'
+    endif
+    if media_type == 'image' and has_image == false and has_video
+      assign media_type = 'video'
+    endif
+
+    assign heading_html = section.settings.heading | replace: '|', '<br>'
+    assign subheading_html = section.settings.subheading | replace: '|', '<br>'
+
+    assign raw_text = section.settings.text | replace: '|', "\n"
+    assign paragraphs = raw_text | newline_to_br | split: '<br />'
+    assign half = paragraphs.size | divided_by: 2
+  -%}
+
+  <!-- HEADER -->
+  <div class="t2__header">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="t2__title">{{ heading_html }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="t2__subtitle">{{ subheading_html }}</p>
+    {%- endif -%}
+  </div>
+
+  <!-- BODY -->
+  <div class="t2__body">
+    <!-- MEDIA -->
+    <div class="t2__media">
+      {%- if media_type == 'video' and has_video -%}
+        <video
+          class="t2__mediaEl"
+          {% if section.settings.video_autoplay %}autoplay{% endif %}
+          {% if section.settings.video_muted %}muted{% endif %}
+          {% if section.settings.video_loop %}loop{% endif %}
+          playsinline
+          preload="metadata"
+        >
+          <source src="{{ section.settings.video_mp4_url }}" type="video/mp4">
+        </video>
+      {%- elsif has_image -%}
+        {%- assign img = section.settings.image -%}
+        {{ img
+          | image_url: width: 2400
+          | image_tag:
+            class: 't2__mediaEl',
+            loading: 'lazy',
+            alt: img.alt
+        }}
+      {%- else -%}
+        <div class="t2__mediaFallback"></div>
+      {%- endif -%}
+    </div>
+
+    <!-- CONTENT -->
+    <div class="t2__content">
+      <div class="t2__contentInner">
+        <!-- DESKTOP/TABLET: 2 columns -->
+        <div class="t2__textGrid t2__only-desktop">
+          <div class="t2__col t2__col--1">
+            {%- for p in paragraphs limit: half -%}
+              {%- assign line = p | strip -%}
+              {%- if line != blank -%}<p>{{ line }}</p>{%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          <div class="t2__col t2__col--2">
+            <div class="t2__col2Body">
+              {%- for p in paragraphs offset: half -%}
+                {%- assign line = p | strip -%}
+                {%- if line != blank -%}<p>{{ line }}</p>{%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+
+        <!-- MOBILE: 1 column thật -->
+        <div class="t2__textSingle t2__only-mobile">
+          {%- for p in paragraphs -%}
+            {%- assign line = p | strip -%}
+            {%- if line != blank -%}<p>{{ line }}</p>{%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #t2-{{ section.id }}{
+    --t2-max: {{ section.settings.max_width }}px;
+    --t2-pad: clamp(18px, 4vw, 64px);
+    --t2-gap: clamp(14px, 2.2vw, 32px);
+
+    --t2-heading-color: {{ section.settings.heading_color }};
+    --t2-subheading-color: {{ section.settings.subheading_color }};
+    --t2-text-color: {{ section.settings.text_color }};
+
+    --t2-align-desktop: {{ section.settings.align_desktop }};
+  }
+
+  /* WRAP */
+  #t2-{{ section.id }}.t2{
+    max-width: var(--t2-max);
+    margin: 0 auto;
+    padding: var(--t2-pad) 0;
+  }
+
+  /* HEADER */
+  #t2-{{ section.id }} .t2__header{
+    text-align: var(--t2-align-desktop);
+    margin-bottom: clamp(20px, 3.2vw, 44px);
+  }
+
+  #t2-{{ section.id }} .t2__title{
+     font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-size: clamp(32px, 3.5vw, 60px);
+    margin: 0 0 10px;
+    color: var(--t2-heading-color);
+  }
+
+  #t2-{{ section.id }} .t2__subtitle{
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    line-height: 1.6;
+    font-size: clamp(14px, 1.2vw, 18px);
+    margin: 0 auto;
+    max-width: none
+    color: var(--t2-subheading-color);
+    font-weight:500;
+  }
+
+  /* BODY GRID: content height follows media */
+  #t2-{{ section.id }} .t2__body{
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: var(--t2-gap);
+    align-items: stretch;
+  }
+
+  /* MEDIA */
+  #t2-{{ section.id }} .t2__media{ height: 100%; }
+
+  #t2-{{ section.id }} .t2__mediaEl{
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  #t2-{{ section.id }} .t2__mediaFallback{
+    width: 100%;
+    min-height: 420px;
+    background: #e9e9e9;
+  }
+
+  /* CONTENT */
+  #t2-{{ section.id }} .t2__content{
+    height: 100%;
+    text-align: left;
+    padding-left: 24px;
+    padding-right: 8px;
+  }
+
+  #t2-{{ section.id }} .t2__contentInner{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* show/hide desktop vs mobile */
+  #t2-{{ section.id }} .t2__only-mobile{ display: none; }
+  #t2-{{ section.id }} .t2__only-desktop{ display: block; }
+
+  /* Desktop 2-column text grid */
+  #t2-{{ section.id }} .t2__textGrid{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: stretch;
+  }
+
+  /* Paragraph styles */
+  #t2-{{ section.id }} .t2__col p,
+  #t2-{{ section.id }} .t2__textSingle p{
+    margin: 0 0 0.9em;
+    line-height: 1.6;
+    color: var(--t2-text-color);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-size: clamp(14px, 1.05vw, 17px);
+  }
+
+  /* Column 2: bottom align + line + offset */
+  #t2-{{ section.id }} .t2__col--2{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+
+  /* push body down so bottom aligns */
+  #t2-{{ section.id }} .t2__col2Body{
+    margin-top: auto;
+  }
+/* === FORCE equal height between media and content cell === */
+#t2-{{ section.id }} .t2__body{
+  align-items: stretch;
+}
+
+/* Media cell: make its child fill the cell */
+#t2-{{ section.id }} .t2__media{
+  display: flex;
+}
+#t2-{{ section.id }} .t2__mediaEl{
+  width: 100%;
+  height: auto;          /* reset */
+  flex: 1 1 auto;        /* fill height */
+  object-fit: cover;
+}
+
+/* Content cell: make inner area fill the cell */
+#t2-{{ section.id }} .t2__content{
+  display: flex;         /* KEY */
+}
+#t2-{{ section.id }} .t2__contentInner{
+  flex: 1 1 auto;        /* KEY */
+  display: flex;
+  min-height: 0;
+}
+
+/* Desktop grid wrapper must fill contentInner */
+#t2-{{ section.id }} .t2__only-desktop{
+  flex: 1 1 auto;        /* KEY */
+  min-height: 0;
+}
+
+/* Text grid must fill available height */
+#t2-{{ section.id }} .t2__textGrid{
+  flex: 1 1 auto;        /* KEY */
+  min-height: 0;
+}
+
+/* Column 2 bottom-align works now because parent has real height */
+#t2-{{ section.id }} .t2__col--2{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+#t2-{{ section.id }} .t2__col2Body{
+  margin-top: auto;      /* push to bottom */
+}
+/* Column 2: bottom align works (no pseudo flex items) */
+#t2-{{ section.id }} .t2__col--2{
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* offset phần đầu cột 2 (đẩy nội dung xuống) */
+  padding-top: {{ section.settings.col2_offset }}px;
+}
+
+/* Cột 2 vẫn là flex để ghim khối text xuống đáy */
+#t2-{{ section.id }} .t2__col--2{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Khối (line + text) của cột 2 được ghim xuống đáy */
+#t2-{{ section.id }} .t2__col2Body{
+  margin-top: auto;                 /* ✅ ít text -> nằm thấp, nhiều text -> cao lên */
+  position: relative;
+  padding-top: {{ section.settings.col2_line_gap }}px;  /* ✅ khoảng cách line -> text (tùy chỉnh) */
+}
+
+/* Line ăn theo cột 2 và “đi cùng” khối text */
+{% if section.settings.show_col2_line %}
+#t2-{{ section.id }} .t2__col2Body::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;                           /* line nằm ngay đầu khối text */
+  height: 1px;
+  background: rgba(0,0,0,0.22);
+}
+{% endif %}
+
+
+
+/* Đẩy nội dung cột 2 xuống đáy */
+#t2-{{ section.id }} .t2__col2Body{
+  margin-top: auto;
+}
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px){
+    #t2-{{ section.id }}{
+      --mx: 16px;        /* padding trái phải bằng nhau */
+      --line-gap: 28px;  /* khoảng cách text -> line cuối */
+    }
+
+    #t2-{{ section.id }}.t2{
+      max-width: 100%;
+      padding: 0;
+    }
+
+    /* header center */
+    #t2-{{ section.id }} .t2__header{
+      padding: 20px var(--mx) 14px;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    /* media on top, content below */
+    #t2-{{ section.id }} .t2__body{
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    #t2-{{ section.id }} .t2__mediaEl{
+      height: auto;
+      max-height: 60vh;
+    }
+
+    /* content padding nhỏ, text left */
+    #t2-{{ section.id }} .t2__content{
+      padding: 16px var(--mx) 0;
+      text-align: left;
+    }
+
+    /* show mobile single column, hide desktop grid */
+    #t2-{{ section.id }} .t2__only-mobile{ display: block; }
+    #t2-{{ section.id }} .t2__only-desktop{ display: none; }
+
+    /* mobile end line */
+    #t2-{{ section.id }}::after{
+      content: "";
+      display: block;
+      height: 1px;
+      background: rgba(0,0,0,0.22);
+      margin: var(--line-gap) var(--mx) 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Media + Content (Clean)",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (dùng | để xuống dòng)",
+      "default": "Yinnar Eco Center —|A Living Sanctuary of Wellness"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading (dùng | để xuống dòng)",
+      "default": "Nestled in the heart of South-West Gippsland...|Today, it’s a vibrant sanctuary where nature is in full bloom."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text (Enter hoặc | để xuống dòng)",
+      "default": "As you step into the garden...|Bees hum gently from blossom to blossom...|It is more than a research site...|The scent clings gently to your skin..."
+    },
+
+    { "type": "header", "content": "Desktop column 2" },
+    {
+      "type": "checkbox",
+      "id": "show_col2_line",
+      "label": "Show line above column 2",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "col2_offset",
+      "label": "Column 2 offset (px)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 88
+    },
+
+    {
+  "type": "range",
+  "id": "col2_line_gap",
+  "label": "Line to text gap (px)",
+  "min": 0,
+  "max": 40,
+  "step": 2,
+  "default": 14
+},
+    { "type": "header", "content": "Media" },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video (MP4 URL)" }
+      ]
+    },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "video_mp4_url", "label": "Video MP4 URL" },
+    { "type": "checkbox", "id": "video_autoplay", "label": "Video autoplay", "default": true },
+    { "type": "checkbox", "id": "video_muted", "label": "Video muted", "default": true },
+    { "type": "checkbox", "id": "video_loop", "label": "Video loop", "default": true },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#2A2A2A" },
+    { "type": "color", "id": "subheading_color", "label": "Subheading color", "default": "#6B6B6B" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#2A2A2A" },
+
+    { "type": "header", "content": "Header align (desktop)" },
+    {
+      "type": "select",
+      "id": "align_desktop",
+      "label": "Header align (desktop)",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 900,
+      "max": 1600,
+      "step": 50,
+      "default": 1100
+    }
+  ],
+  "presets": [
+    { "name": "Media + Content (Clean)" }
+  ]
+}
+{% endschema %}
