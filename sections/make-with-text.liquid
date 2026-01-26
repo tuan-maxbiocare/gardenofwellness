@@ -1,9 +1,3 @@
-{% comment %}
-  Section: Media with text (custom)
-  - Left: image(s) or video (Shopify-hosted or embed URL)
-  - Right: text (blocks: heading, richtext, button)
-{% endcomment %}
-
 {% liquid
   assign s = section.settings
 
@@ -33,11 +27,21 @@
   endif
 
   assign corner_radius = s.corner_radius | default: 0
+
+  comment
+    NEW: width mode (page vs full)
+    - section_width: new setting
+    - keep make_section_full_width for backward compatibility
+  endcomment
+  assign section_width = s.section_width | default: 'page'
+  if s.section_width == blank and s.make_section_full_width
+    assign section_width = 'full'
+  endif
 %}
 
 <section
   id="mwt-{{ section.id }}"
-  class="mwt mwt--{{ section.id }} {% if s.make_section_full_width %}mwt--full{% endif %} {% if s.used_as_hero %}mwt--hero{% endif %}"
+  class="mwt mwt--{{ section.id }} {% if section_width == 'full' %}mwt--full{% endif %} {% if s.used_as_hero %}mwt--hero{% endif %}"
   style="
     --mwt-radius: {{ corner_radius }}px;
     --mwt-transition: {{ s.transition_slideshow_ms }}ms;
@@ -48,7 +52,7 @@
     --mwt-mobile-media-h: {{ s.mobile_image_height }}px;
   "
 >
-  <div class="mwt__wrap {% if s.enable_side_padding %}mwt__wrap--padded{% endif %}">
+  <div class="mwt__wrap {% if section_width == 'page' %}mwt__wrap--page{% endif %} {% if s.enable_side_padding %}mwt__wrap--padded{% endif %}">
     <div class="mwt__grid
       {% if s.content_layout == 'overlap' %}mwt__grid--overlap{% endif %}
       {% if s.desktop_image_width == 'large' %}mwt__grid--wide{% endif %}
@@ -195,9 +199,20 @@
     }
 
     #mwt-{{ section.id }} .mwt__wrap{
-      max-width: 1440px;
       margin: 0 auto;
+      width: 100%;
     }
+
+    /* NEW: page width mode (container) */
+    #mwt-{{ section.id }} .mwt__wrap--page{
+      max-width: 1440px;
+    }
+
+    /* full width mode */
+    #mwt-{{ section.id }}.mwt--full .mwt__wrap{
+      max-width: none;
+    }
+
     #mwt-{{ section.id }} .mwt__wrap--padded{
       padding-left: 26px;
       padding-right:26px;
@@ -365,16 +380,15 @@
       display: flex;
       background-color:rgb(238, 238, 233);
       border-radius: 12px; /* bo nhẹ */
-  overflow: hidden;
-      
+      overflow: hidden;
     }
     #mwt-{{ section.id }} .mwt__content--pos-top{ align-items: flex-start; }
     #mwt-{{ section.id }} .mwt__content--pos-center{ align-items: center; }
     #mwt-{{ section.id }} .mwt__content--pos-bottom{ align-items: flex-end; }
 
     #mwt-{{ section.id }} .mwt__content-inner{
-        padding: 72px 64px;  /* desktop */
-  max-width: 560px;  
+      padding: 72px 64px;  /* desktop */
+      max-width: 560px;
       width: 100%;
     }
 
@@ -391,13 +405,13 @@
     }
     #mwt-{{ section.id }} .mwt__heading{
       margin: 0 0 12px;
-        font-size: clamp(22px, 2.4vw, 36px);
-  line-height: 1.2;
+      font-size: clamp(22px, 2.4vw, 36px);
+      line-height: 1.2;
     }
     #mwt-{{ section.id }} .mwt__heading em {
-  color: #606b57; /* màu bạn muốn */
-  font-style: italic;
-}
+      color: #606b57;
+      font-style: italic;
+    }
 
     #mwt-{{ section.id }} .mwt__text{
       font-size: 14px;
@@ -445,144 +459,140 @@
     }
     @media (max-width: 749px){
 
-  /* 1️⃣ Content box gọn lại */
-  #mwt-{{ section.id }} .mwt__content-inner{
-    padding: 20px 16px;      /* ↓ từ 24–32px */
-    max-width: 100%;
-  }
+      /* 1️⃣ Content box gọn lại */
+      #mwt-{{ section.id }} .mwt__content-inner{
+        padding: 20px 16px;
+        max-width: 100%;
+      }
 
-  /* 2️⃣ Heading gọn hơn (ít xuống dòng) */
-  #mwt-{{ section.id }} .mwt__heading{
-    font-size: 19px;         /* ↓ từ ~22px */
-    line-height: 1.18;       /* chặt hơn */
-    margin-bottom: 8px;
-  }
+      /* 2️⃣ Heading gọn hơn (ít xuống dòng) */
+      #mwt-{{ section.id }} .mwt__heading{
+        font-size: 19px;
+        line-height: 1.18;
+        margin-bottom: 8px;
+      }
 
-  /* 3️⃣ Subheading sát hơn */
-  #mwt-{{ section.id }} .mwt__subheading{
-    margin-bottom: 6px;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-  }
+      /* 3️⃣ Subheading sát hơn */
+      #mwt-{{ section.id }} .mwt__subheading{
+        margin-bottom: 6px;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+      }
 
-  /* 4️⃣ Đoạn text phụ nhỏ & sát */
-  #mwt-{{ section.id }} .mwt__text{
-    font-size: 13px;
-    line-height: 1.5;
-    margin-top: 6px;
-  }
+      /* 4️⃣ Đoạn text phụ nhỏ & sát */
+      #mwt-{{ section.id }} .mwt__text{
+        font-size: 13px;
+        line-height: 1.5;
+        margin-top: 6px;
+      }
 
-  /* 5️⃣ Button lên cao hơn (đúng mẫu) */
-  #mwt-{{ section.id }} .mwt__btn-wrap{
-    margin-top: 14px;        /* ↓ từ 24–32px */
-  }
+      /* 5️⃣ Button lên cao hơn (đúng mẫu) */
+      #mwt-{{ section.id }} .mwt__btn-wrap{
+        margin-top: 14px;
+      }
 
-  /* 6️⃣ Nếu content đang bị canh giữa dọc → cho lên trên */
-  #mwt-{{ section.id }} .mwt__content{
-    align-items: flex-start;
-  }
-}
-/* ===== Smooth desktop height when resizing viewport (like video) ===== */
-/* Chỉ áp dụng từ tablet/desktop trở lên, không ảnh hưởng block mobile bạn đã có */
-@media (min-width: 750px){
-
-  /* 1) Tính chiều cao mượt theo viewport width:
-     - viewport càng rộng -> giá trị calc(...) càng nhỏ -> layout thấp dần
-     - clamp(...) giới hạn min/max để không quá thấp/quá cao
-  */
-  #mwt-{{ section.id }}{
-    --mwt-desktop-h: clamp(440px, calc(760px - 0.18 * 100vw), 620px);
-  }
-
-  /* 2) Ép cả 2 cột (media + content) luôn bằng nhau theo cùng 1 height */
-  #mwt-{{ section.id }} .mwt__media,
-  #mwt-{{ section.id }} .mwt__content{
-    min-height: var(--mwt-desktop-h) !important;
-    transition: min-height .25s ease;
-  }
-
-  /* 3) Override luôn 2 class height cũ để khỏi bị 70vh / 520px “đè” */
-  #mwt-{{ section.id }} .mwt__media--fullscreen,
-  #mwt-{{ section.id }} .mwt__media--medium{
-    min-height: var(--mwt-desktop-h) !important;
-  }
-}
-
-  </style>
-<script>
-(function(){
-  const root = document.getElementById("mwt-{{ section.id }}");
-  if (!root) return;
-
-  // Respect reduced motion
-  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  const media = root.querySelector(".mwt__media");
-  if (!media) return;
-
-  // Target element to move (image/video/iframe)
-  const target =
-    media.querySelector(".mwt__img-el") ||
-    media.querySelector("video") ||
-    media.querySelector("iframe");
-
-  if (!target) return;
-
-  // Optional: make motion smooth & safe
-  target.style.willChange = "transform";
-
-  // Tune this: max translate in px
-  const MAX_SHIFT = 18;
-
-  let ticking = false;
-  let inView = true;
-
-  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-  function update(){
-    ticking = false;
-    if (!inView) return;
-
-    const rect = root.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-
-    // progress from 0 -> 1 as section passes through viewport
-    // 0: section top hits bottom of viewport
-    // 1: section bottom hits top of viewport
-    const start = vh;
-    const end = -rect.height;
-    const p = clamp((start - rect.top) / (start - end), 0, 1);
-
-    // Map to translate range [-MAX_SHIFT, +MAX_SHIFT]
-    const shift = (p - 0.5) * 2 * MAX_SHIFT;
-
-    // Apply translate (no hover involved)
-    target.style.transform = `translate3d(0, ${shift.toFixed(2)}px, 0)`;
-  }
-
-  function requestTick(){
-    if (!ticking){
-      ticking = true;
-      requestAnimationFrame(update);
+      /* 6️⃣ Nếu content đang bị canh giữa dọc → cho lên trên */
+      #mwt-{{ section.id }} .mwt__content{
+        align-items: flex-start;
+      }
     }
-  }
 
-  // Only run when visible (perf)
-  const io = new IntersectionObserver((entries) => {
-    inView = entries[0] ? entries[0].isIntersecting : true;
-    if (inView) requestTick();
-  }, { threshold: 0.01 });
+    /* ===== Smooth desktop height when resizing viewport (like video) ===== */
+    /* Chỉ áp dụng từ tablet/desktop trở lên, không ảnh hưởng block mobile bạn đã có */
+    @media (min-width: 750px){
 
-  io.observe(root);
+      /* 1) Tính chiều cao mượt theo viewport width */
+      #mwt-{{ section.id }}{
+        --mwt-desktop-h: clamp(440px, calc(760px - 0.18 * 100vw), 620px);
+      }
 
-  // Scroll/resize listeners
-  window.addEventListener("scroll", requestTick, { passive: true });
-  window.addEventListener("resize", requestTick);
+      /* 2) Ép cả 2 cột (media + content) luôn bằng nhau */
+      #mwt-{{ section.id }} .mwt__media,
+      #mwt-{{ section.id }} .mwt__content{
+        min-height: var(--mwt-desktop-h) !important;
+        transition: min-height .25s ease;
+      }
 
-  // Initial
-  requestTick();
-})();
-</script>
+      /* 3) Override luôn 2 class height cũ */
+      #mwt-{{ section.id }} .mwt__media--fullscreen,
+      #mwt-{{ section.id }} .mwt__media--medium{
+        min-height: var(--mwt-desktop-h) !important;
+      }
+    }
+  </style>
+
+  <script>
+  (function(){
+    const root = document.getElementById("mwt-{{ section.id }}");
+    if (!root) return;
+
+    // Respect reduced motion
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const media = root.querySelector(".mwt__media");
+    if (!media) return;
+
+    // Target element to move (image/video/iframe)
+    const target =
+      media.querySelector(".mwt__img-el") ||
+      media.querySelector("video") ||
+      media.querySelector("iframe");
+
+    if (!target) return;
+
+    // Optional: make motion smooth & safe
+    target.style.willChange = "transform";
+
+    // Tune this: max translate in px
+    const MAX_SHIFT = 18;
+
+    let ticking = false;
+    let inView = true;
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function update(){
+      ticking = false;
+      if (!inView) return;
+
+      const rect = root.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      // progress from 0 -> 1 as section passes through viewport
+      const start = vh;
+      const end = -rect.height;
+      const p = clamp((start - rect.top) / (start - end), 0, 1);
+
+      // Map to translate range [-MAX_SHIFT, +MAX_SHIFT]
+      const shift = (p - 0.5) * 2 * MAX_SHIFT;
+
+      // Apply translate (no hover involved)
+      target.style.transform = `translate3d(0, ${shift.toFixed(2)}px, 0)`;
+    }
+
+    function requestTick(){
+      if (!ticking){
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    // Only run when visible (perf)
+    const io = new IntersectionObserver((entries) => {
+      inView = entries[0] ? entries[0].isIntersecting : true;
+      if (inView) requestTick();
+    }, { threshold: 0.01 });
+
+    io.observe(root);
+
+    // Scroll/resize listeners
+    window.addEventListener("scroll", requestTick, { passive: true });
+    window.addEventListener("resize", requestTick);
+
+    // Initial
+    requestTick();
+  })();
+  </script>
 
 </section>
 
@@ -591,13 +601,15 @@
   "name": "Media with text (custom)",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "used_as_hero",
-      "label": "Used as Hero",
-      "default": false,
-      "info": "Enable if this section is used as hero."
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "default": "page",
+      "options": [
+        { "value": "page", "label": "Width page (container)" },
+        { "value": "full", "label": "Full page (full bleed)" }
+      ]
     },
-
     {
       "type": "header",
       "content": "Media with text"
@@ -741,7 +753,9 @@
         { "value": "right", "label": "Right" }
       ]
     },
+
     { "type": "checkbox", "id": "make_section_full_width", "label": "Make section full width", "default": false },
+
     { "type": "checkbox", "id": "enable_side_padding", "label": "Enable side padding", "default": true, "info": "Add left and right padding when section is full-width." },
 
     { "type": "range", "id": "desktop_top_padding", "label": "Top padding", "min": 0, "max": 160, "step": 4, "default": 100, "unit": "px" },
