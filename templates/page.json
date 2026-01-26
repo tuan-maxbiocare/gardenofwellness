@@ -89,6 +89,7 @@
           "static": true,
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/image_c0bc3ff8-786f-482f-a3ec-61e53acce9d9.png",
             "link": "",
             "video_loop": true,
             "video_autoplay": false,
