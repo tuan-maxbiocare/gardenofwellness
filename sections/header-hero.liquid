@@ -1,0 +1,49 @@
+{{ 'header-hero.css' | asset_url | stylesheet_tag }}
+
+<section class="header-hero"
+  style="
+    --hero-image: url({{ section.settings.image | image_url: width: 2400 }});
+    --hero-height: {{ section.settings.min_height }}vh;
+  "
+>
+  <div class="header-hero__overlay"></div>
+
+  <div class="page-width header-hero__content">
+    {% if section.settings.kicker != blank %}
+      <div class="header-hero__kicker">{{ section.settings.kicker }}</div>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h1 class="header-hero__heading">{{ section.settings.heading }}</h1>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <p class="header-hero__subheading">{{ section.settings.subheading }}</p>
+    {% endif %}
+
+    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+      <a class="button header-hero__button" href="{{ section.settings.button_link }}">
+        {{ section.settings.button_label }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Header Hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "text", "id": "kicker", "label": "Kicker (nhỏ phía trên)", "default": "Garden of Wellness" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "ABOUT GARDEN OF WELLNESS" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Where Nature Inspires Science and Wellness Blooms" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Explore the range" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "range", "id": "min_height", "label": "Hero height (vh)", "min": 40, "max": 100, "step": 5, "default": 80 },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 70, "step": 5, "default": 25 }
+  ],
+  "presets": [
+    { "name": "Header Hero" }
+  ]
+}
+{% endschema %}

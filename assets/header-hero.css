@@ -1,0 +1,47 @@
+.header-hero{
+  position: relative;
+  background-image: var(--hero-image);
+  background-size: cover;
+  background-position: center;
+  min-height: var(--hero-height);
+  display: flex;
+  align-items: flex-end;
+  padding: 64px 0;
+  isolation: isolate; /* giúp z-index an toàn */
+}
+
+.header-hero__overlay{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0, calc(var(--overlay, 0.25)));
+  z-index:0;
+}
+
+/* Shopify không đọc biến overlay từ schema trong CSS trực tiếp, nên dùng trick: */
+.header-hero{ --overlay: 0.25; }
+.header-hero__content{
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header-hero__kicker{
+  font-size: 14px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .9;
+  margin-bottom: 10px;
+}
+
+.header-hero__heading{
+  margin: 0 0 12px;
+}
+
+.header-hero__subheading{
+  margin: 0 0 18px;
+  opacity: .95;
+}
