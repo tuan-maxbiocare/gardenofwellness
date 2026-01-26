@@ -453,67 +453,64 @@
       }
     }
 
-    /* ===== Optional gap ===== */
+   
     #mwt-{{ section.id }} .mwt__grid--gap{
       gap: 36px;
     }
     @media (max-width: 749px){
 
-      /* 1️⃣ Content box gọn lại */
+ 
       #mwt-{{ section.id }} .mwt__content-inner{
         padding: 20px 16px;
         max-width: 100%;
       }
 
-      /* 2️⃣ Heading gọn hơn (ít xuống dòng) */
+  
       #mwt-{{ section.id }} .mwt__heading{
         font-size: 19px;
         line-height: 1.18;
         margin-bottom: 8px;
       }
 
-      /* 3️⃣ Subheading sát hơn */
+  
       #mwt-{{ section.id }} .mwt__subheading{
         margin-bottom: 6px;
         font-size: 11px;
         letter-spacing: 0.1em;
       }
 
-      /* 4️⃣ Đoạn text phụ nhỏ & sát */
+
       #mwt-{{ section.id }} .mwt__text{
         font-size: 13px;
         line-height: 1.5;
         margin-top: 6px;
       }
 
-      /* 5️⃣ Button lên cao hơn (đúng mẫu) */
+
       #mwt-{{ section.id }} .mwt__btn-wrap{
         margin-top: 14px;
       }
 
-      /* 6️⃣ Nếu content đang bị canh giữa dọc → cho lên trên */
+   
       #mwt-{{ section.id }} .mwt__content{
         align-items: flex-start;
       }
     }
 
-    /* ===== Smooth desktop height when resizing viewport (like video) ===== */
-    /* Chỉ áp dụng từ tablet/desktop trở lên, không ảnh hưởng block mobile bạn đã có */
     @media (min-width: 750px){
 
-      /* 1) Tính chiều cao mượt theo viewport width */
+  
       #mwt-{{ section.id }}{
         --mwt-desktop-h: clamp(440px, calc(760px - 0.18 * 100vw), 620px);
       }
 
-      /* 2) Ép cả 2 cột (media + content) luôn bằng nhau */
+ 
       #mwt-{{ section.id }} .mwt__media,
       #mwt-{{ section.id }} .mwt__content{
         min-height: var(--mwt-desktop-h) !important;
         transition: min-height .25s ease;
       }
 
-      /* 3) Override luôn 2 class height cũ */
       #mwt-{{ section.id }} .mwt__media--fullscreen,
       #mwt-{{ section.id }} .mwt__media--medium{
         min-height: var(--mwt-desktop-h) !important;
@@ -532,7 +529,6 @@
     const media = root.querySelector(".mwt__media");
     if (!media) return;
 
-    // Target element to move (image/video/iframe)
     const target =
       media.querySelector(".mwt__img-el") ||
       media.querySelector("video") ||
@@ -540,10 +536,9 @@
 
     if (!target) return;
 
-    // Optional: make motion smooth & safe
     target.style.willChange = "transform";
 
-    // Tune this: max translate in px
+
     const MAX_SHIFT = 18;
 
     let ticking = false;
@@ -558,15 +553,11 @@
       const rect = root.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
 
-      // progress from 0 -> 1 as section passes through viewport
       const start = vh;
       const end = -rect.height;
       const p = clamp((start - rect.top) / (start - end), 0, 1);
-
-      // Map to translate range [-MAX_SHIFT, +MAX_SHIFT]
       const shift = (p - 0.5) * 2 * MAX_SHIFT;
 
-      // Apply translate (no hover involved)
       target.style.transform = `translate3d(0, ${shift.toFixed(2)}px, 0)`;
     }
 
@@ -585,11 +576,10 @@
 
     io.observe(root);
 
-    // Scroll/resize listeners
+
     window.addEventListener("scroll", requestTick, { passive: true });
     window.addEventListener("resize", requestTick);
 
-    // Initial
     requestTick();
   })();
   </script>
@@ -601,15 +591,15 @@
   "name": "Media with text (custom)",
   "settings": [
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "Section width",
-      "default": "page",
-      "options": [
-        { "value": "page", "label": "Width page (container)" },
-        { "value": "full", "label": "Full page (full bleed)" }
-      ]
-    },
+  "type": "radio",
+  "id": "section_width",
+  "label": "Section width",
+  "default": "page",
+  "options": [
+    { "value": "page", "label": "Page width" },
+    { "value": "full", "label": "Full width" }
+  ]
+},
     {
       "type": "header",
       "content": "Media with text"
