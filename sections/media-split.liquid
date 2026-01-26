@@ -1,0 +1,638 @@
+<section
+  id="media-split-{{ section.id }}"
+  class="media-split"
+  style="
+    --ms-bg: {{ section.settings.bg_color }};
+    --ms-text: {{ section.settings.text_color }};
+    --ms-muted: {{ section.settings.muted_color }};
+    --ms-gap: {{ section.settings.gap }}px;
+    --ms-radius: {{ section.settings.radius }}px;
+
+    --ms-pt: {{ section.settings.padding_top }}px;
+    --ms-pr: {{ section.settings.padding_right }}px;
+    --ms-pb: {{ section.settings.padding_bottom }}px;
+    --ms-pl: {{ section.settings.padding_left }}px;
+
+    --ms-pt-m: {{ section.settings.padding_top_m }}px;
+    --ms-pr-m: {{ section.settings.padding_right_m }}px;
+    --ms-pb-m: {{ section.settings.padding_bottom_m }}px;
+    --ms-pl-m: {{ section.settings.padding_left_m }}px;
+
+    --ms-left-max: {{ section.settings.left_max_width }}px;
+    --ms-small: {{ section.settings.small_media_size }}px;
+    --ms-right-min-h: {{ section.settings.right_min_height }}px;
+    letter-spacing: {{ section.settings.heading_letter_spacing | times: 0.01 }}em;
+
+  "
+>
+  <div class="media-split__container {% if section.settings.full_width %}media-split__container--full{% endif %}">
+    <div class="media-split__grid">
+      <!-- LEFT -->
+      <div class="media-split__left">
+        {% if section.settings.small_image != blank %}
+          <div class="media-split__small">
+            {{ section.settings.small_image
+              | image_url: width: 800
+              | image_tag:
+                loading: 'lazy',
+                class: 'media-split__small-img',
+                widths: '120, 160, 200, 240, 320, 480, 640, 800',
+                sizes: '(max-width: 749px) 120px, 160px',
+                alt: section.settings.small_image.alt | escape
+            }}
+          </div>
+        {% else %}
+          <div class="media-split__small media-split__small--placeholder" aria-hidden="true"></div>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="media-split__heading">{{ section.settings.heading | escape }}</h2>
+        {% endif %}
+
+        {% if section.settings.body != blank %}
+          <div class="media-split__body rte">
+            {{ section.settings.body }}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- RIGHT -->
+      <div class="media-split__right">
+        <div class="media-split__media">
+          {% if section.settings.media_type == 'video' %}
+            {% if section.settings.video_file != blank %}
+             {{ section.settings.video_file | video_tag:
+  autoplay: true,
+  loop: true,
+  muted: true,
+  controls: false,
+  playsinline: true,
+  class: 'media-split__video'
+}}
+            {% elsif section.settings.video_url != blank %}
+          
+              <div class="media-split__iframe-wrap">
+                <iframe
+                  class="media-split__iframe"
+                  src="{{ section.settings.video_url | escape }}"
+                  loading="lazy"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowfullscreen
+                  title="{{ section.settings.heading | default: 'Video' | escape }}"
+                ></iframe>
+              </div>
+            {% else %}
+              <div class="media-split__placeholder" aria-hidden="true"></div>
+            {% endif %}
+          {% else %}
+            {% if section.settings.main_image != blank %}
+              {{ section.settings.main_image
+                | image_url: width: 2400
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'media-split__img',
+                  widths: '480, 640, 800, 1000, 1200, 1600, 2000, 2400',
+                  sizes: '(max-width: 749px) 100vw, (max-width: 990px) 55vw, 60vw',
+                  alt: section.settings.main_image.alt | escape
+              }}
+            {% else %}
+              <div class="media-split__placeholder" aria-hidden="true"></div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #media-split-{{ section.id }}.media-split{
+    background: var(--ms-bg);
+    color: var(--ms-text);
+    padding: var(--ms-pt) var(--ms-pr) var(--ms-pb) var(--ms-pl);
+  }
+
+  #media-split-{{ section.id }} .media-split__container{
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+  }
+  #media-split-{{ section.id }} .media-split__container--full{
+    max-width: 100%;
+  }
+
+  #media-split-{{ section.id }} .media-split__grid{
+    display: grid;
+    grid-template-columns:  calc(var(--ms-left-max) + 40px) 1fr;
+    gap: var(--ms-gap);
+    align-items: stretch;
+  }
+
+  #media-split-{{ section.id }} .media-split__left{
+    max-width: var(--ms-left-max);
+    text-align: center;              /* text căn giữa */
+  display: flex;
+  flex-direction: column;
+  align-items: center;    
+  height: 100%;    
+  }
+
+  #media-split-{{ section.id }} .media-split__small{
+     width: 300px;     /* ngang */
+  height: 280px;    /* dọc */
+    border-radius: var(--ms-radius);
+    overflow: hidden;
+    background: rgba(0,0,0,0.06);
+    margin-bottom: 0 0 30px 0;
+  }
+  #media-split-{{ section.id }} .media-split__small--placeholder{
+    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(0,0,0,0.04);
+  }
+
+  #media-split-{{ section.id }} .media-split__small-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display:block;
+  }
+
+  #media-split-{{ section.id }} .media-split__heading{
+    margin: 30px 0 14px 0;
+    font-size: {{ section.settings.heading_size }}px;
+    line-height: 1.15;
+    letter-spacing: {{ section.settings.heading_letter_spacing }}em;
+    font-weight: {{ section.settings.heading_weight }};
+  }
+
+  #media-split-{{ section.id }} .media-split__body{
+    color: var(--ms-muted);
+    font-size: {{ section.settings.body_size }}px;
+    line-height: 1.6;
+    margin-top: 14px; 
+  }
+
+  #media-split-{{ section.id }} .media-split__right{
+    width: 100%;
+  }
+
+  #media-split-{{ section.id }} .media-split__media{
+    width: 100%;
+    min-height: var(--ms-right-min-h);
+    border-radius: var(--ms-radius);
+    overflow: hidden;
+    background: rgba(0,0,0,0.06);
+    position: relative;
+  }
+#media-split-{{ section.id }} .media-split__media{
+  position: relative;
+}
+
+/* Ảnh & video file luôn cover khung */
+#media-split-{{ section.id }} .media-split__img,
+#media-split-{{ section.id }} .media-split__video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* cover cho fit khung */
+  object-position: center;/* canh giữa */
+  display: block;
+}
+
+/* iframe (youtube/vimeo) cũng cover khung */
+#media-split-{{ section.id }} .media-split__iframe-wrap{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Trick cover iframe: scale lớn hơn để tránh viền đen */
+#media-split-{{ section.id }} .media-split__iframe{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+  border: 0;
+}
+
+  #media-split-{{ section.id }} .media-split__placeholder{
+    width: 100%;
+    height: 100%;
+    min-height: var(--ms-right-min-h);
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  #media-split-{{ section.id }} .media-split__left{
+  width: 100%;
+  max-width: var(--ms-left-max);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#media-split-{{ section.id }} .media-split__heading,
+#media-split-{{ section.id }} .media-split__body{
+  width: 100%;
+  max-width: 100%;
+}
+
+#media-split-{{ section.id }} .media-split__body{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+  /* Responsive */
+  @media (max-width: 989px){
+    #media-split-{{ section.id }} .media-split__grid{
+      grid-template-columns: 1fr;
+    }
+    #media-split-{{ section.id }} .media-split__left{
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 749px){
+    #media-split-{{ section.id }}.media-split{
+      padding: var(--ms-pt-m) var(--ms-pr-m) var(--ms-pb-m) var(--ms-pl-m);
+    }
+    #media-split-{{ section.id }} .media-split__heading{
+      font-size: {{ section.settings.heading_size_m }}px;
+    }
+    #media-split-{{ section.id }} .media-split__body{
+      font-size: {{ section.settings.body_size_m }}px;
+    }
+  }
+  /* =========================
+   Mobile Luxury (<= 749px)
+   ========================= */
+@media (max-width: 749px){
+
+  /* Container & grid */
+  #media-split-{{ section.id }} .media-split__container{
+    max-width: 100%;
+  }
+
+  #media-split-{{ section.id }} .media-split__grid{
+    grid-template-columns: 1fr;
+    gap: 18px;                 /* khoảng thở vừa đủ */
+  }
+
+  /* Right media lên trước (luxury hero feel) */
+  #media-split-{{ section.id }} .media-split__right{
+    order: 0;
+  }
+  #media-split-{{ section.id }} .media-split__left{
+    order: 1;
+  }
+
+  /* Media: full-width card, ratio đẹp kiểu editorial */
+  #media-split-{{ section.id }} .media-split__media{
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 4 / 5;       /* sang châu Âu: hơi đứng, rất “luxury” */
+    border-radius: calc(var(--ms-radius) + 4px);
+  }
+
+  /* Left column: center & gọn dòng */
+  #media-split-{{ section.id }} .media-split__left{
+    width: 100%;
+    max-width: 100%;
+    padding: 2px 6px 0;        /* tạo cảm giác “fine tuned” */
+    text-align: center;
+    align-items: center;
+  }
+
+  /* Small image: phóng vừa phải + mềm */
+  #media-split-{{ section.id }} .media-split__small{
+    width: 150px;              /* tăng nhẹ cho “statement” */
+    height: 160px;
+    border-radius: calc(var(--ms-radius) + 6px);
+    margin: 14px auto 18px;    /* khoảng thở chuẩn */
+    background: rgba(0,0,0,0.04);
+  }
+
+  /* Heading: editorial look */
+  #media-split-{{ section.id }} .media-split__heading{
+    margin: 0 auto 10px;
+    max-width: 28ch;           /* line-length luxury */
+    font-size: 28px;           /* bạn có thể giữ heading_size_m nếu muốn */
+    line-height: 1.12;
+    letter-spacing: 0.01em;    /* nhẹ thôi, sang */
+  }
+
+  #media-split-{{ section.id }} .media-split__body{
+    margin-top: 0;             
+    max-width: 34ch;           
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 15px;          
+    line-height: 1.7;
+    color: var(--ms-muted);
+    overflow-wrap: normal;     
+    word-break: normal;
+  }
+
+  #media-split-{{ section.id }}.media-split{
+    padding-bottom: calc(var(--ms-pb-m) - 6px);
+  }
+}
+/* Mobile: media full-bleed (full width viewport) */
+@media (max-width: 749px){
+
+  /* Đảm bảo grid 1 cột và right nằm trên */
+  #media-split-{{ section.id }} .media-split__grid{
+    grid-template-columns: 1fr;
+  }
+  #media-split-{{ section.id }} .media-split__right{
+    order: 0;
+    grid-column: 1 / -1; /* chiếm toàn hàng grid */
+  }
+  #media-split-{{ section.id }} .media-split__left{
+    order: 1;
+  }
+
+  /* Full bleed thật: phá giới hạn container bằng 100vw */
+  #media-split-{{ section.id }} .media-split__media{
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    border-radius: 0;       /* full-bleed luxury */
+    min-height: 0;
+  }
+
+  /* Nếu trong theme có chỗ nào lỡ overflow hidden thì mở ra */
+  #media-split-{{ section.id }} .media-split__container,
+  #media-split-{{ section.id }} .media-split__grid{
+    overflow: visible;
+  }
+}
+
+  #media-split-{{ section.id }} .nowrap{
+  white-space: nowrap;
+}
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const bodies = document.querySelectorAll(
+      '#media-split-{{ section.id }} .media-split__body'
+    );
+
+    bodies.forEach(body => {
+      body.innerHTML = body.innerHTML.replace(
+        /\(([^)]+)\)/g,
+        '<span class="nowrap">($1)</span>'
+      );
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Section 2.0 - Media Split",
+  "tag": "section",
+  "class": "section section-media-split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width container",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container width (px)",
+      "min": 960,
+      "max": 1600,
+      "step": 20,
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap giữa 2 cột (px)",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "left_max_width",
+      "label": "Max width cột trái (px)",
+      "min": 220,
+      "max": 700,
+      "step": 10,
+      "default": 420
+    },
+    {
+      "type": "range",
+      "id": "right_min_height",
+      "label": "Chiều cao tối thiểu media phải (px)",
+      "min": 240,
+      "max": 900,
+      "step": 10,
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Bo góc (px)",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 8
+    },
+
+    {
+      "type": "header",
+      "content": "Left content"
+    },
+    {
+      "type": "image_picker",
+      "id": "small_image",
+      "label": "Ảnh vuông nhỏ (trái)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Tiêu đề",
+      "default": "MarNuka Bay Center"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Mô tả",
+      "default": "<p>Mar-Nuka Bay site at Largsborough in Southern Gippsland provides another, more protected conservation area rich in native Manuka tea trees (Leptospermum scoparium), which we have dedicated to our honeybees.</p>"
+    },
+
+    {
+      "type": "header",
+      "content": "Right media"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Loại media",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Ảnh lớn (phải)"
+    },
+    {
+      "type": "video",
+      "id": "video_file",
+      "label": "Video file (Shopify video)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (YouTube/Vimeo iframe src)",
+      "info": "Dán iframe src (không phải link share). Ví dụ: https://www.youtube.com/embed/ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_muted",
+      "label": "Muted",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Controls",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size desktop (px)",
+      "min": 18,
+      "max": 64,
+      "step": 1,
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "heading_size_m",
+      "label": "Heading size mobile (px)",
+      "min": 16,
+      "max": 44,
+      "step": 1,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "min": 300,
+      "max": 900,
+      "step": 100,
+      "default": 500
+    },
+    {
+     "type": "range",
+  "id": "heading_letter_spacing",
+  "label": "Heading letter spacing",
+  "min": -5,
+  "max": 20,
+  "step": 1,
+  "default": 0,
+  "info": "Giá trị = x / 100 em"
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body size desktop (px)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "body_size_m",
+      "label": "Body size mobile (px)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#666666"
+    },
+
+    {
+      "type": "header",
+      "content": "Padding desktop (px)"
+    },
+    { "type": "range", "id": "padding_top", "label": "Top", "min": 0, "max": 160, "step": 4, "default": 60 },
+    { "type": "range", "id": "padding_right", "label": "Right", "min": 0, "max": 160, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom", "min": 0, "max": 160, "step": 4, "default": 60 },
+    { "type": "range", "id": "padding_left", "label": "Left", "min": 0, "max": 160, "step": 4, "default": 40 },
+
+    {
+      "type": "header",
+      "content": "Padding mobile (px)"
+    },
+    { "type": "range", "id": "padding_top_m", "label": "Top", "min": 0, "max": 120, "step": 4, "default": 32 },
+    { "type": "range", "id": "padding_right_m", "label": "Right", "min": 0, "max": 80, "step": 4, "default": 16 },
+    { "type": "range", "id": "padding_bottom_m", "label": "Bottom", "min": 0, "max": 120, "step": 4, "default": 32 },
+    { "type": "range", "id": "padding_left_m", "label": "Left", "min": 0, "max": 80, "step": 4, "default": 16 }
+  ],
+  "presets": [
+    {
+      "name": "Media Split (Left text + Right media)"
+    }
+  ]
+}
+{% endschema %}
