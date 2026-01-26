@@ -479,6 +479,39 @@
         "padding_bottom": 20,
         "content_width": 1250
       }
+    },
+    "richy_text_yPJwfp": {
+      "type": "richy-text",
+      "name": "Rich Text Pro",
+      "settings": {
+        "heading": "Sustainable & Ethical by Design ",
+        "heading_tag": "h1",
+        "subheading": "<p>These gardens weren’t created to be harvested and left bare. They’re designed as regenerative systems — biodiverse, low-impact, and deeply respectful.</p>",
+        "align": "center",
+        "max_width": 1300,
+        "side_padding": 16,
+        "gap": 16,
+        "readable_lines": false,
+        "heading_color": "#1d1d1f",
+        "subheading_color": "#3a3a3c",
+        "bg_color": "#ffffff",
+        "bg_color_2": "#ffffff",
+        "bg_opacity": 100,
+        "heading_size_mobile": 30,
+        "heading_size_desktop": 54,
+        "heading_weight": 600,
+        "heading_line_height": 115,
+        "heading_letter_spacing": 0,
+        "subheading_size_mobile": 16,
+        "subheading_size_desktop": 18,
+        "subheading_weight": 400,
+        "subheading_line_height": 160,
+        "subheading_letter_spacing": 0,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 28,
+        "padding_bottom_mobile": 28
+      }
     }
   },
   "order": [
@@ -492,6 +525,7 @@
     "two_row_wrap_6CkD9y",
     "marquee_VaVpYq",
     "media_split_Qd37NW",
-    "luxury_two_column_JUCPcc"
+    "luxury_two_column_JUCPcc",
+    "richy_text_yPJwfp"
   ]
 }
