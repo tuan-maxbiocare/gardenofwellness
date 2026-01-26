@@ -267,7 +267,7 @@
       "settings": {
         "media_position": "left",
         "media_width": "wide",
-        "media_height": "50svh",
+        "media_height": "60svh",
         "section_width": "page-width",
         "extend_media": false,
         "color_scheme": "scheme-1",
