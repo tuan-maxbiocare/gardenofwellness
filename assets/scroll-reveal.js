@@ -1,7 +1,6 @@
 (function () {
   const SELECTORS = [
-    '.shopify-section',
-    '.product-card',
+    'product-card',
     '.product-grid .grid__item',
     '.card',
     '.multicolumn-list__item',
