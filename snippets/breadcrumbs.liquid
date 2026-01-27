@@ -19,7 +19,7 @@
     {%- case t -%}
 
       {%- when 'collection' -%}
-        <li class="breadcrumbs__separator">></li>
+        <li class="breadcrumbs__separator">|</li>
         <li class="breadcrumbs__item breadcrumbs__item--current">
           <a class="breadcrumbs__link" href="{{ collection.url }}" aria-current="page">
             {{ collection.title }}
@@ -27,7 +27,7 @@
         </li>
 
       {%- when 'page' -%}
-        <li class="breadcrumbs__separator">></li>
+        <li class="breadcrumbs__separator">|</li>
         <li class="breadcrumbs__item breadcrumbs__item--current">
           <a class="breadcrumbs__link" href="{{ page.url }}" aria-current="page">
             {{ page.title }}
@@ -35,7 +35,7 @@
         </li>
 
       {%- else -%}
-        <li class="breadcrumbs__separator">></li>
+        <li class="breadcrumbs__separator">|</li>
         <li class="breadcrumbs__item breadcrumbs__item--current">
           <span class="breadcrumbs__link" aria-current="page">
             {{ page_title }}
