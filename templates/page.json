@@ -170,7 +170,7 @@
                 "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
-                "padding-inline-start": 0,
+                "padding-inline-start": 30,
                 "padding-inline-end": 0
               },
               "blocks": {
