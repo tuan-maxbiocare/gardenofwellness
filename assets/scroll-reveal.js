@@ -25,14 +25,19 @@
     );
 
     elements.forEach(el => {
+      /* 🚫 SKIP section chứa sticky-add-to-cart */
+      if (
+        el.classList.contains('shopify-section') &&
+        el.querySelector('sticky-add-to-cart')
+      ) {
+        return;
+      }
+
       el.classList.add('reveal');
       observer.observe(el);
     });
   }
 
-  // DOM load
   document.addEventListener('DOMContentLoaded', init);
-
-  // Shopify editor / AJAX section reload
   document.addEventListener('shopify:section:load', init);
 })();
