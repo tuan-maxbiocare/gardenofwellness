@@ -395,6 +395,7 @@
           "name": "t:names.blog_card",
           "static": true,
           "settings": {
+            "layout": "vertical",
             "alignment": "left",
             "gap": 8,
             "inherit_color_scheme": true,
@@ -500,72 +501,6 @@
         "color_scheme": "",
         "padding-block-start": 48,
         "padding-block-end": 95
-      }
-    },
-    "marquee_qTVpfT": {
-      "type": "marquee",
-      "blocks": {
-        "text_pDr8hW": {
-          "type": "text",
-          "name": "t:names.heading",
-          "settings": {
-            "text": "<h2>New arrivals</h2>",
-            "width": "fit-content",
-            "text_style": "solid",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "image_ceyETc": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/4-Rosehip-Oil.e575d7b7.png",
-            "link": "",
-            "image_ratio": "square",
-            "width": "custom",
-            "custom_width": 100,
-            "width_mobile": "custom",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 100,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_pDr8hW",
-        "image_ceyETc"
-      ],
-      "name": "t:names.marquee_section",
-      "settings": {
-        "movement_direction": "reverse",
-        "color_scheme": "scheme-4",
-        "padding-block-start": 10,
-        "padding-block-end": 10,
-        "gap_between_elements": 24
       }
     },
     "section_waDgtC": {
@@ -1060,7 +995,6 @@
     "main",
     "testimonials_with_card_7Wwq8i",
     "featured_blog_posts_D9KaLY",
-    "marquee_qTVpfT",
     "section_waDgtC",
     "product_recommendations_qggXJq"
   ]
