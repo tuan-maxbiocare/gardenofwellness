@@ -561,7 +561,7 @@
           "settings": {
             "text": "<p>Every species is chosen not just for its skincare benefits, but for its ability to thrive with minimal intervention. We use organic and biodynamic principles, plant pollinator-friendly species, and maintain our bee colonies with care and purpose. Our wetlands support native wildlife. Our energy and water use is managed with long-term sustainability in mind.  </p><p> Even our water — the Aquadene<strong>™</strong> — is sustainably sourced from a rain-fed aquifer beneath Yinnar, filtered through ancient geological formations and replenished naturally.</p>",
             "text_color": "#000000",
-            "text_bg": "transparent",
+            "text_bg": "rgba(0,0,0,0)",
             "text_align": "left",
             "text_size": 16,
             "text_weight": "400",
