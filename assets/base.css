@@ -4057,3 +4057,24 @@ text-component {
     transform: none;
   }
 }
+@media screen and (max-width: 749px) {
+
+  /* 1. Ép container thành row + wrap */
+  #shopify-section-template--19701889630402__section_dHWdmq
+  .section-content-wrapper.mobile-column {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+  }
+
+  /* 2. Ép mỗi block chiếm 50% */
+  #shopify-section-template--19701889630402__section_dHWdmq
+  .section-content-wrapper.mobile-column
+  > .shopify-block {
+    flex: 0 0 calc(50% - 8px) !important;
+    max-width: calc(50% - 8px) !important;
+  }
+
+}
