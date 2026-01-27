@@ -282,7 +282,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<h6><em>naturally</em></h6>",
+            "text": "<p><em>naturally</em></p>",
             "width": "fit-content",
             "text_style": "solid",
             "max_width": "normal",
