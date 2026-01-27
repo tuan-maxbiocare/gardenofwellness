@@ -1,10 +1,3 @@
-{% comment %}
-  Section: Flow (Image left + Steps right)
-  - Responsive
-  - Hover effect on big media (left)
-  - Tabs/steps on right (hover or click switch)
-  - Blocks: Media
-{% endcomment %}
 
 {%- liquid
   assign section_id = 'flow-' | append: section.id
@@ -309,20 +302,19 @@
   font-size: clamp(20px, 5.5vw, 26px) !important;
     line-height: 1.25 !important;
 
-    max-width: 22ch;      /* ÉP heading xuống ~2 dòng */
+    max-width: 22ch;     
     margin-left: auto;
     margin-right: auto;font-size: clamp(20px, 5.5vw, 26px) !important;
     line-height: 1.25 !important;
 
-    display: inline-block !important;      /* để max-width hoạt động rõ ràng */
-    max-width: 260px !important;           /* ép xuống 2 dòng (có thể tăng/giảm) */
+    display: inline-block !important;      
+    max-width: 260px !important;           
 
-    white-space: normal !important;        /* QUAN TRỌNG: bỏ nowrap từ theme */
-    overflow-wrap: anywhere !important;    /* đảm bảo wrap được */
+    white-space: normal !important;      
+    overflow-wrap: anywhere !important;    
     word-break: normal !important;
   }
 
-  /* giữ căn giữa */
   #{{ section_id }} .flow__header{
     text-align: center !important;
   }
@@ -378,7 +370,7 @@
       will-change: transform;
       display:block;
     }
-    /* hover effect on big image */
+  
     #{{ section_id }} .flow__media:hover .flow__mediaImg{
       transform: scale(1.06);
     }
@@ -427,14 +419,7 @@
       text-align: inherit;
     }
 
-    /* =========================
-   FIX HEAD LAYOUT (match sample)
-   Because stepThumb is NOT inside stepLeft in your HTML
-   ========================= */
-
-/* 1) Step head becomes a 2-row grid:
-   Row1: label (full width)
-   Row2: title (col1) + pill (col2) */
+    
 #{{ section_id }} .flow__stepHead{
   display: grid;
   grid-template-columns: auto max-content;
@@ -446,7 +431,7 @@
 
 /* 2) stepLeft should NOT be a grid anymore (it only contains label + title) */
 #{{ section_id }} .flow__stepLeft{
-  display: contents; /* let label/title participate directly in stepHead grid */
+  display: contents; 
 }
 
 /* 3) Label row */
@@ -473,9 +458,9 @@
   letter-spacing: -0.01em;
   line-height: 1.1;
 
-  min-height: 62px;          /* = pill height */
+  min-height: 62px;          
   display: flex;
-  align-items: center;       /* center vertically with pill */
+  align-items: center;       
 }
 
 /* 5) Pill on the right, same row as title */
@@ -491,7 +476,6 @@
   background: #f2f2f2;
 }
 
-/* keep your overlay logic (active/hover) as-is */
 
 /* 6) Body aligned with title (no indent) */
 #{{ section_id }} .flow__stepBody{
@@ -510,10 +494,8 @@
     
 #{{ section_id }} .flow__step.is-active .flow__stepTop,
 #{{ section_id }} .flow__step:not(.is-active) .flow__stepTop{
-  opacity: 0.75; /* tuỳ thích, có thể bỏ */
+  opacity: 0.75; 
 }
-
-
 
 /* ===== FORCE: label row, then title + pill same row ===== */
 #{{ section_id }} .flow__stepHead{
@@ -525,16 +507,14 @@
   align-items: center !important;
 }
 
-/* stepLeft chỉ chứa label + title: cho nó chiếm cột 1 cả 2 hàng */
 #{{ section_id }} .flow__stepLeft{
   grid-column: 1 !important;
-  grid-row: 1 / span 2 !important;   /* chiếm cả 2 hàng */
+  grid-row: 1 / span 2 !important; 
   display: grid !important;
   grid-template-rows: auto auto !important;
   row-gap: 12px !important;
 }
 
-/* label = hàng 1 trong stepLeft */
 #{{ section_id }} .flow__stepTop{
   grid-row: 1 !important;
   margin: 0 !important;
@@ -547,7 +527,6 @@
   opacity: .85 !important;
 }
 
-/* title = hàng 2 trong stepLeft, canh giữa theo pill */
 #{{ section_id }} .flow__stepTitle{
   grid-row: 2 !important;
   margin: 0 !important;
@@ -556,12 +535,11 @@
   letter-spacing: -0.01em !important;
   line-height: 1.1 !important;
 
-  min-height: 62px !important;      /* = pill height */
+  min-height: 62px !important;      
   display: flex !important;
   align-items: center !important;
 }
 
-/* pill nằm cột 2, hàng 2 của stepHead (CÙNG HÀNG với title) */
 #{{ section_id }} .flow__stepThumb{
   grid-column: 2 !important;
   grid-row: 2 !important;
@@ -573,48 +551,41 @@
   position: relative !important;
   background: #f2f2f2 !important;
 
-  /* chặn theme ép full width khiến nó rớt */
   display: block !important;
   justify-self: start !important;
   align-self: center !important;
 }
 
-/* body thẳng hàng như mẫu */
 #{{ section_id }} .flow__stepBody{
   padding-left: 0 !important;
 }
 
-/* Pill gần title hơn */
 #{{ section_id }} .flow__stepHead{
-  column-gap: 10px !important;   /* từ 16px -> 10px (bạn có thể thử 8px) */
+  column-gap: 10px !important;  
 }
 
-/* Step label cách xa title hơn */
 #{{ section_id }} .flow__stepLeft{
-  row-gap: 18px !important;      /* tăng khoảng cách label -> title */
+  row-gap: 18px !important;     
 }
 
-/* Nếu muốn label xa hơn nữa (tuỳ chọn) */
 #{{ section_id }} .flow__stepTop{
-  margin-bottom: 2px !important; /* giữ label thoáng, không dính */
+  margin-bottom: 2px !important; 
 }
-/* 1) Đừng để cột title giãn ra 1fr nữa -> pill sẽ không bị đẩy ra xa */
+
 #{{ section_id }} .flow__stepHead{
   grid-template-columns: max-content max-content !important;
-  column-gap: 10px !important;   /* pill gần title */
+  column-gap: 10px !important;   
 }
 
-/* 2) Ép pill bám sát title (không tự chạy về mép phải) */
 #{{ section_id }} .flow__stepThumb{
   justify-self: start !important;
   margin-left: 0 !important;
 }
-/* INACTIVE: bỏ hẳn dot khỏi layout để STEP label thẳng hàng */
+
 #{{ section_id }} .flow__step:not(.is-active) .flow__dot{
   display: none !important;
 }
 
-/* ACTIVE: hiện dot lại như cũ */
 #{{ section_id }} .flow__step.is-active .flow__dot{
   display: inline-block !important;
 }
@@ -626,14 +597,13 @@
    ========================= */
 
 
-/* image inside pill */
+
 #{{ section_id }} .flow__stepThumb img{
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 
-  /* DEFAULT = NON-ACTIVE */
   filter: grayscale(0.4) saturate(0.4);
   transform: scale(1.02);
   transition: filter .25s ease, transform .25s ease;
@@ -684,10 +654,9 @@
   grid-row: 1 !important;
 }
 
-/* Keep grid as you đang dùng, nhưng ép row2 canh giữa */
 #{{ section_id }} .flow__stepLeft{
   display: grid !important;
-  grid-template-columns: max-content max-content !important; /* title + pill cùng hàng */
+  grid-template-columns: max-content max-content !important; 
   grid-template-rows: auto auto !important;
   column-gap: 14px !important;
   row-gap: 12px !important;
@@ -695,13 +664,11 @@
   max-width: 100% !important;
 }
 
-/* Title nằm cùng hàng với pill (row2) + canh giữa theo chiều dọc */
 #{{ section_id }} .flow__stepTitle{
   grid-column: 1 !important;
   grid-row: 2 !important;
 
-  /* ÉP canh giữa theo pill */
-  min-height: 62px !important;      /* = height của pill hiện tại bạn đang set */
+  min-height: 62px !important;     
   display: flex !important;
   align-items: center !important;
 
@@ -709,18 +676,16 @@
   line-height: 1.1 !important;
 }
 
-/* Pill nằm cùng hàng (row2) và center */
 #{{ section_id }} .flow__stepThumb{
   grid-column: 2 !important;
   grid-row: 2 !important;
   align-self: center !important;
 }
 
-/* Text (desc + button) thẳng hàng với title/label như mẫu */
 #{{ section_id }} .flow__stepBody{
   padding-left: 0 !important;
 }
-/* INACTIVE: bỏ hẳn dot khỏi layout để STEP label thẳng hàng */
+
 #{{ section_id }} .flow__step:not(.is-active) .flow__dot{
   display: none !important;
 }
@@ -738,11 +703,10 @@
     height: 48px;
   }
 }
-    /* ratio helpers (mainly for future extension) */
+
     #{{ section_id }} .flow__ratio--wide-16-9{}
     #{{ section_id }} .flow__ratio--square-1-1{}
 
-    /* body (only show for active) */
     #{{ section_id }} .flow__stepBody{
       max-height: 0;
       overflow:hidden;
@@ -831,7 +795,7 @@
       const root = document.getElementById({{ section_id | json }});
       if(!root) return;
 
-      // --- Heading marker: [text] -> <mark class="marker-...">text</mark>
+
       const title = root.querySelector('.flow__title');
       const markerStyle = {{ section.settings.marker | json }};
       if(title && title.textContent.includes('[') && title.textContent.includes(']')){
@@ -917,6 +881,12 @@
   {
     "name": "Flow",
     "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Make section full width",
+        "default": false
+      },
       {
         "type": "text",
         "id": "heading",
@@ -1043,12 +1013,7 @@
           { "value": "second", "label": "Second" }
         ]
       },
-      {
-        "type": "checkbox",
-        "id": "full_width",
-        "label": "Make section full width",
-        "default": false
-      },
+      
       {
         "type": "checkbox",
         "id": "show_divider",
