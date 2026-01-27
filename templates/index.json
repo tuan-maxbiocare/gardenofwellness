@@ -739,6 +739,7 @@
       ],
       "name": "Image grid hover",
       "settings": {
+        "section_width": "page-width",
         "bg_color": "#ffffff"
       }
     },
@@ -1557,6 +1558,7 @@
         "max_width": "1440px",
         "bg_color": "#ffffff",
         "media_type": "video",
+        "lifestyle_image": "shopify://shop_images/garden-of-wellness-images-812x1244-8.webp",
         "autoplay": true,
         "loop_video": true,
         "product": "garden-of-wellness-nourishing-body-oil-frankincense",
