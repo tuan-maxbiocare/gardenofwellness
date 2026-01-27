@@ -1,4 +1,4 @@
-<script
+<script 
   src="{{ 'marquee.js' | asset_url }}"
   type="module"
   fetchpriority="low"
@@ -9,11 +9,16 @@
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
 <marquee-component
-  class="section spacing-style gap-style color-{{ section.settings.color_scheme }}"
+    class="section spacing-style gap-style color-{{ section.settings.color_scheme }}"
+  data-speed-factor="25"
+  data-movement-direction="{{ section.settings.movement_direction }}"
+  data-border-mode="{{ section.settings.border_mode }}"
   style="
     {%- render 'spacing-style', settings: section.settings %};
     {% render 'gap-style', value: gap_between_elements, name: 'marquee-gap' %}
     --marquee-direction: {{ section.settings.movement_direction }};
+    --marquee-border-color: {{ section.settings.border_color }};
+    --marquee-border-thickness: {{ section.settings.border_thickness }}px;
   "
   data-speed-factor="25"
   data-movement-direction="{{ section.settings.movement_direction }}"
@@ -28,19 +33,73 @@
 </marquee-component>
 
 {% stylesheet %}
-marquee-component {
-  display: block;
-  width: 100%;
+marquee-component{
+  position: relative;
   overflow: hidden;
-  background-color: #6b7a65;
 }
 
+/* 2 line liền mạch, không hở */
+marquee-component::before,
+marquee-component::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 200vw; /* full ngang, kéo không bị hở */
+  height: var(--marquee-border-thickness, 1px);
+  background: var(--marquee-border-color, #000);
+  transform: translateX(-50%);
+  z-index: 9;
+  pointer-events: none;
+
+  /* loop kỹ thuật (không bị đoạn) */
+  animation: marquee-line-solid var(--marquee-speed, 25s) linear infinite;
+}
+
+marquee-component::before{ top: 0; }
+marquee-component::after{ bottom: 0; }
+
+/* đồng bộ hướng */
+marquee-component[data-movement-direction="reverse"]::before,
+marquee-component[data-movement-direction="reverse"]::after{
+  animation-direction: reverse;
+}
+
+@keyframes marquee-line-solid{
+  to { transform: translateX(-100%); }
+}
+
+/* ====== MODE CONTROL ====== */
+marquee-component[data-border-mode="none"]::before,
+marquee-component[data-border-mode="none"]::after{
+  display: none;
+}
+
+marquee-component[data-border-mode="top"]::after{
+  display: none;
+}
+
+marquee-component[data-border-mode="bottom"]::before{
+  display: none;
+}
+
+/* wrapper làm mốc */
 .marquee__wrapper {
+  position: relative;
   display: flex;
   gap: var(--marquee-gap);
   width: max-content;
   white-space: nowrap;
-  padding: 10px 0;
+  padding: 12px 0;
+}
+
+/* top */
+.marquee__wrapper::before {
+  top: 0;
+}
+
+/* bottom */
+.marquee__wrapper::after {
+  bottom: 0;
 }
 
 .marquee__content {
@@ -72,16 +131,6 @@ marquee-component {
   display: block;
 }
 
-/* IMAGE STYLE - STYLE CHO ẢNH */
-.marquee__repeated-items img,
-.marquee__repeated-items .marquee-image {
-  display: block;
-  height: auto;
-  max-height: 60px; /* Có thể điều chỉnh theo ý muốn */
-  width: auto;
-  object-fit: contain;
-}
-
 /* CHỮ ĐẶC */
 .marquee-solid {
   color: white !important;
@@ -101,54 +150,26 @@ marquee-component {
 .marquee__repeated-items > * {
   align-content: center;
 }
-
-/* ============================= */
-/* MARQUEE ANIMATION - SỬA LẠI */
-/* ============================= */
 marquee-component {
   --marquee-speed: 25s;
 }
-
-/* Marquee animation hoạt động trên cả desktop & mobile */
+/* Marquee chạy trên cả desktop & mobile */
 marquee-component:not([data-disabled]) .marquee__wrapper {
-  animation: marquee-motion var(--marquee-speed) linear infinite;
-  animation-direction: var(--marquee-direction, normal);
-  will-change: transform; /* Tối ưu hiệu suất animation */
+  animation: marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
 }
-
-/* Đảm bảo animation không bị ảnh hưởng bởi prefers-reduced-motion */
+/* Tôn trọng user bật Reduce Motion */
 @media (prefers-reduced-motion: reduce) {
   marquee-component .marquee__wrapper {
     animation: none !important;
   }
 }
 
-/* Keyframes cho animation */
 @keyframes marquee-motion {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
+  to {
     transform: translate3d(-50%, 0, 0);
   }
 }
 
-/* Đảm bảo hoạt động tốt trên mobile */
-@media screen and (max-width: 768px) {
-  .marquee__repeated-items :is(p, h1, h2, h3, h4, h5, h6, span, div) {
-    font-size: 32px; /* Giảm kích thước chữ trên mobile */
-  }
-  
-  .marquee__repeated-items img,
-  .marquee__repeated-items .marquee-image {
-    max-height: 50px; /* Giảm kích thước ảnh trên mobile */
-  }
-  
-  /* Tăng tốc độ trên mobile nếu cần */
-  marquee-component {
-    --marquee-speed: 20s;
-  }
-}
 {% endstylesheet %}
 
 {% schema %}
@@ -161,7 +182,6 @@ marquee-component:not([data-disabled]) .marquee__wrapper {
     { "type": "text" },
     { "type": "icon" },
     { "type": "logo" },
-    { "type": "image" },
     { "type": "_divider" }
   ],
   "settings": [
@@ -196,6 +216,34 @@ marquee-component:not([data-disabled]) .marquee__wrapper {
       "default": 24
     },
     {
+  "type": "select",
+  "id": "border_mode",
+  "label": "Marquee border",
+  "options": [
+    { "value": "none", "label": "No border" },
+    { "value": "both", "label": "Top + Bottom" },
+    { "value": "top", "label": "Top only" },
+    { "value": "bottom", "label": "Bottom only" }
+  ],
+  "default": "both"
+},
+{
+  "type": "color",
+  "id": "border_color",
+  "label": "Border color",
+  "default": "#000000"
+},
+{
+  "type": "range",
+  "id": "border_thickness",
+  "label": "Border thickness",
+  "min": 1,
+  "max": 6,
+  "step": 1,
+  "unit": "px",
+  "default": 1
+},
+    {
       "type": "range",
       "id": "padding-block-end",
       "label": "t:settings.bottom",
@@ -221,8 +269,7 @@ marquee-component:not([data-disabled]) .marquee__wrapper {
       "name": "t:names.marquee_section",
       "category": "t:categories.text",
       "blocks": [
-        { "type": "text" },
-        { "type": "image" }
+        { "type": "text" }
       ]
     }
   ]
