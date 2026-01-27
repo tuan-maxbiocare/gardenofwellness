@@ -785,18 +785,13 @@
       "name": "Products - Image Columns",
       "settings": {
         "heading": "The Products",
-        "heading_size": "heading-xl",
-        "heading_tag": "h2",
+        "heading_emphasis": "Collection",
+        "subheading": "<p>Designed as Daily Rituals</p>",
         "heading_color": "#000000",
-        "subheading": "Designed as Daily Rituals",
-        "subheading_size": "subheading-sm",
-        "subheading_tag": "p",
-        "subheading_color": "#000000",
-        "show_divider": true,
-        "text_color": "#000000",
         "columns_desktop": 3,
         "columns_mobile": "1",
         "section_width": "full-width",
+        "color_scheme": "",
         "background_color": "#ffffff",
         "padding_top": 80,
         "padding_bottom": 40,
@@ -843,6 +838,9 @@
         "movement_direction": "reverse",
         "color_scheme": "scheme-4",
         "padding-block-start": 8,
+        "border_mode": "both",
+        "border_color": "#000000",
+        "border_thickness": 1,
         "padding-block-end": 8,
         "gap_between_elements": 24
       }
@@ -1902,6 +1900,37 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "split_2col_8B3BQx": {
+      "type": "split-2col",
+      "name": "4 Media Columns ",
+      "settings": {
+        "min_height_mobile": 360,
+        "gap": 0,
+        "radius": 0,
+        "left_kind": "image",
+        "left_image": "shopify://shop_images/fb061717924ab59520bdc09bff40532069b07611.jpg",
+        "left_fallback_color": "#d9d9d9",
+        "mid_top_kind": "image",
+        "mid_top_image": "shopify://shop_images/ac0cf4557436642a909b1600a141963b02f1e2a0.jpg",
+        "mid_top_fallback_color": "#cccccc",
+        "mid_bottom_kind": "image",
+        "mid_bottom_image": "shopify://shop_images/8097a812dddf42e6654c33ea52359d37703ee0c1.jpg",
+        "mid_bottom_fallback_color": "#eeeeee",
+        "right_kind": "image",
+        "right_image": "shopify://shop_images/garden-of-wellness-images-483x483-13.webp",
+        "right_fallback_color": "#d9d9d9",
+        "text": "<p>This is where Garden of Wellness was born.</p>",
+        "text_color": "#adbc3d",
+        "text_position": "bottom_left",
+        "text_align": "center",
+        "text_padding": 28,
+        "text_max_width": 75,
+        "enable_gradient": true,
+        "overlay_from": "#313131",
+        "overlay_to": "rgba(0,0,0,0)",
+        "gradient_opacity": 0.6
+      }
     }
   },
   "order": [
@@ -1916,6 +1945,7 @@
     "section_amkCtH",
     "section_CdbFV9",
     "section_6eYEq7",
-    "section_JFh6gL"
+    "section_JFh6gL",
+    "split_2col_8B3BQx"
   ]
 }
