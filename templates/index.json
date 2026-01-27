@@ -687,7 +687,7 @@
           "type": "item",
           "settings": {
             "image": "shopify://shop_images/garden-of-wellness-images-820x1256-7.webp",
-            "heading": "The ultimate <i> body care.</i>",
+            "heading": "The ultimate  <i>body care.</i>",
             "heading_font": "sans_serif_n4",
             "heading_size": 38,
             "heading_weight": "400",
@@ -1441,6 +1441,7 @@
       ],
       "name": "Video looping (PS247)",
       "settings": {
+        "full_width_desktop": false,
         "heading": "<p>Shop <em>premium</em> for <em>pennies.</em></p>",
         "heading_size_pct": "110",
         "heading_tag": "h2",
@@ -1459,7 +1460,6 @@
         "card_bg": "#ffffff",
         "container_width": 1400,
         "container_padding": 12,
-        "full_width_desktop": false,
         "show_divider": false,
         "block_spacing": 28,
         "pad_top_desktop": 100,
@@ -1636,6 +1636,7 @@
       ],
       "name": "Flow",
       "settings": {
+        "full_width": false,
         "heading": "How to take care for [glowing skin].",
         "marker": "underline",
         "heading_size": "100",
@@ -1653,7 +1654,6 @@
         "heading_color_dark": "rgba(0,0,0,0)",
         "text_color_dark": "rgba(0,0,0,0)",
         "image_position": "first",
-        "full_width": false,
         "show_divider": true,
         "desktop_height": 750,
         "padding_top": 100,
@@ -1807,6 +1807,7 @@
       ],
       "name": "Video hero",
       "settings": {
+        "section_width": "page-width",
         "video": "shopify://files/videos/video_1768890677_4.mp4",
         "video_mp4_url": "",
         "overlay_opacity": 35,
@@ -1947,6 +1948,7 @@
       ],
       "name": "Journey timeline",
       "settings": {
+        "section_width": "page-width",
         "heading": "Our successful journey.",
         "heading_size": 42,
         "heading_weight": "600",
