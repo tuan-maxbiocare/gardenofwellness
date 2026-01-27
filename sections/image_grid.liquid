@@ -1,12 +1,25 @@
-{% style %} 
+{% style %}  
 .image-grid-section { 
   width: 100%; 
   line-height: 0; 
   overflow: hidden; 
 } 
 
+/* ✅ NEW: container để hỗ trợ Page width / Full width */
+.image-grid__container{
+  width: 100%;
+  max-width: 1280px;          /* page width mặc định */
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+.image-grid-section.is-full .image-grid__container{
+  max-width: none;            /* full width */
+  padding: 0;                 /* full: sát mép như bạn đang muốn */
+}
+
 .image-grid { 
-  display: grid; 
+  display: grid;
   /* Mặc định cho Mobile: Xếp dọc (1 cột) */
   grid-template-columns: 1fr; 
   gap: 2px; 
@@ -105,35 +118,62 @@
 }
 {% endstyle %}
 
-<section class="image-grid-section" style="background: {{ section.settings.bg_color }}">
-  <div class="image-grid">
-    {% for block in section.blocks %}
-      {% if block.settings.image %}
-        <div class="image-grid__item" {{ block.shopify_attributes }}>
-          <div class="image-grid__image">
-            <img src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.heading | escape }}" loading="lazy">
+{% liquid
+  assign s = section.settings
+  assign section_width = s.section_width | default: 'page'
+%}
+
+<section
+  class="image-grid-section {% if section_width == 'full' %}is-full{% endif %}"
+  style="background: {{ section.settings.bg_color }}"
+>
+  <div class="image-grid__container">
+    <div class="image-grid">
+      {% for block in section.blocks %}
+        {% if block.settings.image %}
+          <div class="image-grid__item" {{ block.shopify_attributes }}>
+            <div class="image-grid__image">
+              <img src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.heading | escape }}" loading="lazy">
+            </div>
+            <div class="image-grid__content">
+              <h2 class="image-grid__heading" style="
+                  color: {{ block.settings.heading_color }}; 
+                  font-size: {{ block.settings.heading_size }}px; 
+                  font-family: {{ block.settings.heading_font.family }}; 
+                  font-weight: {{ block.settings.heading_weight }};">
+                {{ block.settings.heading }}
+              </h2>
+              {% if block.settings.button_text != blank %}
+                <a href="{{ block.settings.button_link }}" class="image-grid__button">{{ block.settings.button_text }}</a>
+              {% endif %}
+            </div>
           </div>
-          <div class="image-grid__content">
-            <h2 class="image-grid__heading" style="
-                color: {{ block.settings.heading_color }}; 
-                font-size: {{ block.settings.heading_size }}px; 
-                font-family: {{ block.settings.heading_font.family }}; 
-                font-weight: {{ block.settings.heading_weight }};">
-              {{ block.settings.heading }}
-            </h2>
-            {% if block.settings.button_text != blank %}
-              <a href="{{ block.settings.button_link }}" class="image-grid__button">{{ block.settings.button_text }}</a>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-    {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 </section>
+
 {% schema %}
 {
   "name": "Image grid hover",
   "settings": [
+   {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
     {
       "type": "color",
       "id": "bg_color",
