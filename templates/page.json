@@ -406,7 +406,7 @@
         "carousel_on_mobile": false,
         "post_limit": 2,
         "columns": 2,
-        "mobile_columns": "2",
+        "mobile_columns": "1",
         "mobile_card_size": "60cqw",
         "columns_gap": 40,
         "rows_gap": 8,
