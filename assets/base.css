@@ -4074,3 +4074,17 @@ text-component {
     min-width: 0 !important;
   }
 }
+/* Icons with text (group blocks) -> Mobile 2 columns */
+@media screen and (max-width: 749px) {
+  .section-content-wrapper.mobile-column[data-testid="section-content"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .section-content-wrapper.mobile-column[data-testid="section-content"] > .group-block {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+}
