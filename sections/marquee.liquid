@@ -169,6 +169,28 @@ marquee-component:not([data-disabled]) .marquee__wrapper {
     transform: translate3d(-50%, 0, 0);
   }
 }
+/* ===== MOBILE: blocks thành 2 cột (thay vì xếp dọc) ===== */
+@media screen and (max-width: 749px) {
+  /* cho phép xuống dòng */
+  .marquee__repeated-items {
+    flex-wrap: wrap;
+    white-space: normal;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  /* mỗi block chiếm 1/2 hàng */
+  .marquee__repeated-items > * {
+    flex: 0 0 calc(50% - (var(--marquee-gap, 24px) / 2));
+    max-width: calc(50% - (var(--marquee-gap, 24px) / 2));
+  }
+
+  /* nếu trong block có text đang bị nowrap thì thả ra để không “tràn” */
+  .marquee__repeated-items :is(p, h1, h2, h3, h4, h5, h6, span, div) {
+    white-space: normal;
+  }
+}
+
 {% endstylesheet %}
 
 {% schema %}
