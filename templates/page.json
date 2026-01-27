@@ -343,7 +343,7 @@
             "alignment": "left",
             "type_preset": "custom",
             "font": "var(--font-body--family)",
-            "font_size": "1.5rem",
+            "font_size": "1rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -368,8 +368,8 @@
             "max_width": "normal",
             "alignment": "left",
             "type_preset": "custom",
-            "font": "var(--font-body--family)",
-            "font_size": "1.5rem",
+            "font": "var(--font-heading--family)",
+            "font_size": "1rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -399,7 +399,7 @@
         "padding-block-start": 24,
         "border_mode": "both",
         "border_color": "#000000",
-        "border_thickness": 2,
+        "border_thickness": 1,
         "padding-block-end": 24,
         "gap_between_elements": 69
       }
