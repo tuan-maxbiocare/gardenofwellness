@@ -4058,23 +4058,19 @@ text-component {
   }
 }
 @media screen and (max-width: 749px) {
-
-  /* 1. Ép container thành row + wrap */
+  /* Ép layout về GRID 2 cột */
   #shopify-section-template--19701889630402__section_dHWdmq
-  .section-content-wrapper.mobile-column {
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
+  .section-content-wrapper {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 16px !important;
   }
 
-  /* 2. Ép mỗi block chiếm 50% */
+  /* Đảm bảo các item không phá grid */
   #shopify-section-template--19701889630402__section_dHWdmq
-  .section-content-wrapper.mobile-column
-  > .shopify-block {
-    flex: 0 0 calc(50% - 8px) !important;
-    max-width: calc(50% - 8px) !important;
+  .section-content-wrapper > .shopify-block {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
   }
-
 }
