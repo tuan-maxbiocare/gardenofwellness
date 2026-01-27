@@ -1,5 +1,3 @@
-
-
 {% assign block_settings = block.settings %}
 
 {% liquid
@@ -64,6 +62,7 @@
     featured-blog-posts-card spacing-style border-style
     {% if section.settings.layout_type == 'editorial' %}blog-post-card--flexible-aspect-ratio{% endif %}
     {% if block_settings.inherit_color_scheme == false %}color-{{ block_settings.color_scheme }}{% endif %}
+    {% if block_settings.layout == 'horizontal' %}featured-blog-posts-card--horizontal featured-blog-posts-card--wide-image{% endif %}
   "
   data-block-id="{{ block.id }}"
   data-testid="featured-blog-posts-card"
@@ -88,17 +87,45 @@
     <span class="visually-hidden">{{ display_title }}</span>
   </a>
 
-  <div class="featured-blog-posts-card__inner">
-    {% if onboarding or article.image %}
-      {{ image }}
-    {% endif %}
+  {% if block_settings.layout == 'horizontal' %}
+    <!-- Horizontal layout với các style tùy chỉnh của bạn -->
+    <div class="featured-blog-posts-card__inner" style="display: flex; flex-direction: row; align-items: flex-start; width: 100%;">
+      {% if onboarding or article.image %}
+        <div style="flex: 0 0 auto; width: 60%; max-width: 350px; min-width: 250px; margin-right: 24px;">
+          <div class="featured-blog-posts-card__image-wrapper" style="height: 220px; overflow: hidden;">
+            {{ image }}
+          </div>
+        </div>
+      {% endif %}
 
-    <div class="featured-blog-posts-card__content layout-panel-flex--column">
-      <h4>{{ title }}</h4>
-      {{ details }}
-      {{ description }}
+      <div class="featured-blog-posts-card__content" style="flex: 1; min-width: 0; display: block !important; visibility: visible !important; opacity: 1 !important; width: 40%;">
+        <h4 style="display: block !important; font-size: 16px; line-height: 1.4; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+          {{ title }}
+        </h4>
+        
+        <div style="display: block !important; visibility: visible !important; opacity: 1 !important;">
+          {{ details }}
+        </div>
+        
+        <div style="display: block !important; visibility: visible !important; opacity: 1 !important; font-size: 14px; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+          {{ description }}
+        </div>
+      </div>
     </div>
-  </div>
+  {% else %}
+    <!-- Vertical layout - trở về dạng mặc định -->
+    <div class="featured-blog-posts-card__inner">
+      {% if onboarding or article.image %}
+        {{ image }}
+      {% endif %}
+
+      <div class="featured-blog-posts-card__content layout-panel-flex--column">
+        <h4>{{ title }}</h4>
+        {{ details }}
+        {{ description }}
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 {% stylesheet %}
@@ -108,6 +135,57 @@
 
   .featured-blog-posts-card__inner {
     gap: var(--gap);
+  }
+
+  /* Các style cho layout Vertical mặc định */
+  .featured-blog-posts-card:not(.featured-blog-posts-card--horizontal) .featured-blog-posts-card__inner {
+    display: block;
+  }
+
+  /* Các style cho layout Horizontal */
+  .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image .featured-blog-posts-card__inner {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image .featured-blog-posts-card__inner > div:first-child {
+    width: 60%;
+    min-width: 250px;
+    max-width: 350px;
+    flex-shrink: 0;
+    margin-right: 24px;
+  }
+
+  .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image .featured-blog-posts-card__content {
+    width: 40%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Tỷ lệ hình ảnh cho Horizontal layout - TĂNG CHIỀU CAO */
+  .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image 
+  .featured-blog-posts-card__image {
+    aspect-ratio: 4/3; /* Thay đổi từ 5/3 thành 4/3 để cao hơn */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .featured-blog-posts-card__image-wrapper {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .featured-blog-posts-card__image-wrapper .featured-blog-posts-card__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .resource-list--grid .resource-list__item {
@@ -121,12 +199,56 @@
     }
   }
 
+  @media (min-width: 769px) {
+    /* Tăng height thêm cho desktop */
+    .featured-blog-posts-card__image-wrapper {
+      height: 250px; /* Tăng lên 250px cho desktop */
+    }
+    
+    .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image 
+    .featured-blog-posts-card__image {
+      aspect-ratio: 4/3;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    /* Tăng height thêm cho màn hình lớn */
+    .featured-blog-posts-card__image-wrapper {
+      height: 280px; /* Tăng lên 280px cho màn hình lớn */
+    }
+    
+    .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image 
+    .featured-blog-posts-card__image {
+      aspect-ratio: 4/3;
+    }
+  }
+
   @media (max-width: 768px) {
-    .resource-list:not(.hidden--desktop) .blog-post-card--flexible-aspect-ratio {
-      .featured-blog-posts-card__image,
-      .blog-placeholder-svg {
-        aspect-ratio: unset;
-      }
+    /* Responsive cho horizontal layout */
+    .featured-blog-posts-card--horizontal .featured-blog-posts-card__inner {
+      flex-direction: column !important;
+    }
+    
+    .featured-blog-posts-card--horizontal .featured-blog-posts-card__inner > div:first-child {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-bottom: 16px !important;
+    }
+    
+    .featured-blog-posts-card--horizontal .featured-blog-posts-card__content {
+      width: 100% !important;
+    }
+    
+    /* Giữ height cho mobile */
+    .featured-blog-posts-card__image-wrapper {
+      height: 200px; /* Giữ height cho mobile */
+    }
+    
+    /* Điều chỉnh aspect ratio cho mobile */
+    .featured-blog-posts-card--horizontal.featured-blog-posts-card--wide-image 
+    .featured-blog-posts-card__image {
+      aspect-ratio: 16/9; /* Tỷ lệ rộng hơn cho mobile */
     }
   }
 
@@ -154,6 +276,26 @@
   "name": "t:names.blog_card",
   "tag": null,
   "settings": [
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "t:options.vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "t:options.horizontal"
+        }
+      ],
+      "default": "vertical"
+    },
     {
       "type": "header",
       "content": "t:content.text"
@@ -298,5 +440,5 @@
       "default": 0
     }
   ]
-}
+} 
 {% endschema %}
