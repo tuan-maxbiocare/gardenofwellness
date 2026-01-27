@@ -399,7 +399,7 @@
         "padding-block-start": 24,
         "border_mode": "both",
         "border_color": "#000000",
-        "border_thickness": 1,
+        "border_thickness": 2,
         "padding-block-end": 24,
         "gap_between_elements": 69
       }
