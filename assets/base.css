@@ -2427,19 +2427,6 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
     }
   }
 }
-@media screen and (max-width: 749px) {
-  #shopify-section-template--19701889630402__section_dHWdmq
-  .mobile-column {
-    flex-flow: row wrap !important;
-    gap: 16px;
-  }
-
-  #shopify-section-template--19701889630402__section_dHWdmq
-  .mobile-column > * {
-    flex: 0 0 50%;
-    max-width: 50%;
-  }
-}
 
 @media (min-width: 750px) {
   .layout-panel-flex {
