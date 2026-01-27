@@ -1978,7 +1978,9 @@
         "instagram_post_zCzChQ": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-2_71e33020-b8e9-4579-9bb9-ce255726cdcd.webp",
             "is_video": false,
+            "post_avatar": "shopify://shop_images/Designer.png",
             "username": "",
             "caption": "",
             "products": [],
@@ -1988,6 +1990,7 @@
         "instagram_post_bHw4jA": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-4_cb737588-b23a-4597-9234-1458ee3cb36f.webp",
             "is_video": false,
             "username": "",
             "caption": "",
@@ -1998,6 +2001,7 @@
         "instagram_post_HHwWaE": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-2_927588f4-283d-4aa9-8aa2-0c3739e10174.webp",
             "is_video": false,
             "username": "",
             "caption": "",
@@ -2008,6 +2012,7 @@
         "instagram_post_LikjGk": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lemon-Zest-800x800-10_2f09f02e-950f-47d0-bcd4-da7e93f10ccc.webp",
             "is_video": false,
             "username": "",
             "caption": "",
@@ -2018,6 +2023,7 @@
         "instagram_post_UpbN3N": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x800-6_0fd2ff73-b38f-4ebb-91aa-08f5a1c8fa71.webp",
             "is_video": false,
             "username": "fashionista",
             "caption": "Just got these amazing pieces from the new collection! The fit is perfect and the quality is outstanding. Can't wait to style them all week! 👗✨ #ootd #fashionlove",
@@ -2028,6 +2034,7 @@
         "instagram_post_MJjbeQ": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-13_c67d8f26-bdf4-4f4a-b189-f423bc798b02.webp",
             "is_video": false,
             "username": "styleblogger",
             "caption": "Obsessed with the neutral tones in this outfit! Perfect for transitioning from day to night. The fabric feels so luxurious! 🎀 #neutralaesthetic #minimalstyle",
@@ -2038,6 +2045,7 @@
         "instagram_post_GjahjY": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Geranium-Breeze-800x800-8_08989191-aff8-4c1c-81c3-d34469eb8a87.webp",
             "is_video": false,
             "username": "trendsetter",
             "caption": "Casual Friday vibes with these comfy yet chic pieces. Who says you can't be comfortable and stylish at the same time? 😊 #casualfashion #weekendvibes",
@@ -2048,6 +2056,7 @@
         "instagram_post_HPk4dR": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Sage-Clarity-800x800-10_2410348d-2fb3-405a-bb5f-3912a5d8c869.webp",
             "is_video": false,
             "username": "luxelover",
             "caption": "Treating myself to some luxury basics that will last for seasons to come. Investment pieces are always worth it! 💫 #investmentpieces #capsulewardrobe",
@@ -2058,6 +2067,7 @@
         "instagram_post_thmQMC": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x799-2_6f3ac16c-4b42-4f9c-ab32-49a401bdcd37.webp",
             "is_video": false,
             "username": "streetstyle",
             "caption": "Urban elegance meets comfort. These pieces are perfect for city life - stylish, practical, and oh-so-comfortable! 🏙️ #streetstyle #urbanfashion",
