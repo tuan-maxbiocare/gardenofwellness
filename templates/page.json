@@ -274,11 +274,141 @@
         "padding-block-start": 50,
         "padding-block-end": 50
       }
+    },
+    "marquee_AzjGnU": {
+      "type": "marquee",
+      "blocks": {
+        "text_EbAY39": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<h6><em>naturally</em></h6>",
+            "width": "fit-content",
+            "text_style": "solid",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_6Gk7rc": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p><em>restore</em></p>",
+            "width": "100%",
+            "text_style": "solid",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1.5rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_zQc4Nm": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p><em>soothe</em></p>",
+            "width": "fit-content",
+            "text_style": "solid",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1.5rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_3z9E6G": {
+          "type": "text",
+          "settings": {
+            "text": "<p><em>nourish</em></p>",
+            "width": "fit-content",
+            "text_style": "solid",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1.5rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_EbAY39",
+        "text_6Gk7rc",
+        "text_zQc4Nm",
+        "text_3z9E6G"
+      ],
+      "name": "t:names.marquee_section",
+      "settings": {
+        "movement_direction": "normal",
+        "color_scheme": "",
+        "padding-block-start": 24,
+        "border_mode": "both",
+        "border_color": "#000000",
+        "border_thickness": 1,
+        "padding-block-end": 24,
+        "gap_between_elements": 69
+      }
     }
   },
   "order": [
     "breadcrumbs",
     "main",
-    "media_with_content_CtH4Ww"
+    "media_with_content_CtH4Ww",
+    "marquee_AzjGnU"
   ]
 }
