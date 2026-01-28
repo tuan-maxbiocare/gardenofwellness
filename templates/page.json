@@ -20,7 +20,7 @@
         "full_page": false,
         "container_width": "normal",
         "container_padding": 40,
-        "container_padding_mobile": 15,
+        "container_padding_mobile": 20,
         "section_paddings": 8,
         "section_paddings_mobile": 8,
         "color_type": "default",
