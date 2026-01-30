@@ -393,7 +393,7 @@
         "product": "{{ closest.product }}",
         "tab_collections": [
           "beauty-products",
-          "best-sellers-1",
+          "best-sellers",
           "best-sellers",
           "body-care"
         ],
@@ -633,22 +633,22 @@
         "subheading": "Mix and match your favorites and save more.",
         "subheading_color": "#666666",
         "subheading_size": 18,
-        "image_height": 400,
+        "image_height": 500,
         "image_radius": 20,
         "image_bg_color": "#f8f8f8",
         "image_bg_gradient": "",
         "card_text_align": "center",
         "product_title_color": "#000000",
-        "product_title_size": 18,
+        "product_title_size": 19,
         "price_color": "#000000",
-        "price_size": 18,
+        "price_size": 23,
         "compare_price_color": "#888888",
         "add_button_text": "ADD TO BUNDLE",
         "button_bg": "#000000",
         "button_text_color": "#ffffff",
         "button_radius": 50,
-        "button_size": 15,
-        "button_margin": 16,
+        "button_size": 16,
+        "button_margin": 20,
         "tab_text_color": "#a5a5a5",
         "tab_icon_bg": "#5f6b58",
         "tab_icon_border": "#cfcfcf",
@@ -687,7 +687,7 @@
           "type": "item",
           "settings": {
             "image": "shopify://shop_images/garden-of-wellness-images-820x1256-7.webp",
-            "heading": "The ultimate  <i>body care.</i>",
+            "heading": "The ultimate <i> body care.</i>",
             "heading_font": "sans_serif_n4",
             "heading_size": 38,
             "heading_weight": "400",
@@ -739,7 +739,6 @@
       ],
       "name": "Image grid hover",
       "settings": {
-        "section_width": "page-width",
         "bg_color": "#ffffff"
       }
     },
@@ -1314,7 +1313,6 @@
         "shoppable_video_UJPQzG": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1768895552_62.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1334,7 +1332,6 @@
         "shoppable_video_AtFQbx": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1768891345_28.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1354,7 +1351,6 @@
         "shoppable_video_ai6nzn": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1768895500_60.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1374,7 +1370,6 @@
         "shoppable_video_cAD9VF": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1768895576_63.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1394,7 +1389,6 @@
         "shoppable_video_6PUnN4": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1768892572_49.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1414,7 +1408,6 @@
         "shoppable_video_cbkPyg": {
           "type": "shoppable_video",
           "settings": {
-            "video": "shopify://files/videos/video_1768894247_53.mp4",
             "video_url": "",
             "video_alt": "",
             "title": "",
@@ -1558,7 +1551,6 @@
         "max_width": "1440px",
         "bg_color": "#ffffff",
         "media_type": "video",
-        "lifestyle_image": "shopify://shop_images/garden-of-wellness-images-812x1244-8.webp",
         "autoplay": true,
         "loop_video": true,
         "product": "garden-of-wellness-nourishing-body-oil-frankincense",
@@ -1809,8 +1801,6 @@
       ],
       "name": "Video hero",
       "settings": {
-        "section_width": "page-width",
-        "video": "shopify://files/videos/video_1768890677_4.mp4",
         "video_mp4_url": "",
         "overlay_opacity": 35,
         "kicker": "EURUS STORY",
@@ -1861,7 +1851,6 @@
       ],
       "name": "Media with text (custom)",
       "settings": {
-        "section_width": "page",
         "first_image": "shopify://shop_images/garden-of-wellness-images-740x740-10.webp",
         "second_image": "shopify://shop_images/1c14b463b7e6adb17e59c3a02caebc2ffdf83cfb.jpg",
         "desktop_image_height": "fullscreen",
@@ -1901,7 +1890,6 @@
             "year": "2025",
             "eyebrow": "TODAY & TOMORROW",
             "title": "New vinergy® patent",
-            "video": "shopify://files/videos/video_1768891257_25.mp4",
             "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.<br/></p>"
           }
         },
@@ -1925,8 +1913,7 @@
             "year": "2015",
             "eyebrow": "MILE STONE 2",
             "title": "Our first organic & vegan center",
-            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.</p>",
-            "image": "shopify://shop_images/20251209155045_2000x3000_3a1338d2-bf99-4c6a-b567-e4f491c0d005.webp"
+            "text": "<p>After journeying across the globe and connecting with our customers, we envisioned a space that would reflect our story — a place where we could share our origins and bring a modern, urban perspective to our natural skincare philosophy. This vision led to the creation of our first boutique spa, and today, we are proud to have a growing presence with over 50 boutiques worldwide.</p>"
           }
         },
         "milestone_z4JJHH": {
@@ -1950,7 +1937,6 @@
       ],
       "name": "Journey timeline",
       "settings": {
-        "section_width": "page-width",
         "heading": "Our successful journey.",
         "heading_size": 42,
         "heading_weight": "600",
@@ -1978,9 +1964,7 @@
         "instagram_post_zCzChQ": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-2_71e33020-b8e9-4579-9bb9-ce255726cdcd.webp",
             "is_video": false,
-            "post_avatar": "shopify://shop_images/Designer.png",
             "username": "",
             "caption": "",
             "products": [],
@@ -1990,7 +1974,6 @@
         "instagram_post_bHw4jA": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Contour-Body-Oil-Thirteen-Petals-800x800-4_cb737588-b23a-4597-9234-1458ee3cb36f.webp",
             "is_video": false,
             "username": "",
             "caption": "",
@@ -2001,7 +1984,6 @@
         "instagram_post_HHwWaE": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-2_927588f4-283d-4aa9-8aa2-0c3739e10174.webp",
             "is_video": false,
             "username": "",
             "caption": "",
@@ -2012,7 +1994,6 @@
         "instagram_post_LikjGk": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lemon-Zest-800x800-10_2f09f02e-950f-47d0-bcd4-da7e93f10ccc.webp",
             "is_video": false,
             "username": "",
             "caption": "",
@@ -2023,7 +2004,6 @@
         "instagram_post_UpbN3N": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x800-6_0fd2ff73-b38f-4ebb-91aa-08f5a1c8fa71.webp",
             "is_video": false,
             "username": "fashionista",
             "caption": "Just got these amazing pieces from the new collection! The fit is perfect and the quality is outstanding. Can't wait to style them all week! 👗✨ #ootd #fashionlove",
@@ -2034,7 +2014,6 @@
         "instagram_post_MJjbeQ": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Lavender-Calm-800x800-13_c67d8f26-bdf4-4f4a-b189-f423bc798b02.webp",
             "is_video": false,
             "username": "styleblogger",
             "caption": "Obsessed with the neutral tones in this outfit! Perfect for transitioning from day to night. The fabric feels so luxurious! 🎀 #neutralaesthetic #minimalstyle",
@@ -2045,7 +2024,6 @@
         "instagram_post_GjahjY": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Geranium-Breeze-800x800-8_08989191-aff8-4c1c-81c3-d34469eb8a87.webp",
             "is_video": false,
             "username": "trendsetter",
             "caption": "Casual Friday vibes with these comfy yet chic pieces. Who says you can't be comfortable and stylish at the same time? 😊 #casualfashion #weekendvibes",
@@ -2056,7 +2034,6 @@
         "instagram_post_HPk4dR": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Sage-Clarity-800x800-10_2410348d-2fb3-405a-bb5f-3912a5d8c869.webp",
             "is_video": false,
             "username": "luxelover",
             "caption": "Treating myself to some luxury basics that will last for seasons to come. Investment pieces are always worth it! 💫 #investmentpieces #capsulewardrobe",
@@ -2067,7 +2044,6 @@
         "instagram_post_thmQMC": {
           "type": "instagram_post",
           "settings": {
-            "image": "shopify://shop_images/Garden-of-Wellness-Nourishing-Body-Oil-Honey-Citrus-800x799-2_6f3ac16c-4b42-4f9c-ab32-49a401bdcd37.webp",
             "is_video": false,
             "username": "streetstyle",
             "caption": "Urban elegance meets comfort. These pieces are perfect for city life - stylish, practical, and oh-so-comfortable! 🏙️ #streetstyle #urbanfashion",
