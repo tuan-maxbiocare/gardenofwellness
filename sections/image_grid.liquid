@@ -120,11 +120,11 @@
 
 {% liquid
   assign s = section.settings
-  assign section_width = s.section_width | default: 'page'
+  assign section_width = s.section_width | default: 'page-width'
 %}
 
 <section
-  class="image-grid-section {% if section_width == 'full' %}is-full{% endif %}"
+  class="image-grid-section {% if section_width == 'full-width' %}is-full{% endif %}"
   style="background: {{ section.settings.bg_color }}"
 >
   <div class="image-grid__container">
