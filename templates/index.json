@@ -739,7 +739,7 @@
       ],
       "name": "Image grid hover",
       "settings": {
-        "section_width": "page-width",
+        "section_width": "full-width",
         "bg_color": "#ffffff"
       }
     },
