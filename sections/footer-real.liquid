@@ -369,26 +369,7 @@
     width: auto;
     display:block;
   }
-/* Make the whole "fake dropdown" clickable */
-.eurus-footer .eurus-select{
-  position: relative;
-  cursor: pointer;
-}
 
-.eurus-footer .eurus-select select{
-  position: absolute;
-  inset: 0;                 /* phủ kín cả box */
-  width: 100%;
-  height: 100%;
-  opacity: 0;               /* ẩn select nhưng vẫn click được */
-  cursor: pointer;
-  z-index: 5;
-}
-
-/* đảm bảo chevron vẫn nhìn thấy, không bị select che (vì select opacity 0) */
-.eurus-footer .eurus-select__chev{
-  z-index: 1;
-}
   /* ---------- Mobile: accordion like screenshot ---------- */
   @media (max-width: 989px){
     .eurus-footer .page-width{
