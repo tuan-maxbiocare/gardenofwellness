@@ -1977,90 +1977,117 @@
         "instagram_post_zCzChQ": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/1c14b463b7e6adb17e59c3a02caebc2ffdf83cfb.jpg",
             "is_video": false,
             "username": "",
             "caption": "",
-            "products": [],
+            "products": [
+              "garden-of-wellness-contour-body-oil-thirteen-petals"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_bHw4jA": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/8097a812dddf42e6654c33ea52359d37703ee0c1.jpg",
             "is_video": false,
             "username": "",
             "caption": "",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-frankincense"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_HHwWaE": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/fb061717924ab59520bdc09bff40532069b07611.jpg",
             "is_video": false,
             "username": "",
             "caption": "",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-geranium-breeze"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_LikjGk": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/041277f92ddba83de03ac308a9a0f4045f916c33.jpg",
             "is_video": false,
             "username": "",
             "caption": "",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-lavender-calm"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_UpbN3N": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/d5140364155066e9236f097043e21eae13799232.jpg",
             "is_video": false,
             "username": "fashionista",
             "caption": "Just got these amazing pieces from the new collection! The fit is perfect and the quality is outstanding. Can't wait to style them all week! 👗✨ #ootd #fashionlove",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-lemon-zest"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_MJjbeQ": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/ac0cf4557436642a909b1600a141963b02f1e2a0.jpg",
             "is_video": false,
             "username": "styleblogger",
             "caption": "Obsessed with the neutral tones in this outfit! Perfect for transitioning from day to night. The fabric feels so luxurious! 🎀 #neutralaesthetic #minimalstyle",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-neroli-blossom"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_GjahjY": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/a6a83f09de61dfac85740ff9815b270b46cab28f.jpg",
             "is_video": false,
             "username": "trendsetter",
             "caption": "Casual Friday vibes with these comfy yet chic pieces. Who says you can't be comfortable and stylish at the same time? 😊 #casualfashion #weekendvibes",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-rosemary-touch"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_HPk4dR": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/garden-of-wellness-images-483x483-13.webp",
             "is_video": false,
             "username": "luxelover",
             "caption": "Treating myself to some luxury basics that will last for seasons to come. Investment pieces are always worth it! 💫 #investmentpieces #capsulewardrobe",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-sage-clarity"
+            ],
             "show_placeholder_products": true
           }
         },
         "instagram_post_thmQMC": {
           "type": "instagram_post",
           "settings": {
+            "image": "shopify://shop_images/pink-flowers-and-green-leaves-of-a-large-bush.jpg",
             "is_video": false,
             "username": "streetstyle",
             "caption": "Urban elegance meets comfort. These pieces are perfect for city life - stylish, practical, and oh-so-comfortable! 🏙️ #streetstyle #urbanfashion",
-            "products": [],
+            "products": [
+              "garden-of-wellness-nourishing-body-oil-tropical-glimpse"
+            ],
             "show_placeholder_products": true
           }
         }
