@@ -1,7 +1,3 @@
-{% comment %}
-  Footer Eurus-like (desktop 5 columns + bottom bar, mobile accordion)
-{% endcomment %}
-
 <footer class="eurus-footer" data-footer> 
   <div class="eurus-footer__inner page-width">
     <div class="eurus-footer__grid">
@@ -130,35 +126,67 @@
     <div class="eurus-footer__bottom-inner page-width">
       <div class="eurus-footer__bottom-left">
         {% if section.settings.show_localization %}
-          <div class="eurus-loc">
-            <div class="eurus-select eurus-select--static">
-              <span class="eurus-select__text">English</span>
-              <span class="eurus-select__chev" aria-hidden="true"></span>
-            </div>
+          {%- form 'localization', class: 'eurus-loc', id: 'FooterLocalization' -%}
 
-            <div class="eurus-select eurus-select--static">
-              <span class="eurus-select__text">Vietnam (AUD $)</span>
-              <span class="eurus-select__chev" aria-hidden="true"></span>
-            </div>
-          </div>
+            {%- if localization.available_languages.size > 1 -%}
+              <!-- REAL language selector (styled like your fake UI) -->
+              <div class="eurus-select eurus-select--static">
+                <select name="locale_code" aria-label="Language">
+                  {%- for language in localization.available_languages -%}
+                    <option
+                      value="{{ language.iso_code }}"
+                      {% if language.iso_code == localization.language.iso_code %}selected{% endif %}
+                    >
+                      {{ language.endonym_name | capitalize }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <span class="eurus-select__chev" aria-hidden="true"></span>
+              </div>
+            {%- endif -%}
+
+            {%- if localization.available_countries.size > 1 -%}
+              <!-- REAL country/market selector (currency follows market) -->
+              <div class="eurus-select eurus-select--static">
+                <select name="country_code" aria-label="Country/Region">
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+                    >
+                      {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <span class="eurus-select__chev" aria-hidden="true"></span>
+              </div>
+            {%- endif -%}
+
+          {%- endform -%}
         {% endif %}
       </div>
 
       <div class="eurus-footer__bottom-mid">
         <div class="eurus-footer__copy">
-         <div>© 2026, Puff.</div>
-  <div>Powered by Shopify</div>
+          {% if section.settings.copyright != blank %}
+            {{ section.settings.copyright }}
+          {% else %}
+            <div>© {{ 'now' | date: '%Y' }}, {{ shop.name }}.</div>
+            <div>Powered by Shopify</div>
+          {% endif %}
         </div>
       </div>
 
       <div class="eurus-footer__bottom-right">
-        {% if section.settings.show_payment_icons %}
-  <div class="eurus-payments" aria-label="Payment methods">
-    <span class="eurus-payments__item">{% render 'icon-visa' %}</span>
-    <span class="eurus-payments__item">{% render 'icon-mastercarrd' %}</span>
-    <span class="eurus-payments__item">{% render 'icon-paypal' %}</span>
-  </div>
-{% endif %}
+        {% if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 %}
+          <div class="eurus-payments" aria-label="Payment methods">
+            {% for type in shop.enabled_payment_types %}
+              <span class="eurus-payments__item">
+                {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+              </span>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -185,8 +213,8 @@
   }
   .eurus-footer__grid{
     display: grid;
-  grid-template-columns: 1.25fr repeat(4, 1fr);
-  column-gap: 64px;
+    grid-template-columns: 1.25fr repeat(4, 1fr);
+    column-gap: 64px;
   }
 
   .eurus-footer__head{
@@ -317,6 +345,7 @@
     font-size: 13px;
     padding: 6px 24px 6px 0;
     cursor:pointer;
+    outline: none;
   }
   .eurus-select__chev{
     position:absolute;
@@ -338,6 +367,7 @@
   .eurus-payments__item svg{
     height: 22px;
     width: auto;
+    display:block;
   }
 
   /* ---------- Mobile: accordion like screenshot ---------- */
@@ -411,332 +441,308 @@
       height: 24px;
     }
   }
+
   /* ===== FOOTER BOTTOM FIX ===== */
 
-.eurus-footer__bottom {
-  padding: 18px 0;
-}
-
-.eurus-footer__bottom-inner {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-}
-
-/* LEFT: language */
-.eurus-footer__bottom-left {
-  justify-self: start;
-}
-
-.eurus-loc {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-}
-
-.eurus-select--static {
-  background: none;
-  border: none;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.eurus-select__text {
-  font-size: 13px;
-  color: rgba(255,255,255,0.85);
-  white-space: nowrap;
-}
-
-.eurus-select__chev {
-  width: 7px;
-  height: 7px;
-  border-right: 2px solid rgba(255,255,255,0.7);
-  border-bottom: 2px solid rgba(255,255,255,0.7);
-  transform: rotate(45deg);
-  margin-top: -2px;
-}
-
-/* CENTER: copyright */
-.eurus-footer__bottom-mid {
-  justify-self: center;
-}
-
-.eurus-footer__copy {
-  font-size: 13px;
-  color: rgba(255,255,255,0.7);
-  white-space: nowrap;
-}
-
-/* RIGHT: payment icons */
-.eurus-footer__bottom-right {
-  justify-self: end;
-}
-
-.eurus-payments {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.eurus-payments__item {
-  background: none !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.eurus-payments__item svg {
-  height: 20px;
-  width: auto;
-  display: block;
-  opacity: 0.9;
-}
-
-/* ===== MOBILE FIX ===== */
-@media (max-width: 768px) {
-  .eurus-footer__bottom-inner {
-    grid-template-columns: 1fr;
-    row-gap: 12px;
-    text-align: left;
+  .eurus-footer__bottom {
+    padding: 18px 0;
   }
 
-  .eurus-footer__bottom-left,
-  .eurus-footer__bottom-mid,
-  .eurus-footer__bottom-right {
+  .eurus-footer__bottom-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  /* LEFT: language */
+  .eurus-footer__bottom-left {
     justify-self: start;
   }
 
+  .eurus-loc {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .eurus-select--static {
+    background: none;
+    border: none;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .eurus-select__text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  .eurus-select__chev {
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid rgba(255,255,255,0.7);
+    border-bottom: 2px solid rgba(255,255,255,0.7);
+    transform: rotate(45deg);
+    margin-top: -2px;
+  }
+
+  /* CENTER: copyright */
+  .eurus-footer__bottom-mid {
+    justify-self: center;
+  }
+
+  .eurus-footer__copy {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+  }
+
+  /* RIGHT: payment icons */
+  .eurus-footer__bottom-right {
+    justify-self: end;
+  }
+
+  .eurus-payments {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eurus-payments__item {
+    background: none !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
   .eurus-payments__item svg {
-    height: 22px;
-  }
-}
-/* FIX chevron đè chữ ở fake language/market */
-.eurus-select--static{
-  position: static !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  padding: 0 !important;
-}
-
-.eurus-select--static .eurus-select__text{
-  padding: 0 !important;
-  margin: 0 !important;
-  white-space: nowrap !important;
-}
-
-.eurus-select--static .eurus-select__chev{
-  position: static !important;   /* quan trọng: bỏ absolute */
-  right: auto !important;
-  margin-left: 6px !important;
-  flex: 0 0 auto !important;
-  pointer-events: none !important;
-}
-/* ===== MAKE FOOTER AIRIER (more height / spacing) ===== */
-
-/* tăng chiều cao tổng thể phần grid */
-.eurus-footer__inner{
-  padding-top: 56px !important;
-  padding-bottom: 56px !important;
-}
-
-/* tăng khoảng cách giữa title và nội dung */
-.eurus-footer__body{
-  margin-top: 22px !important;
-}
-
-/* tăng spacing list link/social */
-.eurus-footer__links,
-.eurus-footer__social{
-  row-gap: 18px !important;
-}
-
-/* text thoáng hơn */
-.eurus-footer__text{
-  line-height: 1.8 !important;
-}
-
-/* tăng line-height link */
-.eurus-footer__links a,
-.eurus-footer__social a{
-  line-height: 1.55 !important;
-}
-
-/* bottom bar thoáng hơn */
-.eurus-footer__bottom{
-  padding: 22px 0 !important;
-}
-
-/* ===== MOBILE (accordion) ===== */
-@media (max-width: 989px){
-  .eurus-footer__inner{
-    padding-top: 22px !important;
-    padding-bottom: 10px !important;
+    height: 20px;
+    width: auto;
+    display: block;
+    opacity: 0.9;
   }
 
-  /* mỗi block thoáng hơn */
-  .eurus-footer__col{
-    padding: 18px 0 !important;
+  /* ===== MOBILE FIX ===== */
+  @media (max-width: 768px) {
+    .eurus-footer__bottom-inner {
+      grid-template-columns: 1fr;
+      row-gap: 12px;
+      text-align: left;
+    }
+
+    .eurus-footer__bottom-left,
+    .eurus-footer__bottom-mid,
+    .eurus-footer__bottom-right {
+      justify-self: start;
+    }
+
+    .eurus-payments__item svg {
+      height: 22px;
+    }
   }
 
-  /* title cao hơn, dễ bấm */
-  .eurus-footer__head{
-    padding: 6px 0 !important;
-  }
-
-  /* nội dung khi mở ra có khoảng thở */
-  .eurus-footer__body{
-    margin-top: 12px !important;
-    padding-bottom: 8px !important;
-  }
-
-  /* bottom bar thoáng */
-  .eurus-footer__bottom{
-    padding: 16px 0 22px !important;
-  }
-}
-/* ===== MOBILE LIKE SAMPLE ===== */
-@media (max-width: 989px){
-
-  /* Accordion rows */
-  .eurus-footer__col{
-    border-top: 1px solid rgba(255,255,255,0.10) !important;
-    padding: 14px 0 !important;
-  }
-  .eurus-footer__col--brand{ border-top: 0 !important; }
-
-  .eurus-footer__head{
-    padding: 6px 0 !important;
-    min-height: 44px;
-  }
-
-  /* Chevron like sample (down) */
-  .eurus-footer__chev{
-    display: inline-block !important;
-    width: 9px !important;
-    height: 9px !important;
-    border-right: 2px solid rgba(255,255,255,0.80) !important;
-    border-bottom: 2px solid rgba(255,255,255,0.80) !important;
-    transform: rotate(45deg) !important; /* down */
-    opacity: .9;
-  }
-  /* rotate when collapsed (optional): if your JS uses aria-expanded */
-  .eurus-footer__head[aria-expanded="false"] .eurus-footer__chev{
-    transform: rotate(-45deg) !important;
-  }
-
-  /* Bottom area: stack + centered */
-  .eurus-footer__bottom{
-    border-top: 1px solid rgba(255,255,255,0.10) !important;
-    padding: 16px 0 20px !important;
-  }
-  .eurus-footer__bottom-inner{
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-  .eurus-footer__bottom-left,
-  .eurus-footer__bottom-mid,
-  .eurus-footer__bottom-right{
-    justify-self: center !important;
-    text-align: center !important;
-  }
-
-  /* Language + Market: two lines centered */
-  .eurus-loc{
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
-
-  /* Static selector look */
+  /* FIX chevron đè chữ ở localization */
   .eurus-select--static{
+    position: static !important;
     display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
     padding: 0 !important;
-    background: transparent !important;
-    border: 0 !important;
   }
-  .eurus-select__text{
-    font-size: 13px !important;
-    color: rgba(255,255,255,0.85) !important;
+
+  .eurus-select--static select{
+    padding: 6px 18px 6px 0 !important;
+    margin: 0 !important;
     white-space: nowrap !important;
   }
+
   .eurus-select--static .eurus-select__chev{
-    position: static !important;
-    width: 8px !important;
-    height: 8px !important;
-    border-right: 2px solid rgba(255,255,255,0.70) !important;
-    border-bottom: 2px solid rgba(255,255,255,0.70) !important;
-    transform: rotate(45deg) !important;
-    margin-top: -1px !important;
+    position: static !important;   /* quan trọng: bỏ absolute */
+    right: auto !important;
+    margin-left: 6px !important;
+    flex: 0 0 auto !important;
+    pointer-events: none !important;
   }
 
-  /* Payment icons: keep original colors (IMPORTANT) */
-  .eurus-payments{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 10px !important;
-    flex-wrap: wrap !important;
-  }
-  .eurus-payments__item{
-    background: transparent !important;
-    border: 0 !important;
-    padding: 0 !important;
-  }
-  .eurus-payments__item svg{
-    filter: none !important;
-    opacity: 1 !important;/
-  }
-  /* Undo any previous "force mono color" overrides */
-  .eurus-payments__item svg *{
-    fill: unset !important;
-    stroke: unset !important;
+  /* ===== MAKE FOOTER AIRIER (more height / spacing) ===== */
+
+  .eurus-footer__inner{
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
   }
 
-  /* Copy: two lines like sample */
-  .eurus-footer__copy{
-    font-size: 13px !important;
-    color: rgba(255,255,255,0.85) !important;
-    line-height: 1.6 !important;
-    white-space: normal !important;
-  }
-}
-/* ===== MOBILE: reorder footer bottom like sample ===== */
-@media (max-width: 989px){
-
-  /* dùng flex thay grid */
-  .eurus-footer__bottom-inner{
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
+  .eurus-footer__body{
+    margin-top: 22px !important;
   }
 
-  /* language / market */
-  .eurus-footer__bottom-left{
-    order: 1 !important;
+  .eurus-footer__links,
+  .eurus-footer__social{
+    row-gap: 18px !important;
   }
 
-  /* payment icons LÊN TRƯỚC copyright */
-  .eurus-footer__bottom-right{
-    order: 2 !important;
-    margin: 6px 0 2px !important;
+  .eurus-footer__text{
+    line-height: 1.8 !important;
   }
 
-  /* copyright xuống dưới */
-  .eurus-footer__bottom-mid{
-    order: 3 !important;
-    margin-top: 4px !important;
+  .eurus-footer__links a,
+  .eurus-footer__social a{
+    line-height: 1.55 !important;
   }
 
-  .eurus-footer__copy{
-    text-align: center !important;
+  .eurus-footer__bottom{
+    padding: 22px 0 !important;
   }
-}
 
+  /* ===== MOBILE (accordion) ===== */
+  @media (max-width: 989px){
+    .eurus-footer__inner{
+      padding-top: 22px !important;
+      padding-bottom: 10px !important;
+    }
+
+    .eurus-footer__col{
+      padding: 18px 0 !important;
+    }
+
+    .eurus-footer__head{
+      padding: 6px 0 !important;
+    }
+
+    .eurus-footer__body{
+      margin-top: 12px !important;
+      padding-bottom: 8px !important;
+    }
+
+    .eurus-footer__bottom{
+      padding: 16px 0 22px !important;
+    }
+  }
+
+  /* ===== MOBILE LIKE SAMPLE ===== */
+  @media (max-width: 989px){
+
+    .eurus-footer__col{
+      border-top: 1px solid rgba(255,255,255,0.10) !important;
+      padding: 14px 0 !important;
+    }
+    .eurus-footer__col--brand{ border-top: 0 !important; }
+
+    .eurus-footer__head{
+      padding: 6px 0 !important;
+      min-height: 44px;
+    }
+
+    .eurus-footer__chev{
+      display: inline-block !important;
+      width: 9px !important;
+      height: 9px !important;
+      border-right: 2px solid rgba(255,255,255,0.80) !important;
+      border-bottom: 2px solid rgba(255,255,255,0.80) !important;
+      transform: rotate(45deg) !important; /* down */
+      opacity: .9;
+    }
+    .eurus-footer__head[aria-expanded="false"] .eurus-footer__chev{
+      transform: rotate(-45deg) !important;
+    }
+
+    .eurus-footer__bottom{
+      border-top: 1px solid rgba(255,255,255,0.10) !important;
+      padding: 16px 0 20px !important;
+    }
+    .eurus-footer__bottom-inner{
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    .eurus-footer__bottom-left,
+    .eurus-footer__bottom-mid,
+    .eurus-footer__bottom-right{
+      justify-self: center !important;
+      text-align: center !important;
+    }
+
+    .eurus-loc{
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 10px !important;
+    }
+
+    .eurus-select--static{
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+    }
+
+    .eurus-select--static select{
+      font-size: 13px !important;
+      color: rgba(255,255,255,0.85) !important;
+      white-space: nowrap !important;
+      background: transparent !important;
+    }
+
+    .eurus-select--static .eurus-select__chev{
+      position: static !important;
+      width: 8px !important;
+      height: 8px !important;
+      border-right: 2px solid rgba(255,255,255,0.70) !important;
+      border-bottom: 2px solid rgba(255,255,255,0.70) !important;
+      transform: rotate(45deg) !important;
+      margin-top: -1px !important;
+    }
+
+    .eurus-payments{
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 10px !important;
+      flex-wrap: wrap !important;
+    }
+
+    .eurus-payments__item svg{
+      filter: none !important;
+      opacity: 1 !important;
+    }
+
+    .eurus-footer__copy{
+      font-size: 13px !important;
+      color: rgba(255,255,255,0.85) !important;
+      line-height: 1.6 !important;
+      white-space: normal !important;
+    }
+  }
+
+  /* ===== MOBILE: reorder footer bottom like sample ===== */
+  @media (max-width: 989px){
+
+    .eurus-footer__bottom-inner{
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .eurus-footer__bottom-left{
+      order: 1 !important;
+    }
+
+    .eurus-footer__bottom-right{
+      order: 2 !important;
+      margin: 6px 0 2px !important;
+    }
+
+    .eurus-footer__bottom-mid{
+      order: 3 !important;
+      margin-top: 4px !important;
+    }
+
+    .eurus-footer__copy{
+      text-align: center !important;
+    }
+  }
 </style>
 
 <script>
@@ -759,7 +765,7 @@
           return;
         }
 
-        // Mobile: start collapsed except you want all collapsed like screenshot
+        // Mobile: start collapsed
         btn.setAttribute('aria-expanded','false');
         panel.hidden = true;
 
@@ -774,14 +780,13 @@
 
     init();
     window.addEventListener('resize', function(){
-      // re-init to switch modes
       init();
     });
 
-    // Localization: auto-submit on change
+    // Localization: auto-submit on change (REAL Shopify localization form)
     footer.addEventListener('change', function(e){
       var form = e.target && e.target.form;
-      if(form && form.classList.contains('eurus-loc')){
+      if(form && form.id === 'FooterLocalization'){
         form.submit();
       }
     });
