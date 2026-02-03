@@ -487,7 +487,8 @@
           "all-collections",
           "beauty-products",
           "best-sellers",
-          "best-sellers"
+          "best-sellers",
+          "best-sellers-1"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": true,
