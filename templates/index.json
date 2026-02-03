@@ -658,7 +658,7 @@
         "summary_border": "#e6e6e2",
         "summary_radius": 28,
         "summary_padding": 28,
-        "summary_width": 380,
+        "summary_width": 330,
         "summary_heading": "Your Bundle",
         "summary_heading_color": "#000000",
         "summary_heading_size": 24,
