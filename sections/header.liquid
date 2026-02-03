@@ -191,17 +191,8 @@
     assign color_shadow = '--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));'
     assign form_style = localization_font | append: localization_font_size | append: color_shadow
   %}
-  {% if section.settings.show_language and localization.available_languages.size > 1 and localization.available_languages.size != blank %}
-    <div class="dropdown-localization mobile:hidden">
-      {% render 'localization-form',
-        show_country: section.settings.show_country,
-        show_language: section.settings.show_language,
-        localization_style: 'dropdown',
-        form_style: form_style,
-        block_id: block.id
-      %}
-    </div>
-  {% elsif section.settings.show_country and localization.available_countries.size > 1 %}
+  
+  {% if section.settings.show_language or section.settings.show_country %}
     <dropdown-localization-component class="dropdown-localization mobile:hidden">
       <button
         type="button"
@@ -212,45 +203,25 @@
         on:click="/toggleSelector"
         style="{{ localization_font }} {{ localization_font_size }}"
       >
+        {% comment %} Hiển thị gọn: VND / EN {% endcomment %}
         {% if section.settings.show_country %}
-          {% if section.settings.country_selector_style == true %}
-            {% liquid
-              assign background_brightness = section.settings.color_scheme.settings.background | color_brightness
-              if background_brightness < 64
-                assign shadow_size = 4
-              else
-                assign shadow_size = 2
-              endif
-            %}
-            <span
-              class="icon-flag"
-              style="
-                background-image: url({{- localization.country | image_url: width: 32 }});
-                --size-shadow: {{ shadow_size }}px;
-                --color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-30-60));
-              "
-            ></span>
-          {% endif %}
           <span class="currency-code" data-testid="localization-currency-code">
             {{- localization.country.currency.iso_code -}}
           </span>
         {% endif %}
-        <span class="visually-hidden" data-testid="localization-visually-hidden">
-          {{- 'accessibility.localization_region_and_language' | t -}}
-        </span>
-        {% if section.settings.show_country and section.settings.show_language %}
-          <span>/</span>
-        {% endif %}
+        
         {% if section.settings.show_language %}
+          {% if section.settings.show_country %}<span>/</span>{% endif %}
           <span>{{ localization.language.iso_code | upcase }}</span>
         {% endif %}
+        
         <span class="svg-wrapper icon-caret">
           {{- 'icon-caret.svg' | inline_asset_content -}}
         </span>
       </button>
 
       <div
-        class="localization-wrapper {{ section.settings.localization_position }}-bound color-{{ settings.popover_color_scheme }}"
+        class="localization-wrapper right-bound color-{{ settings.popover_color_scheme }}"
         hidden
         ref="panel"
       >
