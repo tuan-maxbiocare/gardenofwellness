@@ -22,7 +22,7 @@
             "horizontal_alignment": "flex-start",
             "vertical_alignment": "center",
             "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "flex-end",
             "gap": 12,
             "inherit_color_scheme": false,
@@ -33,7 +33,7 @@
             "gradient_direction": "to top",
             "padding-block-start": 48,
             "padding-block-end": 48,
-            "padding-inline-start": 48,
+            "padding-inline-start": 100,
             "padding-inline-end": 48
           },
           "blocks": {
